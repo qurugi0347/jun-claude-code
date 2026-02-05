@@ -9,3 +9,6 @@ yarn-error.log*
 
 .idea
 .DS_Store
+
+# Build output
+dist/
