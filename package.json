@@ -1,0 +1,37 @@
+{
+  "name": "jun-claude-code",
+  "version": "1.0.0",
+  "description": "Claude Code configuration template - copy .claude settings to your project",
+  "main": "dist/index.js",
+  "bin": {
+    "jun-claude-code": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    ".claude"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.5.3"
+  },
+  "private": false,
+  "keywords": [
+    "claude",
+    "claude-code",
+    "cli",
+    "config",
+    "template"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
