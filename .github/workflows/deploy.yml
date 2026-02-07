@@ -1,0 +1,51 @@
+name: Deploy to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Update package.json version
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/v}
+          npm version $TAG_NAME --no-git-tag-version
+          git config --global user.email "qurugi0347@gmail.com"
+          git config --global user.name "qurugi0347"
+
+      - name: Commit version update
+        run: |
+          git add package.json
+          git commit -m "chore: bump version to ${GITHUB_REF#refs/tags/}"
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish to npm
+        run: npm publish --tag latest
+
+      - name: Push changes
+        run: git push origin HEAD:main
