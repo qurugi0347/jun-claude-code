@@ -1,6 +1,6 @@
 ---
 name: react-hook-form
-description: React Hook Form + Zod 폼 검증 패턴. 스키마 정의, 필드 검증, TRPC 연동.
+description: 폼 구현 시 사용. Zod 스키마 정의, useForm 훅 설정, 필드 에러 처리, TRPC mutation 연동 패턴 제공.
 keywords: [react-hook-form, zod, form, 폼, validation, 검증, useForm, register, handleSubmit]
 estimated_tokens: ~500
 ---

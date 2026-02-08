@@ -1,6 +1,6 @@
 ---
 name: Documentation
-description: .claude 하위 문서 작성 가이드. Context, Skill, Agent 파일 구조 및 작성 규칙.
+description: .claude 폴더 내 문서 생성/수정 시 사용. frontmatter 형식, Context/Skill/Agent 템플릿, 파일 분리 기준 제공.
 keywords: [문서, 작성, CLAUDE.md, context, skill, agent, frontmatter, 템플릿]
 estimated_tokens: ~800
 ---

@@ -1,6 +1,6 @@
 ---
 name: Git
-description: Git 작업 스킬. Commit 메시지 작성, PR 생성/리뷰/피드백 적용, 브랜치 전략.
+description: 커밋/PR/브랜치 작업 시 사용. FEAT/FIX/REFACTOR 메시지 규칙, PR 템플릿, 리뷰 체크리스트 인덱스 제공.
 keywords: [커밋, PR, 브랜치, push, merge, FEAT, FIX, 코드리뷰, PR리뷰, 피드백]
 estimated_tokens: ~100
 ---

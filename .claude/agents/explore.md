@@ -1,6 +1,6 @@
 ---
 name: explore
-description: 빠른 코드베이스 탐색 Agent. 파일 패턴 매칭, 키워드 검색, 구조 파악. 가벼운 탐색 작업에 최적화.
+description: 파일 위치/코드 검색이 필요할 때 호출. Glob/Grep으로 빠른 탐색, 파일 구조 파악. Main Context 오염 없이 결과만 반환.
 keywords: [탐색, 검색, 파일찾기, 패턴매칭, 구조파악, Glob, Grep, 빠른검색]
 model: haiku
 color: gray

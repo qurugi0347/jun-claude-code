@@ -1,6 +1,6 @@
 ---
 name: code-writer
-description: 코드 작성 전문 Agent. 프로젝트 규칙(CLAUDE.md, Skills)을 준수하며 실제 코드를 구현.
+description: 3개 이상 파일 수정이 필요한 구현 작업 시 호출. task-planner 계획에 따라 규칙 준수하며 코드 작성, 빌드 가능 상태 유지.
 keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript]
 model: opus
 color: cyan

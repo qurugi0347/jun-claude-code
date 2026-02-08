@@ -1,6 +1,6 @@
 ---
 name: designer
-description: UI/UX 및 프론트엔드 스타일링 전문 Agent. 컴포넌트 설계, 레이아웃, 반응형 설계.
+description: UI 컴포넌트 구조 설계나 스타일링 작업 시 호출. 재사용 컴포넌트 설계, 레이아웃 구성, 반응형 breakpoint, 디자인시스템 적용.
 keywords: [UI, UX, 스타일링, 컴포넌트, 레이아웃, 반응형, 디자인시스템]
 model: sonnet
 color: pink

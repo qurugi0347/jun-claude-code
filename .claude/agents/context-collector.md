@@ -1,6 +1,6 @@
 ---
 name: context-collector
-description: 작업 시작 전 필요한 Context를 수집하는 Agent. 관련 문서 확인, Skill 식별, 기존 코드 패턴 파악, 도메인 지식 수집.
+description: 복잡한 작업 시작 전 배경 정보 수집 시 호출. .claude 문서 탐색, 관련 Skill 식별, 기존 코드 패턴/도메인 지식 요약 제공.
 keywords: [Context수집, 문서확인, 패턴파악, Skill식별, 도메인지식, 코드탐색, 아키텍처분석]
 model: sonnet
 color: blue

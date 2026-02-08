@@ -1,6 +1,6 @@
 ---
 name: tailwind-styled
-description: tailwind-styled-components 사용 패턴. DOM depth 최소화, 스타일 컴포넌트 설계.
+description: tailwind-styled-components로 스타일링 시 사용. DOM depth 최소화 원칙, wrapper 제거 패턴, 조건부 스타일 적용법 제공.
 keywords: [tailwind, styled-components, tw, DOM, depth, wrapper, 스타일링]
 estimated_tokens: ~350
 ---

@@ -1,6 +1,6 @@
 ---
 name: context-manager
-description: .claude/context/ 문서를 관리하고 정리하는 Agent. 파일 분리, 토큰 최적화, 구조 개선.
+description: Context 문서가 길어지거나 구조 개선 필요 시 호출. 1000줄 초과 파일 분리, 중복 제거, 토큰 최적화, INDEX 구조화.
 keywords: [Context관리, 문서정리, 파일분리, 토큰최적화, 구조개선, 문서품질]
 model: sonnet
 color: green

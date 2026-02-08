@@ -1,6 +1,6 @@
 ---
 name: Coding
-description: 공통 코딩 원칙. SRP, 결합도, 응집도, 폴더 구조 설계, 가독성 규칙.
+description: 모든 코드 작성 시 참조. SRP/결합도/응집도 판단 기준, 폴더 구조 설계 원칙, 삼항연산자/try-catch 가독성 규칙 제공.
 keywords: [SRP, 단일책임, 결합도, 응집도, 설계원칙, 폴더구조, 아키텍처, 가독성, 삼항연산자, try-catch]
 estimated_tokens: ~500
 ---

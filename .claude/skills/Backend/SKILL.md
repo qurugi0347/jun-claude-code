@@ -1,6 +1,6 @@
 ---
 name: Backend
-description: 백엔드 개발 원칙. 레이어 간 객체 변환 규칙, TypeORM 사용 규칙.
+description: NestJS/TypeORM 백엔드 개발 시 사용. Controller-Service-Repository 레이어 객체 변환, find vs queryBuilder 선택 기준 제공.
 keywords: [Backend, 백엔드, 레이어, DTO, Entity, Service, Controller, TypeORM, find, queryBuilder]
 estimated_tokens: ~400
 ---

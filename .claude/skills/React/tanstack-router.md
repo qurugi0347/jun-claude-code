@@ -1,6 +1,6 @@
 ---
 name: tanstack-router
-description: TanStack Router 파일 기반 라우팅 패턴. 동적 라우트, 레이아웃, 인증 guard.
+description: TanStack Router로 라우팅 구현 시 사용. 파일 기반 라우트 구조, 동적 경로, beforeLoad 인증 guard 패턴 제공.
 keywords: [tanstack, router, 라우팅, 파일기반, createFileRoute, navigate, beforeLoad, guard]
 estimated_tokens: ~450
 ---

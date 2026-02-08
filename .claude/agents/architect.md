@@ -1,6 +1,6 @@
 ---
 name: architect
-description: 아키텍처 설계 및 복잡한 디버깅 전문 Agent. 시스템 구조 분석, 설계 결정, 기술 부채 해결.
+description: 새 기능 구조 설계나 복잡한 버그 디버깅 시 호출. 시스템 구조 분석, 설계 대안 비교, 기술 부채 해결 방안 도출.
 keywords: [아키텍처, 설계, 디버깅, 시스템구조, 기술부채, 리팩토링, 패턴]
 model: opus
 color: red

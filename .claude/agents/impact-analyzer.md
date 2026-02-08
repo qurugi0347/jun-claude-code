@@ -1,6 +1,6 @@
 ---
 name: impact-analyzer
-description: 코드 수정의 사이드이펙트를 분석하는 Agent. Code Flow, UserFlow 영향 분석, Breaking Change 탐지, 위험도 평가.
+description: 코드 수정 전 영향 범위 파악 시 호출. 호출 관계 추적, API 변경 영향, Breaking Change 탐지, 위험도 HIGH/MEDIUM/LOW 평가.
 keywords: [사이드이펙트, CodeFlow, UserFlow, BreakingChange, 영향분석, 위험도평가, 호출관계, API변경]
 model: opus
 color: orange

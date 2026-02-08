@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Self Code Review Agent. 프로젝트 규칙 준수 확인, 체크리스트 기반 검토, lint 실행, 개선 제안.
+description: 코드 작성 완료 후 품질 검토 시 호출. CLAUDE.md/Skills 규칙 준수 확인, Critical/Warning 분류, lint 실행 및 수정 제안.
 keywords: [코드리뷰, 체크리스트, lint, 규칙검증, 품질검사, Critical, Warning, 수정제안]
 model: opus
 color: yellow

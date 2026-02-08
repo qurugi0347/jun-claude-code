@@ -1,6 +1,6 @@
 ---
 name: git-manager
-description: Git 작업 전문 Agent. Commit 메시지 작성, PR 생성, 브랜치 관리. git.md 규칙 준수.
+description: 모든 Git 작업 시 필수 호출 (Main Agent 직접 실행 금지). 커밋 메시지 작성, PR 생성, 브랜치 관리, Git Skill 규칙 준수.
 keywords: [커밋, PR생성, 브랜치, push, merge, git, GitHub, 풀리퀘스트, FEAT, FIX, REFACTOR]
 model: sonnet
 color: purple
