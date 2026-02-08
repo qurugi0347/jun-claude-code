@@ -156,134 +156,14 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 
 ## .claude 문서 작성 가이드
 
-### 디렉토리 구조
+`.claude/skills/Documentation/SKILL.md` 참조
 
-```
-.claude/
-├── context/       # 사실/배경 정보 (읽기 전용)
-├── skills/        # 방법/절차 가이드 (액션 지침)
-├── agents/        # Agent 정의 (역할, 프로세스)
-└── hooks/         # 자동 실행 스크립트
-```
+### 핵심 요약
 
-### 파일 길이 제한
+| 항목 | 내용 |
+|------|------|
+| 디렉토리 | `context/` (사실), `skills/` (방법), `agents/` (역할) |
+| 파일 길이 | ~500줄 권장, 1000줄 초과 시 분리 |
+| 필수 작성 | YAML frontmatter (name, description, keywords) |
 
-| 상태 | 줄 수 | 조치 |
-|------|-------|------|
-| 권장 | ~500줄 | 이상적인 길이 |
-| 허용 | ~1000줄 | 최대 한계 |
-| 초과 | 1000줄+ | 반드시 파일 분리 |
-
-> **원칙**: Context 압축에 중점. 길어지면 Sub-Skill/Sub-Context로 분리.
-
-### Frontmatter 패턴
-
-모든 `.md` 파일은 YAML frontmatter로 시작:
-
-```yaml
----
-name: file-name              # 파일 식별자 (kebab-case)
-description: 한 줄 설명       # 파일 목적
-keywords: [키워드1, 키워드2]  # 검색/매칭용 키워드
-estimated_tokens: ~500       # 예상 토큰 수 (선택)
----
-```
-
-**Agent 전용 필드:**
-```yaml
-model: opus                  # 사용 모델
-color: blue                  # UI 색상
-```
-
-**Skill 전용 필드:**
-```yaml
-user-invocable: true         # 사용자 직접 호출 가능 여부
-```
-
-### 파일 유형별 구조
-
-#### Context (사실/배경)
-
-```markdown
----
-name: context-name
-description: 설명
-keywords: [...]
----
-
-# 제목
-
-## 핵심 정보
-(테이블, 다이어그램으로 요약)
-
-## 상세 구조
-(필요시 코드 블록)
-
-## 관련 파일
-(참조 경로 목록)
-```
-
-#### Skill (방법/절차)
-
-```markdown
----
-name: skill-name
-description: 설명
-keywords: [...]
----
-
-# 스킬 제목
-
-## 핵심 역할
-(불릿 포인트로 요약)
-
-## 이 스킬이 필요할 때
-(사용 시점 목록)
-
-## 관련 문서
-(Sub-Skill 테이블)
-
-## 필수 준수 사항
-(테이블로 규칙 요약)
-
-## 체크리스트
-(확인 항목)
-```
-
-#### Agent (역할/프로세스)
-
-```markdown
----
-name: agent-name
-description: 설명
-keywords: [...]
-model: opus
-color: blue
----
-
-# Agent 이름
-
-## 역할
-(번호 목록으로 역할 정의)
-
-## 프로세스
-(Step별 작업 흐름)
-
-## 출력 형식
-(결과물 템플릿)
-```
-
-### 파일 분리 기준
-
-| 상황 | 분리 방법 |
-|------|----------|
-| Skill이 길어짐 | `SKILL.md` + `sub-skill.md` |
-| Context가 길어짐 | `INDEX.md` + `detail.md` |
-| 도메인별 분리 | `Backend/`, `Frontend/`, `Git/` |
-
-### 작성 원칙
-
-1. **압축 우선**: 중복 제거, 테이블/불릿 활용
-2. **검색 가능**: keywords에 다양한 변형 포함
-3. **독립적**: 각 파일이 단독으로 이해 가능
-4. **참조 명시**: 관련 문서 경로 항상 포함
+상세 내용은 **Documentation Skill**을 참조하세요.
