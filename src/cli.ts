@@ -27,4 +27,21 @@ program
     }
   });
 
+program
+  .command('init-project')
+  .description('Initialize GitHub Project integration in current directory')
+  .action(async () => {
+    try {
+      const { initProject } = await import('./init-project');
+      await initProject();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error:', error.message);
+      } else {
+        console.error('An unexpected error occurred');
+      }
+      process.exit(1);
+    }
+  });
+
 program.parse();

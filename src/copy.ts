@@ -106,8 +106,18 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     process.exit(1);
   }
 
+  // Files to exclude from global copy (project-specific files)
+  const EXCLUDE_FROM_GLOBAL = [
+    'hooks/task-loader.sh',
+    'agents/project-task-manager.md',
+    'project.env.example',
+  ];
+
   // Get all files to copy
-  const files = getAllFiles(sourceDir);
+  const allFiles = getAllFiles(sourceDir);
+  const files = allFiles.filter((file) => {
+    return !EXCLUDE_FROM_GLOBAL.includes(file);
+  });
 
   if (files.length === 0) {
     console.log(chalk.yellow('No files found in .claude directory'));
