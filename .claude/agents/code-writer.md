@@ -1,6 +1,6 @@
 ---
 name: code-writer
-description: 3개 이상 파일 수정이 필요한 구현 작업 시 호출. task-planner 계획에 따라 규칙 준수하며 코드 작성, 빌드 가능 상태 유지.
+description: Main Agent가 3개 이상 파일을 수정해야 할 때, 또는 새 기능 구현/대규모 리팩토링 시 호출. Entity→Service→Controller 순서로 의존성 지키며 구현, 각 단계마다 빌드 가능 상태 유지.
 keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript]
 model: opus
 color: cyan

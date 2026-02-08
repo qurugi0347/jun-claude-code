@@ -1,6 +1,6 @@
 ---
 name: context-manager
-description: Context 문서가 길어지거나 구조 개선 필요 시 호출. 1000줄 초과 파일 분리, 중복 제거, 토큰 최적화, INDEX 구조화.
+description: .claude/context/ 문서가 500줄 초과하거나, 여러 문서에 중복 내용 발견 시, 또는 "context 정리해줘" 요청 시 호출. 큰 파일을 INDEX.md + 상세파일로 분리, 중복 제거, 테이블 압축으로 토큰 절약.
 keywords: [Context관리, 문서정리, 파일분리, 토큰최적화, 구조개선, 문서품질]
 model: sonnet
 color: green
