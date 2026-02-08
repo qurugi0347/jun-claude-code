@@ -81,6 +81,53 @@ your-project/
 └── CLAUDE.md          # 프로젝트 설명
 ```
 
+### GitHub Project 연동
+
+`init-project` 커맨드로 GitHub Project 태스크 관리를 프로젝트에 연동할 수 있습니다.
+
+```bash
+# 프로젝트 루트에서 실행
+jun-claude-code init-project
+```
+
+실행하면 다음을 인터랙티브로 설정합니다:
+
+1. **GitHub Owner** (org 또는 user)
+2. **Project Number**
+3. **Repository** (owner/repo 형식)
+
+설정 완료 후 프로젝트에 생성되는 파일:
+
+```
+your-project/
+├── .claude/
+│   ├── project.env                    # GitHub Project 설정 (GITHUB_PROJECT_OWNER 등)
+│   ├── settings.json                  # StartSession hook (세션 시작 시 태스크 표시)
+│   ├── hooks/
+│   │   └── task-loader.sh             # 태스크 조회 스크립트
+│   └── agents/
+│       └── project-task-manager.md    # 태스크 관리 Agent
+```
+
+#### 수동 설정
+
+`init-project` 대신 직접 `.claude/project.env`를 생성할 수도 있습니다:
+
+```bash
+# .claude/project.env
+GITHUB_PROJECT_OWNER=your-org
+GITHUB_PROJECT_NUMBER=1
+GITHUB_PROJECT_REPO=your-org/your-repo
+```
+
+#### 필요 권한
+
+GitHub Project 접근에 `read:project` 스코프가 필요합니다:
+
+```bash
+gh auth refresh -s read:project,project
+```
+
 ## 핵심 원칙
 
 이 템플릿의 핵심 원칙:
