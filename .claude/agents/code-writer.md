@@ -1,7 +1,7 @@
 ---
 name: code-writer
-description: Main Agent가 3개 이상 파일을 수정해야 할 때, 또는 새 기능 구현/대규모 리팩토링 시 호출. Entity→Service→Controller 순서로 의존성 지키며 구현, 각 단계마다 빌드 가능 상태 유지.
-keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript]
+description: Main Agent가 3개 이상 파일을 수정해야 할 때, 또는 새 기능 구현/대규모 리팩토링 시 호출. BE는 Entity→Service→Controller, FE는 타입→훅→컴포넌트→페이지 순서로 의존성 지키며 구현.
+keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript, React, 훅, 페이지]
 model: opus
 color: cyan
 ---
@@ -50,9 +50,14 @@ color: cyan
 
 새 코드 작성 전 기존 유사 코드 참고:
 ```
+BE:
 - 새 Entity → 기존 Entity 구조 참고
 - 새 Service → 기존 Service 패턴 참고
+
+FE:
 - 새 컴포넌트 → 기존 컴포넌트 구조 참고
+- 새 훅 → 기존 useQuery/useMutation 패턴 참고
+- 새 페이지 → 기존 라우팅/레이아웃 구조 참고
 ```
 
 ---
@@ -74,13 +79,22 @@ task-planner에서 작성한 계획 확인:
 
 ### Step 2: 순서대로 구현
 
+**Backend (NestJS/TypeORM):**
 ```
 1. Entity/타입 정의 (의존성 없는 것부터)
 2. Repository 등록
 3. DTO 정의
 4. Service 구현
 5. Controller 작성
-6. 프론트엔드 연동
+```
+
+**Frontend (React):**
+```
+1. 타입/인터페이스 정의
+2. API 호출 함수 (queries/mutations)
+3. 커스텀 훅 작성
+4. 컴포넌트 구현 (Presentational → Container)
+5. 페이지 연동 및 라우팅
 ```
 
 ### Step 3: 단위별 확인
