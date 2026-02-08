@@ -156,3 +156,4 @@ useEffect(() => {
 |------|------|
 | `tanstack-router.md` | TanStack Router 파일 기반 라우팅 패턴 |
 | `react-hook-form.md` | React Hook Form + Zod 폼 검증 패턴 |
+| `tailwind-styled.md` | tailwind-styled-components DOM depth 최소화 |
