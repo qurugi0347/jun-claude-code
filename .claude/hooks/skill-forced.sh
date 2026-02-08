@@ -6,6 +6,8 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="$(dirname "$SCRIPT_DIR")"
+GLOBAL_CLAUDE_DIR="$HOME/.claude"
+PROJECT_CLAUDE_DIR="$(pwd)/.claude"
 
 echo "✅ [Hook] Skill/Agent 평가 프로토콜 실행됨"
 
@@ -90,22 +92,38 @@ Step 2 - Skill 활성화: YES로 표시된 모든 Skill의 SKILL.md를 읽으세
 EOF
 
 # skills 폴더에서 SKILL.md 파일들의 frontmatter 자동 탐색
-if [ -d "$CLAUDE_DIR/skills" ]; then
-  for skill_dir in "$CLAUDE_DIR/skills"/*/; do
-    if [ -d "$skill_dir" ]; then
-      skill_name=$(basename "$skill_dir")
-      skill_file="$skill_dir/SKILL.md"
+# 프로젝트 .claude/ 와 ~/.claude/ 양쪽에서 탐색 (프로젝트 우선, 중복 제거)
+SEEN_SKILLS=""
+for search_dir in "$PROJECT_CLAUDE_DIR" "$GLOBAL_CLAUDE_DIR"; do
+  if [ -d "$search_dir/skills" ]; then
+    for skill_dir in "$search_dir/skills"/*/; do
+      if [ -d "$skill_dir" ]; then
+        skill_name=$(basename "$skill_dir")
+        skill_file="$skill_dir/SKILL.md"
 
-      if [ -f "$skill_file" ]; then
-        echo "**[$skill_name]** \`.claude/skills/$skill_name/SKILL.md\`"
-        echo '```yaml'
-        head -6 "$skill_file"
-        echo '```'
-        echo ""
+        # 이미 탐색된 Skill은 건너뜀
+        case "$SEEN_SKILLS" in
+          *"|${skill_name}|"*) continue ;;
+        esac
+        SEEN_SKILLS="${SEEN_SKILLS}|${skill_name}|"
+
+        if [ -f "$skill_file" ]; then
+          # 출처 표시
+          if [ "$search_dir" = "$PROJECT_CLAUDE_DIR" ]; then
+            display_path=".claude/skills/$skill_name/SKILL.md"
+          else
+            display_path="~/.claude/skills/$skill_name/SKILL.md"
+          fi
+          echo "**[$skill_name]** \`$display_path\`"
+          echo '```yaml'
+          head -6 "$skill_file"
+          echo '```'
+          echo ""
+        fi
       fi
-    fi
-  done
-fi
+    done
+  fi
+done
 
 cat << 'EOF'
 
@@ -139,22 +157,40 @@ Step 4 - Agent 활용: YES로 표시된 Agent는 Task 도구로 호출하세요.
 EOF
 
 # agents 폴더에서 agent 파일들의 frontmatter 자동 탐색
-if [ -d "$CLAUDE_DIR/agents" ]; then
-  for agent_file in "$CLAUDE_DIR/agents"/*.md; do
-    if [ -f "$agent_file" ]; then
-      agent_name=$(basename "$agent_file" .md)
+# 프로젝트 .claude/ 와 ~/.claude/ 양쪽에서 탐색 (프로젝트 우선, 중복 제거)
+SEEN_AGENTS=""
+for search_dir in "$PROJECT_CLAUDE_DIR" "$GLOBAL_CLAUDE_DIR"; do
+  if [ -d "$search_dir/agents" ]; then
+    for agent_file in "$search_dir/agents"/*.md; do
+      if [ -f "$agent_file" ]; then
+        agent_name=$(basename "$agent_file" .md)
 
-      # CLAUDE.md는 제외
-      if [ "$agent_name" != "CLAUDE" ]; then
-        echo "**[$agent_name]** \`.claude/agents/$agent_name.md\`"
+        # CLAUDE.md는 제외
+        if [ "$agent_name" = "CLAUDE" ]; then
+          continue
+        fi
+
+        # 이미 탐색된 Agent는 건너뜀
+        case "$SEEN_AGENTS" in
+          *"|${agent_name}|"*) continue ;;
+        esac
+        SEEN_AGENTS="${SEEN_AGENTS}|${agent_name}|"
+
+        # 출처 표시
+        if [ "$search_dir" = "$PROJECT_CLAUDE_DIR" ]; then
+          display_path=".claude/agents/$agent_name.md"
+        else
+          display_path="~/.claude/agents/$agent_name.md"
+        fi
+        echo "**[$agent_name]** \`$display_path\`"
         echo '```yaml'
         head -6 "$agent_file"
         echo '```'
         echo ""
       fi
-    fi
-  done
-fi
+    done
+  fi
+done
 
 cat << 'EOF'
 

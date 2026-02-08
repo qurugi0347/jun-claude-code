@@ -6,6 +6,8 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="$(dirname "$SCRIPT_DIR")"
+GLOBAL_CLAUDE_DIR="$HOME/.claude"
+PROJECT_CLAUDE_DIR="$(pwd)/.claude"
 
 echo "✅ [Hook] 워크플로우 순서 강제 프로토콜 실행됨"
 
@@ -132,22 +134,38 @@ PHASE 4: 리뷰 (Review) - 구현 후 필수
 EOF
 
 # skills 폴더에서 SKILL.md 파일들의 frontmatter 자동 탐색
-if [ -d "$CLAUDE_DIR/skills" ]; then
-  for skill_dir in "$CLAUDE_DIR/skills"/*/; do
-    if [ -d "$skill_dir" ]; then
-      skill_name=$(basename "$skill_dir")
-      skill_file="$skill_dir/SKILL.md"
+# 프로젝트 .claude/ 와 ~/.claude/ 양쪽에서 탐색 (프로젝트 우선, 중복 제거)
+SEEN_SKILLS=""
+for search_dir in "$PROJECT_CLAUDE_DIR" "$GLOBAL_CLAUDE_DIR"; do
+  if [ -d "$search_dir/skills" ]; then
+    for skill_dir in "$search_dir/skills"/*/; do
+      if [ -d "$skill_dir" ]; then
+        skill_name=$(basename "$skill_dir")
+        skill_file="$skill_dir/SKILL.md"
 
-      if [ -f "$skill_file" ]; then
-        echo "**[$skill_name]** \`.claude/skills/$skill_name/SKILL.md\`"
-        echo '```yaml'
-        head -6 "$skill_file"
-        echo '```'
-        echo ""
+        # 이미 탐색된 Skill은 건너뜀
+        case "$SEEN_SKILLS" in
+          *"|${skill_name}|"*) continue ;;
+        esac
+        SEEN_SKILLS="${SEEN_SKILLS}|${skill_name}|"
+
+        if [ -f "$skill_file" ]; then
+          # 출처 표시
+          if [ "$search_dir" = "$PROJECT_CLAUDE_DIR" ]; then
+            display_path=".claude/skills/$skill_name/SKILL.md"
+          else
+            display_path="~/.claude/skills/$skill_name/SKILL.md"
+          fi
+          echo "**[$skill_name]** \`$display_path\`"
+          echo '```yaml'
+          head -6 "$skill_file"
+          echo '```'
+          echo ""
+        fi
       fi
-    fi
-  done
-fi
+    done
+  fi
+done
 
 cat << 'EOF'
 
