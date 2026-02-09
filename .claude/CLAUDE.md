@@ -18,7 +18,7 @@ Main Agent의 Context Window는 제한적입니다.
 | 영향 분석 | `impact-analyzer` | 분석 결과만 받음 |
 | 코드 리뷰 | `code-reviewer` | 리뷰 결과만 받음 |
 | 테스트/빌드 검증 | `qa-tester` | 검증 결과만 받음 |
-| 간단한 코드 수정 | `simple-code-writer` | 1-2개 파일도 Main이 직접 수정하지 않음 |
+| 단순 수정 (lint/build 오류, 오타, 설정값) | `simple-code-writer` | Main이 직접 수정하지 않음 |
 | 여러 파일 코드 작성 | `code-writer` | 구현 결과만 받음 |
 | Git 작업 | `git-manager` | 커밋/PR 결과만 받음 |
 | Context 문서 정리 | `context-manager` | 파일 분리, 토큰 최적화 |
@@ -44,10 +44,10 @@ Main Agent의 Context Window는 제한적입니다.
 Main Agent는 **절대 코드를 직접 수정하지 않습니다.**
 모든 코드 수정은 Subagent에 위임하세요.
 
-| 수정 규모 | Agent | 모델 |
+| 수정 유형 | Agent | 모델 |
 |----------|-------|------|
-| 1-2개 파일 간단 수정 | `simple-code-writer` | haiku |
-| 3개 이상 파일 / 복잡한 수정 | `code-writer` | opus |
+| lint/build 오류 수정, 오타, 설정값 변경 등 단순 수정 | `simple-code-writer` | haiku |
+| 로직 작성, 기능 구현, 리팩토링 (파일 수 무관) | `code-writer` | opus |
 
 ### Git 작업은 반드시 Subagent 사용
 
@@ -69,9 +69,8 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 
 | 상황 | 처리 |
 |------|------|
-| 1~2개 파일 간단 수정 | `simple-code-writer` Agent에 위임 |
-| 3개 이상 파일 수정/생성 | `code-writer` Agent에 위임 |
-| 여러 파일 대규모 리팩토링 | `code-writer` Agent에 위임 |
+| lint/build 오류, 오타, 설정값 등 단순 수정 | `simple-code-writer` Agent에 위임 |
+| 로직 작성, 기능 구현, 리팩토링 | `code-writer` Agent에 위임 |
 
 ## 작업 워크플로우 (필수)
 

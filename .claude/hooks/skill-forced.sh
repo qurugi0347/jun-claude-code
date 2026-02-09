@@ -34,7 +34,7 @@ Main Agent의 Context Window는 제한적입니다.
 | 영향 분석 | impact-analyzer | 분석 결과만 받음 |
 | 코드 리뷰 | code-reviewer | 리뷰 결과만 받음 |
 | 테스트/빌드 검증 | qa-tester | 검증 결과만 받음 |
-| 간단한 코드 수정 (1-2파일) | simple-code-writer | 1-2개 파일도 Main이 직접 수정하지 않음 |
+| 단순 수정 (lint/build 오류, 오타, 설정값) | simple-code-writer | Main이 직접 수정하지 않음 |
 | 여러 파일 코드 작성 | code-writer / designer | 구현 결과만 받음 |
 | Git 작업 | git-manager | 커밋/PR 결과만 받음 |
 
