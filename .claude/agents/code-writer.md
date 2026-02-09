@@ -1,6 +1,6 @@
 ---
 name: code-writer
-description: Main Agent가 3개 이상 파일을 수정해야 할 때, 또는 새 기능 구현/대규모 리팩토링 시 호출. BE는 Entity→Service→Controller, FE는 타입→훅→컴포넌트→페이지 순서로 의존성 지키며 구현.
+description: 로직 작성, 기능 구현, 리팩토링 등 코드 수정이 필요할 때 호출 (파일 수 무관). BE는 Entity→Service→Controller, FE는 타입→훅→컴포넌트→페이지 순서로 의존성 지키며 구현.
 keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript, React, 훅, 페이지]
 model: opus
 color: cyan
