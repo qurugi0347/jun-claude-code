@@ -24,7 +24,7 @@ jobs:
       - name: Generate context documents
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             당신은 context-generator 에이전트입니다.
             .claude/agents/context-generator.md의 에이전트 정의와
