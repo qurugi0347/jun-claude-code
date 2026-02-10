@@ -7,7 +7,7 @@ on:
       - '.claude/context/**'
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   id-token: write
 
@@ -25,8 +25,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          max_turns: "30"
-          allowed_tools: "Read,Write,Edit,Bash(git diff),Bash(git log),Bash(git add),Bash(git commit),Glob,Grep"
           prompt: |
             당신은 context-generator 에이전트입니다.
             .claude/agents/context-generator.md의 에이전트 정의와
@@ -45,3 +43,10 @@ jobs:
             - 컨텍스트 문서에 소스 코드를 포함하지 말고, 파일 경로와 함수 이름만 포함하세요
             - 실제로 변경된 파일에 대해서만 컨텍스트 업데이트
             - ContextGeneration 스킬에 명시된 정확한 형식 따르기
+
+      - name: Commit and push context changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .claude/context/
+          git diff --staged --quiet || (git commit -m "docs: context 문서 자동 업데이트" && git push)
