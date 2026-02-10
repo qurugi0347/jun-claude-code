@@ -68,12 +68,12 @@ function copyFile(src: string, dest: string): void {
 }
 
 /**
- * Get the source .claude directory path (from package installation)
+ * Get the source templates/global directory path (from package installation)
  */
-function getSourceClaudeDir(): string {
+function getSourceGlobalDir(): string {
   // When installed as npm package, __dirname is in dist/
-  // .claude folder is at package root (sibling to dist/)
-  return path.resolve(__dirname, '..', '.claude');
+  // templates/global folder is at package root
+  return path.resolve(__dirname, '..', 'templates', 'global');
 }
 
 /**
@@ -179,7 +179,7 @@ function mergeSettingsJson(sourceDir: string, destDir: string): void {
 export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> {
   const { dryRun = false, force = false } = options;
 
-  const sourceDir = getSourceClaudeDir();
+  const sourceDir = getSourceGlobalDir();
   const destDir = getDestClaudeDir();
 
   console.log(chalk.blue('Source:'), sourceDir);
@@ -188,15 +188,12 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
 
   // Check if source exists
   if (!fs.existsSync(sourceDir)) {
-    console.error(chalk.red('Error:'), 'Source .claude directory not found');
+    console.error(chalk.red('Error:'), 'Source templates/global directory not found');
     process.exit(1);
   }
 
-  // Files to exclude from global copy (project-specific files or merge-handled)
+  // Files to exclude from global copy (merge-handled separately)
   const EXCLUDE_FROM_GLOBAL = [
-    'hooks/task-loader.sh',
-    'agents/project-task-manager.md',
-    'project.env.example',
     'settings.json',
   ];
 
@@ -207,7 +204,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
   });
 
   if (files.length === 0) {
-    console.log(chalk.yellow('No files found in .claude directory'));
+    console.log(chalk.yellow('No files found in templates/global directory'));
     return;
   }
 

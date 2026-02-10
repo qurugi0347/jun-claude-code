@@ -6,7 +6,6 @@
   "bin": "dist/cli.js",
   "files": [
     "dist",
-    ".claude",
     "templates"
   ],
   "scripts": {

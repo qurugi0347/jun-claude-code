@@ -3,10 +3,10 @@ import * as path from 'path';
 import chalk from 'chalk';
 
 /**
- * Get the templates directory path (from package installation)
+ * Get the templates/project directory path (from package installation)
  */
 function getTemplatesDir(): string {
-  return path.resolve(__dirname, '..', 'templates');
+  return path.resolve(__dirname, '..', 'templates', 'project');
 }
 
 /**
@@ -17,8 +17,8 @@ export async function initContext(): Promise<void> {
 
   console.log(chalk.bold('\n📄 Initializing Context Auto-Generation...\n'));
 
-  // 1. templates/context-gen.yml → .github/workflows/context-gen.yml 복사
-  const templateSrc = path.join(getTemplatesDir(), 'context-gen.yml');
+  // 1. templates/project/workflows/context-gen.yml → .github/workflows/context-gen.yml 복사
+  const templateSrc = path.join(getTemplatesDir(), 'workflows', 'context-gen.yml');
   const workflowDest = path.join(cwd, '.github', 'workflows', 'context-gen.yml');
 
   fs.mkdirSync(path.dirname(workflowDest), { recursive: true });

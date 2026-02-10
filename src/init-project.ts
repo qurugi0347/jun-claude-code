@@ -27,10 +27,10 @@ function askQuestion(question: string): Promise<string> {
 }
 
 /**
- * Get the source .claude directory path (from package installation)
+ * Get the source templates/project directory path (from package installation)
  */
-function getSourceClaudeDir(): string {
-  return path.resolve(__dirname, '..', '.claude');
+function getSourceProjectDir(): string {
+  return path.resolve(__dirname, '..', 'templates', 'project');
 }
 
 /**
@@ -80,7 +80,7 @@ function createProjectEnv(destDir: string, config: ProjectConfig): void {
  * Copy a project-specific file from package source to project directory
  */
 function copyProjectFile(srcRelative: string, destDir: string): void {
-  const srcPath = path.join(getSourceClaudeDir(), srcRelative);
+  const srcPath = path.join(getSourceProjectDir(), srcRelative);
   const destPath = path.join(destDir, srcRelative);
 
   if (!fs.existsSync(srcPath)) {

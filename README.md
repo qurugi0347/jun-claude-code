@@ -4,7 +4,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 
 ## 포함 내용
 
-### Agents (`.claude/agents/`)
+### Agents (`templates/global/agents/`)
 
 작업별 전문 Subagent 15종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
 
@@ -26,7 +26,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 | `context-generator` | Context 자동 생성 |
 | `project-task-manager` | GitHub Project 태스크 관리 |
 
-### Skills (`.claude/skills/`)
+### Skills (`templates/global/skills/`)
 
 | Skill | 설명 |
 |-------|------|
@@ -38,7 +38,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 | `Director` | 디렉터 Agent 운영 스킬 |
 | `ContextGeneration` | Context 자동 생성 스킬 |
 
-### Hooks (`.claude/hooks/`)
+### Hooks (`templates/global/hooks/`)
 
 | Hook | 설명 |
 |------|------|
@@ -64,7 +64,7 @@ npm install -g jun-claude-code
 
 ### 기본 명령어: 설정 복사
 
-`.claude` 설정 파일을 `~/.claude`로 복사합니다.
+`templates/global` 설정 파일을 `~/.claude`로 복사합니다.
 
 ```bash
 jun-claude-code
@@ -128,12 +128,18 @@ jun-claude-code init-context
 ## 프로젝트 구조
 
 ```
-.claude/
-├── CLAUDE.md              # 작업 가이드 (워크플로우, Context 절약 원칙)
-├── agents/                # Subagent 정의 (15종)
-├── skills/                # 스킬 가이드 (코딩, Git, BE, FE 등)
-├── hooks/                 # 자동 실행 스크립트 (워크플로우 강제, 스킬 평가)
-└── context/               # 프로젝트별 Context (직접 추가)
+templates/
+├── global/                # ~/.claude/에 설치되는 전역 설정
+│   ├── CLAUDE.md          # 작업 가이드 (워크플로우, Context 절약 원칙)
+│   ├── agents/            # Subagent 정의 (15종)
+│   ├── skills/            # 스킬 가이드 (코딩, Git, BE, FE 등)
+│   ├── hooks/             # 자동 실행 스크립트 (워크플로우 강제, 스킬 평가)
+│   └── settings.json      # Claude Code 전역 설정
+└── project/               # 프로젝트 .claude/에 설치되는 프로젝트별 설정
+    ├── agents/            # project-task-manager Agent
+    ├── hooks/             # task-loader Hook
+    ├── workflows/         # context-gen Workflow
+    └── project.env.example
 ```
 
 ## 커스터마이징
