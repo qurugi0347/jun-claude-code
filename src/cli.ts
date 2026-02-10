@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { copyClaudeFiles } from './copy';
+import { initContext } from './init-context';
 
 const program = new Command();
 
@@ -34,6 +35,22 @@ program
     try {
       const { initProject } = await import('./init-project');
       await initProject();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error:', error.message);
+      } else {
+        console.error('An unexpected error occurred');
+      }
+      process.exit(1);
+    }
+  });
+
+program
+  .command('init-context')
+  .description('Setup context auto-generation with GitHub Actions')
+  .action(async () => {
+    try {
+      await initContext();
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error:', error.message);

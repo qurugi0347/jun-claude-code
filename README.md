@@ -1,6 +1,54 @@
 # jun-claude-code
 
-Claude Code 설정 템플릿 CLI입니다. 미리 정의된 `.claude` 설정을 `~/.claude`로 복사하여 새 프로젝트에서 빠르게 Claude Code 환경을 구축할 수 있습니다.
+Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workflow를 프로젝트에 설치하여 Claude Code 환경을 빠르게 구축합니다.
+
+## 포함 내용
+
+### Agents (`.claude/agents/`)
+
+작업별 전문 Subagent 15종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
+
+| Agent | 역할 |
+|-------|------|
+| `explore` | 코드베이스 탐색 |
+| `task-planner` | 작업 계획 수립 |
+| `code-writer` | 코드 작성 (Opus) |
+| `simple-code-writer` | 단순 수정 (Haiku) |
+| `code-reviewer` | 셀프 코드 리뷰 |
+| `git-manager` | Git 커밋/PR |
+| `impact-analyzer` | 사이드이펙트 분석 |
+| `qa-tester` | 테스트/빌드 검증 |
+| `architect` | 아키텍처 설계 |
+| `designer` | UI/UX 스타일링 |
+| `director` | 작업 총괄 디렉터 |
+| `context-collector` | Context 수집 |
+| `context-manager` | Context 문서 관리 |
+| `context-generator` | Context 자동 생성 |
+| `project-task-manager` | GitHub Project 태스크 관리 |
+
+### Skills (`.claude/skills/`)
+
+| Skill | 설명 |
+|-------|------|
+| `Coding` | 공통 코딩 원칙 (SRP, 응집도, 가독성) |
+| `Git` | Git 커밋/PR 규칙, PR 리뷰, 피드백 적용 |
+| `Backend` | 백엔드 개발 원칙 (레이어, TypeORM) |
+| `React` | React 개발 (TanStack Router, React Hook Form, Tailwind) |
+| `Documentation` | .claude 문서 작성 가이드 |
+| `Director` | 디렉터 Agent 운영 스킬 |
+| `ContextGeneration` | Context 자동 생성 스킬 |
+
+### Hooks (`.claude/hooks/`)
+
+| Hook | 설명 |
+|------|------|
+| `workflow-enforced.sh` | 워크플로우 순서 강제 프로토콜 |
+| `skill-forced.sh` | Skill/Agent 평가 프로토콜 |
+| `task-loader.sh` | GitHub Project 태스크 조회 |
+
+### Workflow
+
+Planning -> Validation -> Implementation -> Review 순서의 작업 워크플로우와 Context 절약 원칙(Subagent 위임 규칙)을 정의합니다.
 
 ## 설치
 
@@ -14,127 +62,94 @@ npm install -g jun-claude-code
 
 ## 사용법
 
+### 기본 명령어: 설정 복사
+
+`.claude` 설정 파일을 `~/.claude`로 복사합니다.
+
 ```bash
-# 기본 실행 (기존 파일이 있으면 덮어쓰기 확인)
 jun-claude-code
-
-# 미리보기 (실제 복사 없이 복사될 파일 목록 확인)
-jun-claude-code --dry-run
-
-# 강제 덮어쓰기 (확인 없이 모든 파일 복사)
-jun-claude-code --force
 ```
 
-## 포함된 설정
+| 옵션 | 설명 |
+|------|------|
+| `--dry-run`, `-d` | 실제 복사 없이 복사될 파일 목록만 확인 |
+| `--force`, `-f` | 확인 없이 모든 파일 덮어쓰기 |
 
-### Agents (`.claude/agents/`)
+### `init-project`: GitHub Project 연동
 
-| Agent | 설명 |
-|-------|------|
-| `explore` | 빠른 코드베이스 탐색 |
-| `task-planner` | 작업 계획 수립 |
-| `code-writer` | 코드 작성 |
-| `code-reviewer` | 셀프 코드 리뷰 |
-| `git-manager` | Git 작업 (커밋, PR) |
-| `impact-analyzer` | 사이드이펙트 분석 |
-| `qa-tester` | 테스트/빌드 검증 |
-| `architect` | 아키텍처 설계 |
-| `designer` | UI/UX 스타일링 |
-| `context-collector` | Context 수집 |
-| `context-manager` | Context 문서 관리 |
-
-### Skills (`.claude/skills/`)
-
-| Skill | 설명 |
-|-------|------|
-| `Coding` | 공통 코딩 원칙 (SRP, 응집도, 가독성) |
-| `Git` | Git 커밋/PR 규칙 |
-| `Backend` | 백엔드 개발 원칙 (레이어, TypeORM) |
-
-### Hooks (`.claude/hooks/`)
-
-- 워크플로우 순서 강제 프로토콜
-- Skill/Agent 평가 프로토콜
-
-## 커스터마이징
-
-설치 후 `~/.claude/` 디렉토리에서 필요에 맞게 수정하세요.
-
-```
-~/.claude/
-├── CLAUDE.md          # 작업 가이드
-├── agents/            # Agent 정의 수정/추가
-├── skills/            # Skill 가이드 수정/추가
-├── hooks/             # 자동 실행 스크립트
-└── context/           # 프로젝트별 Context (직접 추가)
-```
-
-### 프로젝트별 설정
-
-프로젝트 루트에 `.claude/` 폴더를 만들어 프로젝트별 설정을 추가할 수 있습니다.
-
-```
-your-project/
-├── .claude/
-│   ├── context/       # 프로젝트 아키텍처, 도메인 지식
-│   └── skills/        # 프로젝트 전용 스킬
-└── CLAUDE.md          # 프로젝트 설명
-```
-
-### GitHub Project 연동
-
-`init-project` 커맨드로 GitHub Project 태스크 관리를 프로젝트에 연동할 수 있습니다.
+프로젝트 디렉토리에서 GitHub Project 태스크 관리를 설정합니다.
 
 ```bash
-# 프로젝트 루트에서 실행
 jun-claude-code init-project
 ```
 
-실행하면 다음을 인터랙티브로 설정합니다:
+인터랙티브로 다음을 설정합니다:
+- GitHub Owner (org 또는 user)
+- Project Number
+- Repository (owner/repo 형식)
 
-1. **GitHub Owner** (org 또는 user)
-2. **Project Number**
-3. **Repository** (owner/repo 형식)
+설정 후 생성되는 파일:
 
-설정 완료 후 프로젝트에 생성되는 파일:
+```
+.claude/
+├── project.env                    # GitHub Project 환경변수
+├── settings.json                  # StartSession hook 설정
+├── hooks/
+│   └── task-loader.sh             # 태스크 조회 스크립트
+└── agents/
+    └── project-task-manager.md    # 태스크 관리 Agent
+```
+
+> `read:project` 스코프 필요: `gh auth refresh -s read:project,project`
+
+### `init-context`: Context 자동 생성 설정
+
+GitHub Actions를 통한 Context 문서 자동 생성을 설정합니다.
+
+```bash
+jun-claude-code init-context
+```
+
+설정 후 생성되는 파일:
+
+```
+.github/workflows/
+└── context-gen.yml                # Context 생성 GitHub Actions 워크플로우
+
+.claude/context/
+├── codebase/
+│   └── INDEX.md                   # 코드베이스 모듈 참조 목록
+└── business/
+    └── INDEX.md                   # 비즈니스 도메인 참조 목록
+```
+
+> `ANTHROPIC_API_KEY`를 GitHub repository secrets에 추가해야 합니다.
+
+## 프로젝트 구조
+
+```
+.claude/
+├── CLAUDE.md              # 작업 가이드 (워크플로우, Context 절약 원칙)
+├── agents/                # Subagent 정의 (15종)
+├── skills/                # 스킬 가이드 (코딩, Git, BE, FE 등)
+├── hooks/                 # 자동 실행 스크립트 (워크플로우 강제, 스킬 평가)
+└── context/               # 프로젝트별 Context (직접 추가)
+```
+
+## 커스터마이징
+
+설치 후 `~/.claude/`에서 필요에 맞게 수정할 수 있습니다. 프로젝트별로는 프로젝트 루트에 `.claude/`를 만들어 설정을 추가합니다.
 
 ```
 your-project/
 ├── .claude/
-│   ├── project.env                    # GitHub Project 설정 (GITHUB_PROJECT_OWNER 등)
-│   ├── settings.json                  # StartSession hook (세션 시작 시 태스크 표시)
-│   ├── hooks/
-│   │   └── task-loader.sh             # 태스크 조회 스크립트
-│   └── agents/
-│       └── project-task-manager.md    # 태스크 관리 Agent
+│   ├── context/           # 프로젝트 아키텍처, 도메인 지식
+│   └── skills/            # 프로젝트 전용 스킬
+└── CLAUDE.md              # 프로젝트 설명
 ```
 
-#### 수동 설정
-
-`init-project` 대신 직접 `.claude/project.env`를 생성할 수도 있습니다:
-
-```bash
-# .claude/project.env
-GITHUB_PROJECT_OWNER=your-org
-GITHUB_PROJECT_NUMBER=1
-GITHUB_PROJECT_REPO=your-org/your-repo
-```
-
-#### 필요 권한
-
-GitHub Project 접근에 `read:project` 스코프가 필요합니다:
-
-```bash
-gh auth refresh -s read:project,project
-```
-
-## 핵심 원칙
-
-이 템플릿의 핵심 원칙:
-
-1. **Context 절약**: Main Agent의 Context Window 보존을 위해 Subagent에 작업 위임
-2. **워크플로우 준수**: Planning → Validation → Implementation → Review
-3. **Git 작업 위임**: 모든 Git 작업은 `git-manager` Agent 사용
+- **context/**: 프로젝트의 사실/배경 정보 (아키텍처, 도메인 모델, API 스펙 등)
+- **skills/**: 프로젝트 고유의 작업 절차 (배포 방법, 테스트 규칙 등)
 
 ## License
 

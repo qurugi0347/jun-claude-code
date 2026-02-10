@@ -6,7 +6,8 @@
   "bin": "dist/cli.js",
   "files": [
     "dist",
-    ".claude"
+    ".claude",
+    "templates"
   ],
   "scripts": {
     "build": "tsc",

@@ -1,0 +1,46 @@
+name: Context Auto-Generation
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '.claude/context/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Generate context documents
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          max_turns: "30"
+          allowed_tools: "Read,Write,Edit,Bash(git diff),Bash(git log),Bash(git add),Bash(git commit),Glob,Grep"
+          prompt: |
+            You are the context-generator agent.
+            Read the agent definition at .claude/agents/context-generator.md and
+            the skill guide at .claude/skills/ContextGeneration/SKILL.md, then follow them exactly.
+
+            Analyze the PR diff and generate/update context documents under .claude/context/.
+
+            Steps:
+            1. Run `git diff HEAD~1 --name-only` to get changed files
+            2. For each changed module, create or update .claude/context/codebase/<module>.md
+            3. For each business domain affected, create or update .claude/context/business/<domain>.md
+            4. Update INDEX.md files in both directories
+            5. Commit changes with message "docs: update context for PR changes"
+
+            IMPORTANT:
+            - Never include source code in context documents, only file paths and function names
+            - Only update context for files that actually changed
+            - Follow the exact format specified in the ContextGeneration skill
