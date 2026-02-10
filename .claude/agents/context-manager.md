@@ -1,6 +1,6 @@
 ---
 name: context-manager
-description: .claude 문서의 파일 구조/포맷 최적화 시 호출. 큰 파일을 INDEX.md + 상세파일로 분리, 중복 제거, 테이블 압축으로 토큰 절약. (스펙 내용의 논리적 정합성 검증은 director 담당)
+description: 기존 .claude/context/ 문서의 구조 최적화 시 호출. 큰 파일을 INDEX.md + 상세파일로 분리, 중복 제거, 테이블 압축으로 토큰 절약 (수동 호출, 스펙 정합성 검증은 director 담당)
 keywords: [Context관리, 문서정리, 파일분리, 토큰최적화, 구조개선, 문서품질]
 model: sonnet
 color: green
