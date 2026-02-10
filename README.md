@@ -123,7 +123,7 @@ jun-claude-code init-context
     └── INDEX.md                   # 비즈니스 도메인 참조 목록
 ```
 
-> `ANTHROPIC_API_KEY`를 GitHub repository secrets에 추가해야 합니다.
+> `CLAUDE_CODE_OAUTH_TOKEN`를 GitHub repository secrets에 추가해야 합니다.
 
 ## 프로젝트 구조
 
