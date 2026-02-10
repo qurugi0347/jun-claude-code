@@ -25,18 +25,8 @@ Main Agent의 Context Window는 제한적입니다.
 
 ### 🚨 필수 위임 작업 (Main Agent 직접 수행 금지)
 
-| 작업 유형 | 사용할 Agent | 이유 |
-|----------|-------------|------|
-| 코드베이스 탐색/검색 | explore | 파일 내용이 Main Context에 쌓이지 않음 |
-| 여러 파일 읽기 | explore / context-collector | 탐색 결과만 요약해서 받음 |
-| 패턴/구조 파악 | context-collector | 분석 결과만 받음 |
-| 복잡한 계획 수립 | task-planner | 계획 결과만 받음 |
-| 영향 분석 | impact-analyzer | 분석 결과만 받음 |
-| 코드 리뷰 | code-reviewer | 리뷰 결과만 받음 |
-| 테스트/빌드 검증 | qa-tester | 검증 결과만 받음 |
-| 단순 수정 (lint/build 오류, 오타, 설정값) | simple-code-writer | Main이 직접 수정하지 않음 |
-| 여러 파일 코드 작성 | code-writer / designer | 구현 결과만 받음 |
-| Git 작업 | git-manager | 커밋/PR 결과만 받음 |
+아래 PART 2의 "사용 가능한 Agents" 목록에서 각 Agent의 description을 확인하고,
+작업에 적합한 Agent에 위임하세요. 각 Agent의 description에 위임 이유가 포함되어 있습니다.
 
 ### ❌ 절대 금지 (Main Agent에서 직접 수행 금지)
 

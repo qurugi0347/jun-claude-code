@@ -1,6 +1,6 @@
 ---
 name: simple-code-writer
-description: 1-2개 파일의 간단한 코드 수정 시 호출. Main Agent 대신 단순 수정, 설정 변경, 오타 수정 등을 수행.
+description: lint/build 오류, 오타, 설정값 등 간단한 코드 수정 시 호출. 단순 수정, 설정 변경, 오타 수정 수행.
 keywords: [간단수정, 단순수정, 설정변경, 오타수정, 1-2파일, 소규모수정]
 model: haiku
 color: cyan
