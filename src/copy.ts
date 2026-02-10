@@ -88,6 +88,79 @@ function getDestClaudeDir(): string {
 }
 
 /**
+ * Merge settings.json from source into destination.
+ * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
+ * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
+ */
+function mergeSettingsJson(sourceDir: string, destDir: string): void {
+  const sourcePath = path.join(sourceDir, 'settings.json');
+  const destPath = path.join(destDir, 'settings.json');
+
+  if (!fs.existsSync(sourcePath)) {
+    return;
+  }
+
+  let sourceSettings: Record<string, any>;
+  try {
+    sourceSettings = JSON.parse(fs.readFileSync(sourcePath, 'utf-8'));
+  } catch {
+    console.log(chalk.yellow('  Warning: Could not parse source settings.json, skipping merge.'));
+    return;
+  }
+
+  let destSettings: Record<string, any> = {};
+  if (fs.existsSync(destPath)) {
+    try {
+      destSettings = JSON.parse(fs.readFileSync(destPath, 'utf-8'));
+    } catch {
+      console.log(chalk.yellow('  Warning: Could not parse destination settings.json, creating fresh.'));
+      destSettings = {};
+    }
+  }
+
+  // Merge top-level keys (source fills in missing keys, dest's existing keys preserved)
+  for (const key of Object.keys(sourceSettings)) {
+    if (key === 'hooks') {
+      continue; // hooks are merged separately below
+    }
+    if (!(key in destSettings)) {
+      destSettings[key] = sourceSettings[key];
+    }
+  }
+
+  // Merge hooks
+  const sourceHooks: Record<string, any[]> = sourceSettings.hooks || {};
+  if (!destSettings.hooks) {
+    destSettings.hooks = {};
+  }
+  const destHooks: Record<string, any[]> = destSettings.hooks;
+
+  for (const event of Object.keys(sourceHooks)) {
+    const sourceEntries: any[] = sourceHooks[event] || [];
+    if (!destHooks[event]) {
+      destHooks[event] = [];
+    }
+    const destEntries: any[] = destHooks[event];
+
+    // Build a Set of serialized existing entries for fast duplicate detection
+    const existingSet = new Set(destEntries.map((entry) => JSON.stringify(entry)));
+
+    for (const entry of sourceEntries) {
+      const serialized = JSON.stringify(entry);
+      if (!existingSet.has(serialized)) {
+        destEntries.push(entry);
+        existingSet.add(serialized);
+      }
+    }
+  }
+
+  ensureDir(destDir);
+  fs.writeFileSync(destPath, JSON.stringify(destSettings, null, 2) + '\n', 'utf-8');
+
+  console.log(`  ${chalk.blue('[merged]')} settings.json`);
+}
+
+/**
  * Copy .claude files to user's home directory
  */
 export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> {
@@ -106,11 +179,12 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     process.exit(1);
   }
 
-  // Files to exclude from global copy (project-specific files)
+  // Files to exclude from global copy (project-specific files or merge-handled)
   const EXCLUDE_FROM_GLOBAL = [
     'hooks/task-loader.sh',
     'agents/project-task-manager.md',
     'project.env.example',
+    'settings.json',
   ];
 
   // Get all files to copy
@@ -136,6 +210,11 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
       const exists = fs.existsSync(destPath);
       const status = exists ? chalk.yellow('[overwrite]') : chalk.green('[new]');
       console.log(`  ${status} ${file}`);
+    }
+    // settings.json merge indicator
+    const sourceSettingsExists = fs.existsSync(path.join(sourceDir, 'settings.json'));
+    if (sourceSettingsExists) {
+      console.log(`  ${chalk.blue('[merge]')} settings.json`);
     }
     console.log();
     console.log(chalk.yellow('No files were copied (dry run mode)'));
@@ -169,6 +248,9 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     console.log(`  ${status} ${file}`);
     copiedCount++;
   }
+
+  // Merge settings.json (hooks are merged, not overwritten)
+  mergeSettingsJson(sourceDir, destDir);
 
   console.log();
   console.log(chalk.green(`Done! Copied ${copiedCount} files, skipped ${skippedCount} files.`));
