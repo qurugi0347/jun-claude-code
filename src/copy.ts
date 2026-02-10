@@ -142,14 +142,27 @@ function mergeSettingsJson(sourceDir: string, destDir: string): void {
     }
     const destEntries: any[] = destHooks[event];
 
-    // Build a Set of serialized existing entries for fast duplicate detection
-    const existingSet = new Set(destEntries.map((entry) => JSON.stringify(entry)));
+    // Extract a command-based key from a hook entry for duplicate detection.
+    // Type 1: { type: "command", command: "..." } → returns "type:command"
+    // Type 2: { hooks: [{ type: "command", command: "..." }, ...] } → returns sorted "type:command" joined
+    const getHookKey = (entry: any): string => {
+      if (entry.hooks && Array.isArray(entry.hooks)) {
+        return entry.hooks
+          .map((h: any) => `${h.type || ''}:${h.command || ''}`)
+          .sort()
+          .join('\n');
+      }
+      return `${entry.type || ''}:${entry.command || ''}`;
+    };
+
+    // Build a Set of command keys from existing entries for fast duplicate detection
+    const existingKeys = new Set(destEntries.map((entry) => getHookKey(entry)));
 
     for (const entry of sourceEntries) {
-      const serialized = JSON.stringify(entry);
-      if (!existingSet.has(serialized)) {
+      const key = getHookKey(entry);
+      if (!existingKeys.has(key)) {
         destEntries.push(entry);
-        existingSet.add(serialized);
+        existingKeys.add(key);
       }
     }
   }
