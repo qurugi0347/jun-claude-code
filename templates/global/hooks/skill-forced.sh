@@ -126,14 +126,66 @@ cat << 'EOF'
 
 <phase name="Context 확인">
 
-## PART 1.5: CONTEXT 확인 (Subagent 위임 권장)
+## PART 1.5: PROJECT CONTEXT (프로젝트 배경 정보)
 
-**권장:** Context 확인은 `context-collector` Agent에 위임하세요.
-여러 파일을 직접 읽는 대신, Subagent가 요약하여 전달합니다.
+아래는 이 프로젝트의 배경 정보입니다. 작업 판단 시 참고하세요.
+상세 분석이 필요하면 `context-collector` Agent에 위임하세요.
 
 ```
 Task(subagent_type="context-collector", prompt="[작업 설명]에 필요한 Context를 수집하고 요약해줘")
 ```
+
+EOF
+
+# context 디렉토리에서 business/codebase context 동적 탐색
+# 프로젝트 .claude/context/ 만 탐색 (글로벌 ~/.claude/context/는 탐색하지 않음)
+CONTEXT_BASE_DIR="$PROJECT_CLAUDE_DIR/context"
+HAS_CONTEXT=false
+
+for context_type in "business" "codebase"; do
+  context_dir="$CONTEXT_BASE_DIR/$context_type"
+  if [ -d "$context_dir" ]; then
+    HAS_CONTEXT=true
+
+    # 헤더 출력
+    if [ "$context_type" = "business" ]; then
+      echo "---"
+      echo ""
+      echo "### Business Context"
+      echo ""
+    else
+      echo "---"
+      echo ""
+      echo "### Codebase Context"
+      echo ""
+    fi
+
+    # INDEX.md가 있으면 내용 출력
+    if [ -f "$context_dir/INDEX.md" ]; then
+      cat "$context_dir/INDEX.md"
+      echo ""
+    fi
+
+    # INDEX.md 외의 .md 파일 목록을 상세 문서로 표시
+    has_detail_docs=false
+    for md_file in "$context_dir"/*.md; do
+      if [ -f "$md_file" ] && [ "$(basename "$md_file")" != "INDEX.md" ]; then
+        if [ "$has_detail_docs" = false ]; then
+          has_detail_docs=true
+        fi
+        echo "상세 문서: \`$(basename "$md_file")\`"
+      fi
+    done
+    echo ""
+  fi
+done
+
+if [ "$HAS_CONTEXT" = false ]; then
+  echo "프로젝트 context가 없습니다. (.claude/context/business/ 또는 .claude/context/codebase/ 디렉토리가 없음)"
+  echo ""
+fi
+
+cat << 'EOF'
 
 </phase>
 
