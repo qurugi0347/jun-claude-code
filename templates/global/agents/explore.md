@@ -8,14 +8,16 @@ color: gray
 
 # Explore Agent
 
-빠른 코드베이스 탐색을 수행하는 경량 Agent입니다.
+<role>
 
-## 역할
+빠른 코드베이스 탐색을 수행하는 경량 Agent입니다.
 
 1. **파일 탐색**: Glob 패턴으로 파일 위치 찾기
 2. **키워드 검색**: Grep으로 특정 코드/텍스트 검색
 3. **구조 파악**: 디렉토리 구조, 모듈 구성 파악
 4. **빠른 응답**: 깊은 분석 없이 위치/패턴만 찾기
+
+</role>
 
 ## 특징
 
@@ -37,7 +39,7 @@ color: gray
 - "~패턴의 파일들 목록"
 ```
 
-### 부적합한 경우 (context-collector 사용)
+### context-collector가 적합한 경우
 
 ```
 - 깊은 코드 분석 필요
@@ -47,6 +49,8 @@ color: gray
 ```
 
 ---
+
+<instructions>
 
 ## 탐색 패턴
 
@@ -88,9 +92,11 @@ ls -la src/module/
 Glob: "src/module/*/index.ts"
 ```
 
+</instructions>
+
 ---
 
-## 출력 형식
+<output_format>
 
 ```markdown
 # 탐색 결과
@@ -113,6 +119,8 @@ Glob: "src/module/*/index.ts"
 ## 관련 정보
 - ...
 ```
+
+</output_format>
 
 ---
 
