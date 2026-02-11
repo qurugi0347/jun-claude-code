@@ -2,12 +2,12 @@
 
 이 파일은 Claude Code의 작업 워크플로우와 규칙을 정의합니다.
 
-## Context 절약 원칙 (최우선 - 반드시 준수)
+## Context 절약 원칙 (최우선)
 
 Main Agent의 Context Window는 제한적입니다.
-**Subagent가 할 수 있는 작업은 반드시 Subagent에 위임하세요!**
+**Subagent가 할 수 있는 작업은 Subagent에 위임하세요.**
 
-### 필수 위임 작업 (Main Agent 직접 수행 금지)
+### 필수 위임 작업 (Subagent 전담)
 
 | 작업 | Agent | 이유 |
 |------|-------|------|
@@ -18,40 +18,45 @@ Main Agent의 Context Window는 제한적입니다.
 | 영향 분석 | `impact-analyzer` | 분석 결과만 받음 |
 | 코드 리뷰 | `code-reviewer` | 리뷰 결과만 받음 |
 | 테스트/빌드 검증 | `qa-tester` | 검증 결과만 받음 |
-| 단순 수정 (lint/build 오류, 오타, 설정값) | `simple-code-writer` | Main이 직접 수정하지 않음 |
+| 단순 수정 (lint/build 오류, 오타, 설정값) | `simple-code-writer` | Main Context 보존 |
 | 여러 파일 코드 작성 | `code-writer` | 구현 결과만 받음 |
 | Git 작업 | `git-manager` | 커밋/PR 결과만 받음 |
 | Context 문서 정리 | `context-manager` | 파일 분리, 토큰 최적화 |
 
-### 절대 금지 (Main Agent에서 직접 수행 금지)
+<delegation_rules>
 
-- Main Agent에서 직접 Glob/Grep으로 여러 파일 탐색
-- Main Agent에서 직접 여러 파일 Read (2개 이상)
-- Main Agent에서 복잡한 분석/계획 수행
-- Main Agent에서 3개 이상 파일 수정
-- **Main Agent에서 직접 Git 명령어 실행 (git add, commit, push 등)**
-- **Main Agent에서 직접 코드 수정 (Edit/Write로 코드 파일 수정)**
+### Subagent 전용 작업
 
-### Main Agent 허용 작업 (이것만 직접 수행)
+| 작업 | 전담 Agent |
+|------|-----------|
+| 파일 탐색 (Glob/Grep) | explore Agent가 전담 |
+| 2개 이상 파일 읽기 | explore/context-collector가 전담 |
+| 복잡한 분석/계획 | task-planner에 위임 |
+| 파일 수정 | code-writer가 전담 |
+| Git 명령어 실행 (git add, commit, push 등) | git-manager에 위임 |
+| 코드 수정 (Edit/Write) | code-writer/simple-code-writer에 위임 |
+
+### Main Agent 전담 작업
 
 - 사용자와 대화/질문 응답
 - Task 흐름 관리 (TaskCreate, TaskUpdate, TaskList)
 - Subagent 호출 및 결과 전달
-- 단순 명령 실행 (Bash) - **단, Git 명령어 제외**
+- 단순 명령 실행 (Bash) - **Git/코드수정은 Subagent 전담**
 
-### Main Agent 코드 수정 금지
+</delegation_rules>
 
-Main Agent는 **절대 코드를 직접 수정하지 않습니다.**
-모든 코드 수정은 Subagent에 위임하세요.
+### 코드 수정 위임 규칙
+
+모든 코드 수정은 Subagent가 전담합니다.
 
 | 수정 유형 | Agent | 모델 |
 |----------|-------|------|
 | lint/build 오류 수정, 오타, 설정값 변경 등 단순 수정 | `simple-code-writer` | haiku |
 | 로직 작성, 기능 구현, 리팩토링 (파일 수 무관) | `code-writer` | opus |
 
-### Git 작업은 반드시 Subagent 사용
+### Git 작업은 Subagent 전담
 
-**모든 Git 작업은 `git-manager` Agent에 위임하세요!**
+**모든 Git 작업은 `git-manager` Agent에 위임하세요.**
 
 ```
 Task(subagent_type="git-manager", prompt="현재 변경사항을 커밋해줘")
@@ -72,9 +77,13 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 | lint/build 오류, 오타, 설정값 등 단순 수정 | `simple-code-writer` Agent에 위임 |
 | 로직 작성, 기능 구현, 리팩토링 | `code-writer` Agent에 위임 |
 
+<workflow>
+
 ## 작업 워크플로우 (필수)
 
 모든 코드 작업은 아래 순서를 따릅니다:
+
+<phase name="계획">
 
 ### Phase 1: 계획 (Planning)
 
@@ -98,6 +107,10 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 4. 작성된 내용을 사용자에게 Confirm 받음 **필수**
 ```
 
+</phase>
+
+<phase name="검증">
+
 ### Phase 2: 검증 (Validation)
 
 ```
@@ -107,19 +120,27 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
    - Breaking Change 여부 확인
 ```
 
+</phase>
+
+<phase name="구현">
+
 ### Phase 3: 구현 (Implementation)
 
 ```
 5. 작은 단위로 코드 수정
    - 독립적으로 빌드 가능한 단위로 작업
    - 한 번에 하나의 기능/수정만 진행
-   - 빌드 에러가 발생하지 않는 상태 유지
+   - 빌드 가능 상태를 유지
 
 6. 단위별 커밋
-   - 수정한 파일만 git add (git add -A 금지)
+   - 수정한 파일만 개별 지정하여 git add
    - 명확한 커밋 메시지 작성
    - 커밋 단위: 하나의 논리적 변경
 ```
+
+</phase>
+
+<phase name="리뷰">
 
 ### Phase 4: 리뷰 (Review)
 
@@ -131,8 +152,10 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 8. Task 완료 검증
    - 원래 요청사항이 모두 충족되었는지 확인
    - 예상한 동작이 구현되었는지 확인
-   - 누락된 엣지케이스 없는지 점검
+   - 모든 엣지케이스가 처리되었는지 점검
 ```
+
+</phase>
 
 ### 워크플로우 요약
 
@@ -148,7 +171,11 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 └─────────────────────────────────────────────────────────────┘
 ```
 
+</workflow>
+
 ## 문서 참조
+
+<reference>
 
 ### Context (사실/배경) - "우리 프로젝트는 이렇다"
 
@@ -162,6 +189,8 @@ Task(subagent_type="git-manager", prompt="PR을 생성해줘")
 | Git 커밋/PR 생성 | `.claude/skills/Git/SKILL.md` |
 | PR 리뷰 | `.claude/skills/Git/pr-review.md` |
 | PR 피드백 적용 | `.claude/skills/Git/pr-apply.md` |
+
+</reference>
 
 ---
 
