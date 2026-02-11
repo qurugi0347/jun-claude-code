@@ -50,6 +50,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
           git add .claude/context/
           git diff --staged --quiet || git commit -m "docs: context 문서 자동 업데이트"
           git push origin HEAD:refs/heads/${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
