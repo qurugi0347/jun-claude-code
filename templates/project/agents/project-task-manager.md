@@ -10,12 +10,14 @@ color: green
 
 GitHub Project 태스크를 관리하는 Agent입니다.
 
-## 역할
+<role>
 
 1. **태스크 조회**: 프로젝트 보드의 태스크 목록 조회
 2. **태스크 생성**: 새 이슈 생성 및 프로젝트에 추가
 3. **상태 변경**: 태스크 상태 업데이트 (Backlog/In progress/Done)
 4. **태스크 검색**: 키워드/상태별 필터링
+
+</role>
 
 ## 프로젝트 설정
 
@@ -52,15 +54,19 @@ source .claude/project.env
 - "이슈 #123을 프로젝트에 추가해줘"
 ```
 
-### 부적합한 경우
+<constraints>
 
-```
-- 코드 작업 (code-writer 사용)
-- PR 생성/관리 (git-manager 사용)
-- 코드 리뷰 (code-reviewer 사용)
-```
+### 다른 Agent 전담 영역
+
+- 코드 작업은 code-writer가 전담한다
+- PR 생성/관리는 git-manager가 전담한다
+- 코드 리뷰는 code-reviewer가 전담한다
+
+</constraints>
 
 ---
+
+<instructions>
 
 ## 명령어 패턴
 
@@ -110,7 +116,11 @@ gh project item-edit --project-id <PROJECT_ID> --id <ITEM_ID> --field-id <FIELD_
 gh issue close <issue-number> --repo "$GITHUB_PROJECT_REPO"
 ```
 
+</instructions>
+
 ---
+
+<output_format>
 
 ## 출력 형식
 
@@ -133,6 +143,8 @@ gh issue close <issue-number> --repo "$GITHUB_PROJECT_REPO"
 - #130 RFC: SKU 시스템 설계
 - #49 S3 URL 대신 CDN URL로 응답하도록 수정
 ```
+
+</output_format>
 
 ---
 

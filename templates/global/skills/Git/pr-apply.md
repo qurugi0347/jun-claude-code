@@ -10,6 +10,8 @@ user-invocable: true
 
 PR 리뷰 피드백을 코드에 반영하는 가이드.
 
+<instructions>
+
 ## Apply Workflow
 
 ### Step 1: 리뷰 피드백 확인
@@ -58,6 +60,10 @@ git push origin feature/branch-name
 gh pr comment <PR번호> --body "리뷰 피드백 반영 완료했습니다. 재확인 부탁드립니다."
 ```
 
+</instructions>
+
+<rules>
+
 ## 피드백 대응 원칙
 
 ### 수용할 때
@@ -77,11 +83,17 @@ gh pr comment <PR번호> --body "리뷰 피드백 반영 완료했습니다. 재
 - 해당 코멘트에 직접 답변
 - 필요시 코드에 주석 추가
 
+</rules>
+
+<checklist>
+
 ## 체크리스트
 
-- [ ] 모든 Critical 피드백 반영
-- [ ] Suggestion 검토 및 결정
-- [ ] Question 답변 완료
-- [ ] `lint` 통과
-- [ ] `build` 성공
-- [ ] 리뷰어에게 재확인 요청
+- [ ] 모든 Critical 피드백을 반영했는가?
+- [ ] Suggestion을 검토하고 결정했는가?
+- [ ] Question에 답변을 완료했는가?
+- [ ] `lint` 통과하는가?
+- [ ] `build` 성공하는가?
+- [ ] 리뷰어에게 재확인을 요청했는가?
+
+</checklist>

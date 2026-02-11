@@ -7,6 +7,8 @@ estimated_tokens: ~600
 
 # Git 작업 가이드
 
+<rules>
+
 ## Commit 메시지
 
 ### 형식
@@ -34,7 +36,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### 작성 원칙
 
 - **한글 사용**, 50자 이내
-- **현재형**: "추가함" → "추가"
+- **현재형**: "추가함" 대신 "추가"
 - **Why 중심**: 무엇보다 왜 변경했는지
 
 ### Commit 단위
@@ -42,6 +44,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - 한 커밋 = 한 가지 목적
 - 각 커밋 후 빌드 에러 없음
 - 되돌리기 용이한 단위
+
+</rules>
 
 ---
 
@@ -55,6 +59,8 @@ chore/{작업명}       # 설정/빌드
 ```
 
 ---
+
+<instructions>
 
 ## PR (Pull Request) 생성
 
@@ -166,20 +172,24 @@ EOF
 )"
 ```
 
+</instructions>
+
 ---
 
-## Git 명령어 주의사항
+<rules>
 
-### 금지
+## Git 명령어 안전 규칙
 
-| 명령어 | 이유 |
+### 사용 제한 명령어
+
+| 명령어 | 대안 |
 |--------|------|
-| `git add -A`, `git add .` | 민감 파일 포함 위험 |
-| `git push --force` | 히스토리 손상 |
-| `git reset --hard` | 작업 손실 위험 |
-| `--no-verify` | hook 우회 금지 |
+| `git add -A`, `git add .` | 파일을 지정하여 `git add path/to/file` 사용 |
+| `git push --force` | `git push` 또는 `--force-with-lease` 사용 |
+| `git reset --hard` | `git stash` 또는 `git checkout -- file` 사용 |
+| `--no-verify` | hook을 통과하도록 코드 수정 |
 
-### 권장
+### 권장 패턴
 
 ```bash
 # 파일 지정하여 add
@@ -196,7 +206,11 @@ EOF
 )"
 ```
 
+</rules>
+
 ---
+
+<checklist>
 
 ## PR 생성 전 체크리스트
 
@@ -207,7 +221,11 @@ EOF
 - [ ] 영향 범위 분석 완료
 - [ ] Breaking change 명시 (해당시)
 
+</checklist>
+
 ---
+
+<instructions>
 
 ## PR 생성 후 워크플로우
 
@@ -227,14 +245,18 @@ gh pr view <PR번호>
 
 | 항목 | 확인 |
 |------|------|
-| 불필요한 코드/주석 제거 | ☐ |
-| 디버그 코드 제거 (console.log 등) | ☐ |
-| 하드코딩된 값 없음 | ☐ |
-| 타입 안전성 확인 | ☐ |
-| 에러 핸들링 적절함 | ☐ |
-| 네이밍 컨벤션 준수 | ☐ |
+| 불필요한 코드/주석 제거 | |
+| 디버그 코드 제거 (console.log 등) | |
+| 하드코딩된 값 확인 | |
+| 타입 안전성 확인 | |
+| 에러 핸들링 적절함 | |
+| 네이밍 컨벤션 준수 | |
+
+<reference>
 
 > 상세 체크리스트: `.claude/skills/Git/pr-review.md`
+
+</reference>
 
 **Self Review 이슈 발견 시:**
 
@@ -287,7 +309,13 @@ git push
 gh pr comment <PR번호> --body "리뷰 피드백 반영 완료. 재확인 부탁드립니다."
 ```
 
+<reference>
+
 > 상세 가이드: `.claude/skills/Git/pr-apply.md`
+
+</reference>
+
+</instructions>
 
 ---
 
@@ -308,9 +336,13 @@ graph TD
   H -->|Approve| J[✅ Merge]
 ```
 
+<reference>
+
 ### 관련 Skill 참조
 
 | 단계 | Skill |
 |------|-------|
 | PR Review | `.claude/skills/Git/pr-review.md` |
 | PR Apply | `.claude/skills/Git/pr-apply.md` |
+
+</reference>
