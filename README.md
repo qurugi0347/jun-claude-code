@@ -6,7 +6,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 
 ### Agents (`templates/global/agents/`)
 
-작업별 전문 Subagent 15종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
+작업별 전문 Subagent 13종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
 
 | Agent | 역할 |
 |-------|------|
@@ -23,8 +23,6 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 | `director` | 작업 총괄 디렉터 |
 | `context-collector` | Context 수집 |
 | `context-manager` | Context 문서 관리 |
-| `context-generator` | Context 자동 생성 |
-| `project-task-manager` | GitHub Project 태스크 관리 |
 
 ### Skills (`templates/global/skills/`)
 
@@ -36,7 +34,6 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 | `React` | React 개발 (TanStack Router, React Hook Form, Tailwind) |
 | `Documentation` | .claude 문서 작성 가이드 |
 | `Director` | 디렉터 Agent 운영 스킬 |
-| `ContextGeneration` | Context 자동 생성 스킬 |
 
 ### Hooks (`templates/global/hooks/`)
 
@@ -44,7 +41,21 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 |------|------|
 | `workflow-enforced.sh` | 워크플로우 순서 강제 프로토콜 |
 | `skill-forced.sh` | Skill/Agent 평가 프로토콜 |
-| `task-loader.sh` | GitHub Project 태스크 조회 |
+
+### Project Agents (`templates/project/agents/`)
+
+프로젝트 `.claude/`에 설치되는 프로젝트별 Agent.
+
+| Agent | 역할 |
+|-------|------|
+| `project-task-manager` | GitHub Project 태스크 관리 |
+| `context-generator` | Context 자동 생성 |
+
+### Project Skills (`templates/project/skills/`)
+
+| Skill | 설명 |
+|-------|------|
+| `ContextGeneration` | Context 자동 생성 스킬 |
 
 ### Workflow
 
@@ -116,11 +127,17 @@ jun-claude-code init-context
 .github/workflows/
 └── context-gen.yml                # Context 생성 GitHub Actions 워크플로우
 
-.claude/context/
-├── codebase/
-│   └── INDEX.md                   # 코드베이스 모듈 참조 목록
-└── business/
-    └── INDEX.md                   # 비즈니스 도메인 참조 목록
+.claude/
+├── agents/
+│   └── context-generator.md       # Context 자동 생성 Agent
+├── skills/
+│   └── ContextGeneration/
+│       └── SKILL.md               # Context 자동 생성 Skill
+└── context/
+    ├── codebase/
+    │   └── INDEX.md               # 코드베이스 모듈 참조 목록
+    └── business/
+        └── INDEX.md               # 비즈니스 도메인 참조 목록
 ```
 
 > `CLAUDE_CODE_OAUTH_TOKEN`를 GitHub repository secrets에 추가해야 합니다.
@@ -131,12 +148,13 @@ jun-claude-code init-context
 templates/
 ├── global/                # ~/.claude/에 설치되는 전역 설정
 │   ├── CLAUDE.md          # 작업 가이드 (워크플로우, Context 절약 원칙)
-│   ├── agents/            # Subagent 정의 (15종)
+│   ├── agents/            # Subagent 정의 (13종)
 │   ├── skills/            # 스킬 가이드 (코딩, Git, BE, FE 등)
 │   ├── hooks/             # 자동 실행 스크립트 (워크플로우 강제, 스킬 평가)
 │   └── settings.json      # Claude Code 전역 설정
 └── project/               # 프로젝트 .claude/에 설치되는 프로젝트별 설정
-    ├── agents/            # project-task-manager Agent
+    ├── agents/            # project-task-manager, context-generator Agent
+    ├── skills/            # ContextGeneration Skill
     ├── hooks/             # task-loader Hook
     ├── workflows/         # context-gen Workflow
     └── project.env.example

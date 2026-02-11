@@ -30,7 +30,33 @@ export async function initContext(): Promise<void> {
     console.log(chalk.green('  ✓ Created .github/workflows/context-gen.yml'));
   }
 
-  // 2. .claude/context/codebase/ 디렉토리 + stub INDEX.md
+  // 2. context-generator Agent 복사
+  const agentSrc = path.join(getTemplatesDir(), 'agents', 'context-generator.md');
+  const agentDest = path.join(cwd, '.claude', 'agents', 'context-generator.md');
+
+  fs.mkdirSync(path.dirname(agentDest), { recursive: true });
+
+  if (fs.existsSync(agentDest)) {
+    console.log(chalk.yellow('  ⚠ .claude/agents/context-generator.md already exists, skipping'));
+  } else {
+    fs.copyFileSync(agentSrc, agentDest);
+    console.log(chalk.green('  ✓ Created .claude/agents/context-generator.md'));
+  }
+
+  // 3. ContextGeneration Skill 복사
+  const skillSrc = path.join(getTemplatesDir(), 'skills', 'ContextGeneration', 'SKILL.md');
+  const skillDest = path.join(cwd, '.claude', 'skills', 'ContextGeneration', 'SKILL.md');
+
+  fs.mkdirSync(path.dirname(skillDest), { recursive: true });
+
+  if (fs.existsSync(skillDest)) {
+    console.log(chalk.yellow('  ⚠ .claude/skills/ContextGeneration/SKILL.md already exists, skipping'));
+  } else {
+    fs.copyFileSync(skillSrc, skillDest);
+    console.log(chalk.green('  ✓ Created .claude/skills/ContextGeneration/SKILL.md'));
+  }
+
+  // 4. .claude/context/codebase/ 디렉토리 + stub INDEX.md
   const codebaseDirPath = path.join(cwd, '.claude', 'context', 'codebase');
   const codebaseIndex = path.join(codebaseDirPath, 'INDEX.md');
 
@@ -54,7 +80,7 @@ description: 코드베이스 모듈 참조 목록
     console.log(chalk.green('  ✓ Created .claude/context/codebase/INDEX.md'));
   }
 
-  // 3. .claude/context/business/ 디렉토리 + stub INDEX.md
+  // 5. .claude/context/business/ 디렉토리 + stub INDEX.md
   const businessDirPath = path.join(cwd, '.claude', 'context', 'business');
   const businessIndex = path.join(businessDirPath, 'INDEX.md');
 
@@ -82,7 +108,7 @@ description: 비즈니스 도메인 참조 목록
     console.log(chalk.green('  ✓ Created .claude/context/business/INDEX.md'));
   }
 
-  // 4. 안내 메시지
+  // 6. 안내 메시지
   console.log(chalk.bold('\n✅ Context auto-generation setup complete!\n'));
   console.log(chalk.cyan('Next steps:'));
   console.log(chalk.cyan('  1. Add CLAUDE_CODE_OAUTH_TOKEN to your repository secrets'));
