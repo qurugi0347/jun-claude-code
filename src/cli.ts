@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import chalk from 'chalk';
 import { copyClaudeFiles } from './copy';
 import { initContext } from './init-context';
+import { validateTemplates } from './validate';
 
 const program = new Command();
 
@@ -56,6 +58,22 @@ program
         console.error('Error:', error.message);
       } else {
         console.error('An unexpected error occurred');
+      }
+      process.exit(1);
+    }
+  });
+
+program
+  .command('validate')
+  .description('Validate template directory structure')
+  .action(async () => {
+    try {
+      await validateTemplates();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(chalk.red('Validation failed:'), error.message);
+      } else {
+        console.error(chalk.red('Validation failed'));
       }
       process.exit(1);
     }
