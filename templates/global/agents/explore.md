@@ -39,13 +39,21 @@ color: gray
 - "~패턴의 파일들 목록"
 ```
 
-### context-collector가 적합한 경우
+### 다른 Agent가 적합한 경우
 
+**project-context-collector** (프로젝트 배경 정보):
+```
+- .claude/context/ 문서에서 배경 정보 수집
+- 비즈니스 규칙/도메인 용어 확인
+- 모듈 구조/아키텍처 개요 파악
+```
+
+**context-collector** (소스 코드 DEEP 탐색):
 ```
 - 깊은 코드 분석 필요
-- 비즈니스 로직 이해 필요
 - 여러 파일 간 관계 파악
-- Context 문서 기반 작업
+- Skill/Agent 식별
+- 코드 패턴/구현 방식 분석
 ```
 
 ---
@@ -124,12 +132,13 @@ Glob: "src/module/*/index.ts"
 
 ---
 
-## context-collector와의 차이
+## 관련 Agent 비교
 
-| 항목 | explore | context-collector |
-|------|---------|-------------------|
-| 모델 | Haiku | Sonnet |
-| 속도 | 빠름 | 보통 |
-| 깊이 | 얕음 (위치만) | 깊음 (분석 포함) |
-| 비용 | 낮음 | 보통 |
-| 용도 | "어디 있지?" | "어떻게 동작하지?" |
+| 항목 | explore | project-context-collector | context-collector |
+|------|---------|--------------------------|-------------------|
+| 모델 | Haiku | Sonnet | Opus |
+| 속도 | 빠름 | 보통 | 느림 |
+| 깊이 | 얕음 (위치만) | 중간 (문서 분석) | 깊음 (코드 분석) |
+| 비용 | 낮음 | 보통 | 높음 |
+| 대상 | 소스 코드 | .claude/context/ 문서 | 소스 코드 + Skill/Agent |
+| 용도 | "어디 있지?" | "프로젝트 배경이 뭐지?" | "어떻게 동작하지?" |

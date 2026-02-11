@@ -2,7 +2,7 @@
 name: context-generator
 description: GitHub Action에서 PR diff 기반으로 .claude/context/ 문서를 자동 생성/업데이트 (CI 전용)
 keywords: [context, PR, diff, codebase, business, 문서생성]
-model: sonnet
+model: opus
 color: green
 ---
 

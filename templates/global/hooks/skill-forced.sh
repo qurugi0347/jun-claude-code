@@ -33,6 +33,8 @@ Main Agent의 Context Window는 제한적입니다.
 | 작업 | 전담 Agent |
 |------|-----------|
 | 파일 탐색 (Glob/Grep) | explore Agent가 전담 |
+| .claude/context/ 문서 탐색 | project-context-collector가 전담 |
+| 소스 코드 패턴/구조 파악 | context-collector가 전담 |
 | 2개 이상 파일 읽기 | explore/context-collector가 전담 |
 | 복잡한 분석/계획 | task-planner에 위임 |
 | 파일 수정 (3개 이상) | code-writer가 전담 |
@@ -129,11 +131,18 @@ cat << 'EOF'
 ## PART 1.5: PROJECT CONTEXT (프로젝트 배경 정보)
 
 아래는 이 프로젝트의 배경 정보입니다. 작업 판단 시 참고하세요.
-상세 분석이 필요하면 `context-collector` Agent에 위임하세요.
+상세 분석이 필요하면 아래 Agent에 위임하세요.
 
-```
-Task(subagent_type="context-collector", prompt="[작업 설명]에 필요한 Context를 수집하고 요약해줘")
-```
+| 필요한 정보 | Agent | 호출 예시 |
+|------------|-------|----------|
+| 프로젝트 배경/도메인 지식 | project-context-collector | \`Task(subagent_type="project-context-collector", prompt="[작업]에 필요한 프로젝트 배경 정보를 수집해줘")\` |
+| 소스 코드 패턴/구현 방식 | context-collector | \`Task(subagent_type="context-collector", prompt="[작업]에 필요한 코드 패턴을 수집해줘")\` |
+
+두 Agent를 순차적으로 사용하면 가장 포괄적인 Context를 수집할 수 있습니다:
+\`\`\`
+1. project-context-collector → 프로젝트 배경 수집
+2. context-collector → 소스 코드 패턴 수집
+\`\`\`
 
 EOF
 

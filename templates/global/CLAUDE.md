@@ -13,7 +13,8 @@ Main Agent의 Context Window는 제한적입니다.
 |------|-------|------|
 | 코드베이스 탐색/검색 | `explore` | 파일 내용이 Main Context에 쌓이지 않음 |
 | 여러 파일 읽기 | `explore`, `context-collector` | 탐색 결과만 요약해서 받음 |
-| 패턴/구조 파악 | `context-collector` | 분석 결과만 받음 |
+| .claude/context/ 문서 수집 | `project-context-collector` | 프로젝트 배경 정보만 요약해서 받음 |
+| 코드 패턴/구조 파악 | `context-collector` | 분석 결과만 받음 |
 | 복잡한 계획 수립 | `task-planner` | 계획 결과만 받음 |
 | 영향 분석 | `impact-analyzer` | 분석 결과만 받음 |
 | 코드 리뷰 | `code-reviewer` | 리뷰 결과만 받음 |
@@ -30,6 +31,8 @@ Main Agent의 Context Window는 제한적입니다.
 | 작업 | 전담 Agent |
 |------|-----------|
 | 파일 탐색 (Glob/Grep) | explore Agent가 전담 |
+| .claude/context/ 문서 탐색 | project-context-collector가 전담 |
+| 소스 코드 패턴/구조 파악 | context-collector가 전담 |
 | 2개 이상 파일 읽기 | explore/context-collector가 전담 |
 | 복잡한 분석/계획 | task-planner에 위임 |
 | 파일 수정 | code-writer가 전담 |

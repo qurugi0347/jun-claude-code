@@ -21,7 +21,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 | `architect` | 아키텍처 설계 |
 | `designer` | UI/UX 스타일링 |
 | `director` | 작업 총괄 디렉터 |
-| `context-collector` | Context 수집 |
+| `context-collector` | 소스 코드 기반 Context 수집 |
 | `context-manager` | Context 문서 관리 |
 
 ### Skills (`templates/global/skills/`)
@@ -50,6 +50,7 @@ Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workfl
 |-------|------|
 | `project-task-manager` | GitHub Project 태스크 관리 |
 | `context-generator` | Context 자동 생성 |
+| `project-context-collector` | .claude/context/ 문서 기반 프로젝트 배경 수집 |
 
 ### Project Skills (`templates/project/skills/`)
 
