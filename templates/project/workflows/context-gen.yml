@@ -40,7 +40,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           show_full_output: true
-          claude_args: '--allowedTools "Bash(git:*),Bash(ls:*),Bash(mkdir:*),Read,Write,Edit,Glob,Grep"'
+          claude_args: '--model opus --allowedTools "Bash(git:*),Bash(ls:*),Bash(mkdir:*),Read,Write,Edit,Glob,Grep"'
           prompt: |
             # 에이전트 정의
             ${{ steps.read-skills.outputs.agent_def }}
@@ -63,13 +63,40 @@ jobs:
             - 위 스킬 가이드에 명시된 정확한 형식 따르기
             - 커밋하지 마세요. 파일 생성/수정만 하세요.
 
-      - name: Push context changes
+      - name: Push context to separate branch and create PR
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+
           git add .claude/context/
-          git diff --staged --quiet || git commit -m "docs: context 문서 자동 업데이트"
-          git push origin HEAD:refs/heads/${{ github.head_ref }}
+          if git diff --staged --quiet; then
+            echo "No context changes detected"
+            exit 0
+          fi
+
+          CONTEXT_BRANCH="${{ github.head_ref }}-generated-context"
+          git commit -m "docs: context 문서 자동 업데이트"
+          git push --force origin HEAD:refs/heads/${CONTEXT_BRANCH}
+
+          # 기존 PR이 있으면 스킵, 없으면 생성
+          EXISTING_PR=$(gh pr list --head "${CONTEXT_BRANCH}" --base "${{ github.head_ref }}" --json number --jq '.[0].number')
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --head "${CONTEXT_BRANCH}" \
+              --base "${{ github.head_ref }}" \
+              --title "docs: context 문서 자동 업데이트" \
+              --body "$(cat <<'PREOF'
+          ## Auto-generated Context
+
+          PR의 코드 변경을 분석하여 자동 생성된 context 문서입니다.
+          선택적으로 머지하여 반영할 수 있습니다.
+
+          > 이 PR은 re-sync 시 force push로 업데이트됩니다.
+          PREOF
+          )"
+          else
+            echo "PR #${EXISTING_PR} already exists, force-pushed updates"
+          fi
         env:
           GITHUB_TOKEN: ${{ github.token }}

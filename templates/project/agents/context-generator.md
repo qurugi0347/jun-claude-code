@@ -52,12 +52,11 @@ git diff HEAD~1 --name-only
 - 도메인별 `.md` 파일 생성/업데이트
 - `business/INDEX.md` 업데이트
 
-### 6. 커밋
+### 6. 반영
 
-```bash
-git add .claude/context/
-git commit -m "docs: update context for PR changes"
-```
+- 생성된 context 문서는 `{브랜치명}-generated-context` 브랜치에 push됩니다.
+- 원본 PR 브랜치로 별도 PR이 생성되어 선택적으로 머지할 수 있습니다.
+- PR이 re-sync되면 context 브랜치가 force push로 업데이트됩니다.
 
 ## 제약사항
 
