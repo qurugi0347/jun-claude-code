@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as readline from 'readline';
 import chalk from 'chalk';
 
 /**
@@ -7,6 +8,24 @@ import chalk from 'chalk';
  */
 function getTemplatesDir(): string {
   return path.resolve(__dirname, '..', 'templates', 'project');
+}
+
+/**
+ * Prompt user for confirmation using readline
+ */
+function askConfirmation(question: string): Promise<boolean> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      const normalized = answer.toLowerCase().trim();
+      resolve(normalized === 'y' || normalized === 'yes');
+    });
+  });
 }
 
 /**
@@ -24,7 +43,15 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(workflowDest), { recursive: true });
 
   if (fs.existsSync(workflowDest)) {
-    console.log(chalk.yellow('  ⚠ .github/workflows/context-gen.yml already exists, skipping'));
+    const shouldOverwrite = await askConfirmation(
+      chalk.yellow('  ⚠ .github/workflows/context-gen.yml already exists. Overwrite? (y/N): ')
+    );
+    if (shouldOverwrite) {
+      fs.copyFileSync(templateSrc, workflowDest);
+      console.log(chalk.green('  ✓ Replaced .github/workflows/context-gen.yml'));
+    } else {
+      console.log(chalk.gray('  Skipped: .github/workflows/context-gen.yml'));
+    }
   } else {
     fs.copyFileSync(templateSrc, workflowDest);
     console.log(chalk.green('  ✓ Created .github/workflows/context-gen.yml'));
@@ -37,7 +64,15 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(agentDest), { recursive: true });
 
   if (fs.existsSync(agentDest)) {
-    console.log(chalk.yellow('  ⚠ .claude/agents/context-generator.md already exists, skipping'));
+    const shouldOverwrite = await askConfirmation(
+      chalk.yellow('  ⚠ .claude/agents/context-generator.md already exists. Overwrite? (y/N): ')
+    );
+    if (shouldOverwrite) {
+      fs.copyFileSync(agentSrc, agentDest);
+      console.log(chalk.green('  ✓ Replaced .claude/agents/context-generator.md'));
+    } else {
+      console.log(chalk.gray('  Skipped: .claude/agents/context-generator.md'));
+    }
   } else {
     fs.copyFileSync(agentSrc, agentDest);
     console.log(chalk.green('  ✓ Created .claude/agents/context-generator.md'));
@@ -50,7 +85,15 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(skillDest), { recursive: true });
 
   if (fs.existsSync(skillDest)) {
-    console.log(chalk.yellow('  ⚠ .claude/skills/ContextGeneration/SKILL.md already exists, skipping'));
+    const shouldOverwrite = await askConfirmation(
+      chalk.yellow('  ⚠ .claude/skills/ContextGeneration/SKILL.md already exists. Overwrite? (y/N): ')
+    );
+    if (shouldOverwrite) {
+      fs.copyFileSync(skillSrc, skillDest);
+      console.log(chalk.green('  ✓ Replaced .claude/skills/ContextGeneration/SKILL.md'));
+    } else {
+      console.log(chalk.gray('  Skipped: .claude/skills/ContextGeneration/SKILL.md'));
+    }
   } else {
     fs.copyFileSync(skillSrc, skillDest);
     console.log(chalk.green('  ✓ Created .claude/skills/ContextGeneration/SKILL.md'));
