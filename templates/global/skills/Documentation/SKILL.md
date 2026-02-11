@@ -2,7 +2,7 @@
 name: Documentation
 description: .claude 폴더 내 문서 생성/수정 시 사용. frontmatter 형식, Context/Skill/Agent 템플릿, 파일 분리 기준 제공.
 keywords: [문서, 작성, CLAUDE.md, context, skill, agent, frontmatter, 템플릿]
-estimated_tokens: ~800
+estimated_tokens: ~1200
 ---
 
 # .claude 문서 작성 스킬
@@ -119,10 +119,19 @@ estimated_tokens: ~300
 
 (필요시 코드 블록, 상세 설명)
 
+## 제약 사항
+
+<constraints>
+- 제약 1
+- 제약 2
+</constraints>
+
 ## 관련 파일
 
+<reference>
 - `path/to/related.md` - 설명
 - `src/module/` - 관련 소스 코드
+</reference>
 ```
 
 ### Skill 템플릿
@@ -139,25 +148,33 @@ estimated_tokens: ~400
 
 ## 핵심 역할
 
+<instructions>
 - 역할 1
 - 역할 2
+</instructions>
 
 ## 필수 준수 사항
 
+<rules>
 | 규칙 | 올바른 예 | 잘못된 예 |
 |------|----------|----------|
 | ... | ... | ... |
+</rules>
 
 ## 코드 예제
 
+<examples>
 \`\`\`typescript
 // 올바른 패턴
 \`\`\`
+</examples>
 
 ## 체크리스트
 
+<checklist>
 - [ ] 확인 항목 1
 - [ ] 확인 항목 2
+</checklist>
 
 ## 관련 문서
 
@@ -179,16 +196,19 @@ color: blue
 
 # Agent 이름
 
+<role>
 ## 역할
 
 1. 첫 번째 역할
 2. 두 번째 역할
+</role>
 
 ## 언제 사용하는가
 
 - 사용 시점 1
 - 사용 시점 2
 
+<instructions>
 ## 프로세스
 
 ### Step 1: 준비
@@ -196,7 +216,16 @@ color: blue
 
 ### Step 2: 실행
 ...
+</instructions>
 
+<constraints>
+## 제약 사항
+
+- 이 Agent는 A만 전담한다
+- B 작업은 other-agent에 위임한다
+</constraints>
+
+<output_format>
 ## 출력 형식
 
 \`\`\`markdown
@@ -205,6 +234,7 @@ color: blue
 ## 요약
 ...
 \`\`\`
+</output_format>
 ```
 
 ## 인덱스 파일 작성법
@@ -271,6 +301,43 @@ keywords:
 - 1000줄 초과 (분리!)
 - frontmatter 누락
 - 모호한 keywords
+
+## 프롬프트 구조화 (XML 태그)
+
+문서에 XML 태그를 사용하면 Claude가 지시/규칙/제약을 정확히 구분하여 준수율이 높아집니다.
+
+### 파일 유형별 권장 XML 태그
+
+| 파일 유형 | 필수 태그 | 선택 태그 |
+|----------|----------|----------|
+| Agent | `<role>`, `<instructions>`, `<constraints>`, `<output_format>` | `<rules>`, `<examples>`, `<reference>` |
+| Skill | `<instructions>`, `<rules>`, `<checklist>` | `<examples>`, `<constraints>`, `<reference>` |
+| CLAUDE.md | `<workflow>`, `<delegation_rules>`, `<constraints>` | `<rules>`, `<reference>` |
+| Hook | `<phase name="...">`, `<checklist>` | `<delegation_rules>`, `<rules>` |
+
+### 긍정 표현 원칙
+
+프롬프트는 부정 표현 대신 긍정 표현으로 작성합니다.
+
+| 부정 표현 (비권장) | 긍정 표현 (권장) |
+|-------------------|-----------------|
+| "직접 수정하지 마라" | "모든 수정은 code-writer가 전담한다" |
+| "Git 명령어 실행 금지" | "Git 작업은 git-manager에 위임한다" |
+| "3개 이상 파일 수정 금지" | "파일 수정은 2개 이하만 직접 수행한다" |
+
+- 제약은 "~만 한다", "~전용", "~전담" 형태로 표현
+- 대안 행동을 구체적으로 명시 (무엇을 대신 해야 하는지)
+
+### XML 태그 사용 규칙
+
+1. **섹션 경계를 명확히**: 태그는 논리적 블록 단위로 감싼다
+2. **중첩 최소화**: 2단계 이상 중첩은 지양한다
+3. **태그 이름 통일**: 위 테이블의 태그명을 일관되게 사용한다
+4. **Markdown과 병행**: 태그 안에서 Markdown 서식을 그대로 사용한다
+
+> 상세 가이드: `.claude/skills/PromptStructuring/`
+
+---
 
 ## 체크리스트
 
