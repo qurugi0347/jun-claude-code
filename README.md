@@ -74,6 +74,14 @@ npm install -g jun-claude-code
 
 ## 사용법
 
+### 명령어 미리보기
+
+| 명령어 | 설명 | 활성화되는 기능 |
+|--------|------|----------------|
+| `jun-claude-code` | 전역 설정 (`~/.claude/`) 설치 | Agents 13종, Skills 6종, Hooks 2종, Workflow |
+| `jun-claude-code init-project` | GitHub Project 연동 | 세션 시작 시 태스크 자동 로드, 태스크 관리 Agent |
+| `jun-claude-code init-context` | Context 자동 생성 설정 | PR 기반 Context 자동 생성, Codebase/Business 문서화, 별도 브랜치 PR |
+
 ### 기본 명령어: 설정 복사
 
 `templates/global` 설정 파일을 `~/.claude`로 복사합니다.
@@ -100,6 +108,13 @@ jun-claude-code init-project
 - Project Number
 - Repository (owner/repo 형식)
 
+**활성화되는 기능:**
+
+| 기능 | 설명 |
+|------|------|
+| 세션 시작 시 태스크 자동 로드 | Claude Code 시작 시 `task-loader.sh`가 GitHub Project에서 할당된 태스크를 조회 |
+| 태스크 관리 Agent | `project-task-manager` Agent를 통해 태스크 상태 변경, 코멘트 추가 가능 |
+
 설정 후 생성되는 파일:
 
 ```
@@ -121,6 +136,15 @@ GitHub Actions를 통한 Context 문서 자동 생성을 설정합니다.
 ```bash
 jun-claude-code init-context
 ```
+
+**활성화되는 기능:**
+
+| 기능 | 설명 |
+|------|------|
+| PR 기반 Context 자동 생성 | PR이 생성/업데이트되면 GitHub Actions가 코드 변경을 분석하여 Context 문서 생성 |
+| Codebase Context | 모듈별 파일 경로, 함수명, 의존 관계를 `.claude/context/codebase/`에 정리 |
+| Business Context | 기술 변경을 비즈니스 관점으로 변환하여 `.claude/context/business/`에 정리 |
+| 별도 브랜치 PR 방식 | 생성된 Context를 `{브랜치명}-generated-context` 브랜치로 분리하여 선택적 머지 가능 |
 
 설정 후 생성되는 파일:
 
