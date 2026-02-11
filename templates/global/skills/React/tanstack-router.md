@@ -32,6 +32,8 @@ src/routes/
     └── register.tsx     # /auth/register
 ```
 
+<rules>
+
 ## 필수 준수 사항
 
 | 규칙 | 올바른 예 | 잘못된 예 |
@@ -40,6 +42,10 @@ src/routes/
 | 레이아웃 라우트 | `_layout.tsx` (언더스코어) | `layout.tsx` |
 | 루트 라우트 | `__root.tsx` (더블 언더스코어) | `root.tsx` |
 | 네비게이션 훅 | `Route.useNavigate()` | `useNavigate()` 직접 import |
+
+</rules>
+
+<instructions>
 
 ## 라우트 정의 패턴
 
@@ -166,19 +172,25 @@ export const Route = createFileRoute('/_admin')({
 })
 ```
 
+</instructions>
+
+<checklist>
+
 ## 체크리스트
 
 ### 라우트 설정 시
-- [ ] 동적 파라미터에 `$` 프리픽스 사용
-- [ ] 레이아웃 라우트에 `_` 프리픽스 사용
-- [ ] 루트 레이아웃은 `__root.tsx`
+- [ ] 동적 파라미터에 `$` 프리픽스를 사용하는가?
+- [ ] 레이아웃 라우트에 `_` 프리픽스를 사용하는가?
+- [ ] 루트 레이아웃은 `__root.tsx`인가?
 
 ### 네비게이션
-- [ ] `Route.useNavigate()` 사용
-- [ ] 타입 안전한 params 전달
-- [ ] 동적 파라미터는 params 객체로 전달
+- [ ] `Route.useNavigate()`를 사용하는가?
+- [ ] 타입 안전한 params를 전달하는가?
+- [ ] 동적 파라미터는 params 객체로 전달하는가?
 
 ### 인증
-- [ ] beforeLoad에서 인증 체크
-- [ ] redirect로 리다이렉트 처리
-- [ ] 원래 경로 저장 (redirect search param)
+- [ ] beforeLoad에서 인증을 체크하는가?
+- [ ] redirect로 리다이렉트를 처리하는가?
+- [ ] 원래 경로를 저장하는가? (redirect search param)
+
+</checklist>

@@ -26,6 +26,8 @@ src/features/auth/
     └── useLoginMutation.ts  # TRPC mutation 훅
 ```
 
+<rules>
+
 ## 필수 준수 사항
 
 | 규칙 | 올바른 예 | 잘못된 예 |
@@ -34,6 +36,8 @@ src/features/auth/
 | 타입 추론 | `z.infer<typeof schema>` | 수동 타입 정의 |
 | 에러 표시 | `formState.errors` 사용 | 커스텀 에러 상태 |
 | 로딩 상태 | `mutation.isPending` 사용 | 별도 loading 상태 |
+
+</rules>
 
 ## 스키마 정의 패턴
 
@@ -199,24 +203,28 @@ const formValues = watch()
 {watchedEmail && <p>입력된 이메일: {watchedEmail}</p>}
 ```
 
+<checklist>
+
 ## 체크리스트
 
 ### 스키마 설정
-- [ ] 스키마를 별도 파일(*FormSchema.ts)로 분리
-- [ ] z.infer로 타입 추론
-- [ ] 에러 메시지 한글화
+- [ ] 스키마를 별도 파일(*FormSchema.ts)로 분리했는가?
+- [ ] z.infer로 타입 추론을 사용하는가?
+- [ ] 에러 메시지를 한글화했는가?
 
 ### 폼 구현
-- [ ] zodResolver 사용
-- [ ] defaultValues 설정
-- [ ] register로 필드 등록
+- [ ] zodResolver를 사용하는가?
+- [ ] defaultValues를 설정했는가?
+- [ ] register로 필드를 등록했는가?
 
 ### 에러 처리
-- [ ] formState.errors로 에러 표시
-- [ ] 서버 에러는 setError로 처리
-- [ ] 필드별 에러 메시지 표시
+- [ ] formState.errors로 에러를 표시하는가?
+- [ ] 서버 에러는 setError로 처리하는가?
+- [ ] 필드별 에러 메시지를 표시하는가?
 
 ### TRPC 연동
-- [ ] useMutation 사용
-- [ ] isPending으로 로딩 상태 표시
-- [ ] onSuccess/onError 핸들러 구현
+- [ ] useMutation을 사용하는가?
+- [ ] isPending으로 로딩 상태를 표시하는가?
+- [ ] onSuccess/onError 핸들러를 구현했는가?
+
+</checklist>

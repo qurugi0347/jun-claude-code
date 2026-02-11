@@ -43,6 +43,8 @@ src/
 | Layout | 페이지 레이아웃 구조 | Header, Sidebar, Footer |
 | Page | 라우트에 매핑되는 페이지 | HomePage, LoginPage |
 
+<rules>
+
 ## 필수 준수 사항
 
 ### 컴포넌트 작성
@@ -58,19 +60,21 @@ src/
 
 | 규칙 | 설명 |
 |------|------|
-| 상태 최소화 | 파생 가능한 값은 상태로 두지 않음 |
+| 상태 최소화 | 파생 가능한 값은 계산으로 처리 |
 | 상태 위치 | 필요한 가장 가까운 공통 조상에 배치 |
-| 불변성 유지 | 상태 직접 수정 금지, 새 객체/배열 생성 |
+| 불변성 유지 | 상태 업데이트 시 새 객체/배열을 생성 |
 | 복잡한 상태 | useReducer 또는 상태 관리 라이브러리 사용 |
 
 ### Hooks 규칙
 
 | 규칙 | 설명 |
 |------|------|
-| 최상위에서만 호출 | 조건문, 반복문 내부에서 호출 금지 |
-| 의존성 배열 정확히 | useEffect, useMemo, useCallback의 deps 누락 금지 |
+| 최상위에서만 호출 | 조건문, 반복문 바깥의 최상위 레벨에서 호출 |
+| 의존성 배열 정확히 | useEffect, useMemo, useCallback의 deps를 빠짐없이 명시 |
 | 커스텀 훅 추출 | 재사용 가능한 로직은 커스텀 훅으로 분리 |
 | 훅 네이밍 | `use` 접두사 필수 (예: `useAuth`, `useFetch`) |
+
+</rules>
 
 ## 성능 최적화
 
@@ -87,6 +91,8 @@ const expensiveValue = useMemo(() => computeExpensive(a, b), [a, b]);
 const handleClick = useCallback(() => doSomething(id), [id]);
 ```
 
+<rules>
+
 ### 최적화 적용 기준
 
 | 상황 | 적용 |
@@ -96,10 +102,16 @@ const handleClick = useCallback(() => doSomething(id), [id]);
 | 비용이 큰 계산 | `useMemo` 사용 |
 | 자식에게 전달하는 콜백 | `useCallback` 사용 |
 
-### 불필요한 최적화 금지
+<constraints>
 
-- 모든 컴포넌트에 무조건 memo 적용 금지
-- 측정 없이 최적화하지 않음 (React DevTools Profiler 사용)
+### 최적화 시 주의사항
+
+- memo는 측정 결과 리렌더링이 잦은 컴포넌트에만 적용 (React DevTools Profiler 사용)
+- 성능 측정 후 필요한 곳에만 최적화 적용
+
+</constraints>
+
+</rules>
 
 ## useEffect 패턴
 
@@ -128,6 +140,8 @@ useEffect(() => {
 | 렌더링 중 상태 업데이트 | 조건부 렌더링 또는 useMemo |
 | 불필요한 Effect | 이벤트 핸들러로 처리 |
 
+<checklist>
+
 ## 체크리스트
 
 ### 컴포넌트 작성 시
@@ -147,8 +161,12 @@ useEffect(() => {
 
 ### 성능
 - [ ] 리스트에 적절한 key가 사용되었는가?
-- [ ] 불필요한 리렌더링이 없는가?
+- [ ] 불필요한 리렌더링이 있는가? (있다면 memo 검토)
 - [ ] 메모이제이션이 적절히 사용되었는가?
+
+</checklist>
+
+<reference>
 
 ## 관련 문서
 
@@ -157,3 +175,5 @@ useEffect(() => {
 | `tanstack-router.md` | TanStack Router 파일 기반 라우팅 패턴 |
 | `react-hook-form.md` | React Hook Form + Zod 폼 검증 패턴 |
 | `tailwind-styled.md` | tailwind-styled-components DOM depth 최소화 |
+
+</reference>

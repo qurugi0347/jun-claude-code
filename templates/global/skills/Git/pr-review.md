@@ -10,6 +10,8 @@ user-invocable: true
 
 체크리스트 기반 Pull Request 리뷰.
 
+<instructions>
+
 ## Review Workflow
 
 ### Step 1: Review Plan 작성
@@ -57,6 +59,8 @@ user-invocable: true
 ### Questions (질문)
 ### Highlights (좋은 점)
 ```
+
+</instructions>
 
 ## PR 타입별 Focus
 
