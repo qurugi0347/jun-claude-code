@@ -46,9 +46,10 @@ jobs:
             - 실제로 변경된 파일에 대해서만 컨텍스트 업데이트
             - ContextGeneration 스킬에 명시된 정확한 형식 따르기
 
-      - name: Commit and push context changes
+      - name: Push context changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .claude/context/
-          git diff --staged --quiet || (git commit -m "docs: context 문서 자동 업데이트" && git push)
+          git diff --staged --quiet || git commit -m "docs: context 문서 자동 업데이트"
+          git push || echo "Nothing to push"
