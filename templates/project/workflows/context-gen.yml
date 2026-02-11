@@ -21,6 +21,20 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
+      - name: Read skill files
+        id: read-skills
+        run: |
+          {
+            echo "agent_def<<AGENT_EOF"
+            cat .claude/agents/context-generator.md
+            echo "AGENT_EOF"
+          } >> $GITHUB_OUTPUT
+          {
+            echo "skill_guide<<SKILL_EOF"
+            cat .claude/skills/ContextGeneration/SKILL.md
+            echo "SKILL_EOF"
+          } >> $GITHUB_OUTPUT
+
       - name: Generate context documents
         uses: anthropics/claude-code-action@v1
         with:
@@ -28,10 +42,13 @@ jobs:
           show_full_output: true
           claude_args: '--allowedTools "Bash(git:*),Bash(ls:*),Bash(mkdir:*),Read,Write,Edit,Glob,Grep"'
           prompt: |
-            당신은 context-generator 에이전트입니다.
-            .claude/agents/context-generator.md의 에이전트 정의와
-            .claude/skills/ContextGeneration/SKILL.md의 스킬 가이드를 읽고 정확히 따르세요.
+            # 에이전트 정의
+            ${{ steps.read-skills.outputs.agent_def }}
 
+            # 스킬 가이드
+            ${{ steps.read-skills.outputs.skill_guide }}
+
+            # 작업 지시
             PR diff를 분석하고 .claude/context/ 아래에 컨텍스트 문서를 생성/업데이트하세요.
 
             단계:
@@ -39,12 +56,12 @@ jobs:
             2. 변경된 각 모듈에 대해 .claude/context/codebase/<module>.md 생성 또는 업데이트
             3. 영향을 받는 각 비즈니스 도메인에 대해 .claude/context/business/<domain>.md 생성 또는 업데이트
             4. 두 디렉토리의 INDEX.md 파일 업데이트
-            5. "docs: update context for PR changes" 메시지로 변경사항 커밋
 
             중요사항:
             - 컨텍스트 문서에 소스 코드를 포함하지 말고, 파일 경로와 함수 이름만 포함하세요
             - 실제로 변경된 파일에 대해서만 컨텍스트 업데이트
-            - ContextGeneration 스킬에 명시된 정확한 형식 따르기
+            - 위 스킬 가이드에 명시된 정확한 형식 따르기
+            - 커밋하지 마세요. 파일 생성/수정만 하세요.
 
       - name: Push context changes
         run: |
