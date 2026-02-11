@@ -52,4 +52,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .claude/context/
           git diff --staged --quiet || git commit -m "docs: context 문서 자동 업데이트"
-          git push || echo "Nothing to push"
+          git push origin HEAD:refs/heads/${{ github.head_ref }}
