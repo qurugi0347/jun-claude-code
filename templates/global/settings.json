@@ -13,6 +13,16 @@
           }
         ]
       }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/skill-forced-subagent.sh"
+          }
+        ]
+      }
     ]
   }
 }
