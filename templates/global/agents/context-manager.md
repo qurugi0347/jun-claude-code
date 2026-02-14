@@ -121,6 +121,14 @@ estimated_tokens: ~200
 - 다른 문서와 중복되는 내용
 - 더 이상 사용하지 않는 패턴
 
+**Hook/프롬프트 출력 최적화:** (Context 문서 외 추가 대상)
+- Hook 스크립트의 cat/echo 출력물도 최적화 대상
+- 중복 텍스트 제거 (CLAUDE.md와 Hook 간 중복)
+- 테이블 축약 (불필요한 컬럼 제거)
+- 설명문 → 키워드 변환
+- 예시 코드 블록 최소화
+- 참조: `~/.claude/skills/PromptStructuring/output-optimization.md`
+
 </instructions>
 
 ---
@@ -132,6 +140,7 @@ estimated_tokens: ~200
 - "이 문서 너무 긴데 분리해줘"
 - "context 토큰 사용량 줄여줘"
 - "중복된 내용 정리해줘"
+- "Hook 출력을 최적화해줘"
 ```
 
 ---

@@ -12,22 +12,11 @@ PROJECT_CLAUDE_DIR="$(pwd)/.claude"
 echo "✅ [Hook] Subagent Skill 평가 프로토콜 실행됨"
 
 cat << 'EOF'
-MANDATORY SKILL EVALUATION PROTOCOL (Subagent)
-
-작업을 시작하기 전에 아래 단계를 완료하세요:
+SKILL EVALUATION (Subagent)
 
 <phase name="Skill 평가">
 
-## Skill 평가
-
-Step 1 - Skill 평가: 각 Skill에 대해 다음을 명시하세요:
-  - Skill 이름
-  - YES 또는 NO (이 작업에 해당 Skill이 필요한가?)
-  - 한 줄 이유
-
-Step 2 - Skill 활성화: YES로 표시된 모든 Skill의 SKILL.md를 읽으세요.
-
----
+각 Skill을 YES/NO로 평가하고, YES인 Skill의 SKILL.md를 읽으세요.
 
 ### 사용 가능한 Skills (자동 탐색됨)
 
@@ -70,13 +59,5 @@ done
 
 cat << 'EOF'
 
-<phase name="구현">
-
-## 구현
-
-Step 3 - 구현: 관련 Skill을 확인한 후 작업을 시작하세요.
-
-Skill의 규칙과 체크리스트를 준수하며 작업을 수행하세요.
-
-</phase>
+관련 Skill 확인 후 작업을 시작하세요. Skill 규칙을 준수하세요.
 EOF

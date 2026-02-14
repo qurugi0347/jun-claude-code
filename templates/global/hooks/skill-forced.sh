@@ -48,27 +48,7 @@ Main Agent의 Context Window는 제한적입니다.
 - Subagent 호출 및 결과 전달
 - 단순 명령 실행 (Bash) - **Git/코드수정은 Subagent 전담**
 
-### Git 작업은 git-manager 전담
-
-**모든 Git 작업은 `git-manager` Agent에 위임하세요.**
-
-\`\`\`
-Task(subagent_type="git-manager", prompt="현재 변경사항을 커밋해줘")
-Task(subagent_type="git-manager", prompt="PR을 생성해줘")
-\`\`\`
-
-| Git 작업 | 전담 여부 | 이유 |
-|----------|----------|------|
-| 단순 커밋 | **전담** | 커밋 규칙 자동 준수 |
-| PR 생성 | **전담** | PR 템플릿 자동 적용 |
-| 브랜치 관리 | **전담** | 안전 규칙 자동 적용 |
-
-### 왜 Subagent를 사용해야 하는가?
-
-1. **Context 절약**: Subagent의 탐색/분석 결과는 요약되어 Main에 전달
-2. **대화 지속성**: Main Context가 절약되어 더 긴 대화 가능
-3. **전문성**: 각 Agent는 특정 작업에 최적화됨
-4. **병렬 처리**: 여러 Agent를 동시에 실행 가능
+모든 Git 작업(커밋, PR, 브랜치)은 git-manager에 위임
 
 </delegation_rules>
 
@@ -133,16 +113,10 @@ cat << 'EOF'
 아래는 이 프로젝트의 배경 정보입니다. 작업 판단 시 참고하세요.
 상세 분석이 필요하면 아래 Agent에 위임하세요.
 
-| 필요한 정보 | Agent | 호출 예시 |
-|------------|-------|----------|
-| 프로젝트 배경/도메인 지식 | project-context-collector | \`Task(subagent_type="project-context-collector", prompt="[작업]에 필요한 프로젝트 배경 정보를 수집해줘")\` |
-| 소스 코드 패턴/구현 방식 | context-collector | \`Task(subagent_type="context-collector", prompt="[작업]에 필요한 코드 패턴을 수집해줘")\` |
-
-두 Agent를 순차적으로 사용하면 가장 포괄적인 Context를 수집할 수 있습니다:
-\`\`\`
-1. project-context-collector → 프로젝트 배경 수집
-2. context-collector → 소스 코드 패턴 수집
-\`\`\`
+| 필요한 정보 | Agent |
+|------------|-------|
+| 프로젝트 배경/도메인 지식 | project-context-collector |
+| 소스 코드 패턴/구현 방식 | context-collector |
 
 EOF
 
@@ -263,11 +237,7 @@ Step 5 - 구현: 모든 관련 Skill 확인 및 Agent 호출 후에 구현을 �
 
 ---
 
-### 핵심 원칙
-
-- **탐색 작업은 Subagent 전담**: Main Context 절약
-- **구현 후 검증 수행**: code-reviewer + qa-tester
-- **단순 작업은 예외**: 설정 파일 수정, 오타 수정은 직접 처리 가능
+탐색은 Subagent 전담, 구현 후 검증(code-reviewer + qa-tester), 단순 작업은 직접 처리 가능
 
 지금 바로 모든 사용 가능한 Skill과 Agent를 평가하세요.
 

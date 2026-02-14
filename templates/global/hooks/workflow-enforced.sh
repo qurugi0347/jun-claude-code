@@ -25,7 +25,6 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 
 ### Step 1.1: Context 수집
 
-필수 조건:
 - [ ] EnterPlanMode 진입 (복잡한 작업인 경우)
 - [ ] 관련 Context 문서 확인 (.claude/context/)
 - [ ] 필요한 Skill 활성화 (.claude/skills/)
@@ -38,8 +37,6 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 - [ ] 각 Task에 명확한 완료 조건 정의
 - [ ] Task 간 의존성 설정
 
-도구: TaskCreate, TaskUpdate, TaskList
-
 ### Step 1.3: 코드 수정 계획 작성
 
 필수 출력:
@@ -47,11 +44,9 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 - [ ] 각 파일의 변경 내용 요약
 - [ ] 예상되는 영향 범위
 
-### Step 1.4: 사용자 Confirm 받기 -- 필수
+### Step 1.4: 사용자 Confirm -- 필수
 
-중요: 계획을 사용자에게 보여주고 승인받은 후에만 구현 진행
-- ExitPlanMode 사용 (Plan Mode인 경우)
-- 또는 계획 내용을 명시적으로 보여주고 확인 요청
+- [ ] 계획을 사용자에게 보여주고 승인받은 후 구현 진행
 
 </checklist>
 
@@ -69,8 +64,6 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 - [ ] Code Flow 분석: 변경이 다른 모듈에 미치는 영향
 - [ ] UI/UX UserFlow 분석: 사용자 경험에 미치는 영향
 - [ ] Breaking Change 여부 확인
-
-도구: impact-analyzer Agent (복잡한 경우)
 
 </checklist>
 
@@ -113,11 +106,8 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 - [ ] Skill checklist 기준 검토
 - [ ] lint 실행
 
-도구: code-reviewer Agent
-
 ### Step 4.2: Task 완료 검증
 
-필수 확인:
 - [ ] 원래 요청사항이 모두 충족되었는지 확인
 - [ ] 예상한 동작이 구현되었는지 확인
 - [ ] 모든 엣지케이스가 처리되었는지 점검
@@ -128,26 +118,7 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 
 ### 워크플로우 요약
 
-┌─────────────────────────────────────────────────────────────┐
-│  PHASE 1: 계획                                              │
-│  ├─ 1.1 Context 수집                                        │
-│  ├─ 1.2 TaskList 생성                                       │
-│  ├─ 1.3 수정 계획 작성                                       │
-│  └─ 1.4 사용자 Confirm                                      │
-│                        ↓                                    │
-│  PHASE 2: 검증                                              │
-│  └─ 2.1 사이드이펙트 검증 (Code Flow, UserFlow)              │
-│                        ↓                                    │
-│  PHASE 3: 구현                                              │
-│  ├─ 3.1 코드 수정 (작은 단위)                                │
-│  └─ 3.2 git add & commit (단위별)                           │
-│                        ↓                                    │
-│  PHASE 4: 리뷰                                              │
-│  ├─ 4.1 Self Code Review + lint                             │
-│  └─ 4.2 Task 완료 검증                                      │
-└─────────────────────────────────────────────────────────────┘
-
----
+계획(Context->TaskList->수정계획->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
 
 ### 참조 가능한 Skills (자동 탐색됨)
 
@@ -189,13 +160,5 @@ done
 
 cat << 'EOF'
 
-### 예외 상황
-
-다음의 경우 Phase를 축소/생략 가능:
-- 단순 오타 수정
-- 설정 파일 간단 수정
-- 1-2줄 변경
-- 사용자가 명시적으로 빠른 수정 요청
-
-그 외 모든 코드 작업은 위 순서를 따르세요.
+예외: 단순 오타/설정/1-2줄 수정, 사용자가 빠른 수정 요청 시 Phase 축소 가능
 EOF
