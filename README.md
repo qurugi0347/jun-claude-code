@@ -165,7 +165,16 @@ jun-claude-code init-context
         └── INDEX.md               # 비즈니스 도메인 참조 목록
 ```
 
-> `CLAUDE_CODE_OAUTH_TOKEN`를 GitHub repository secrets에 추가해야 합니다.
+**필수 설정:**
+
+1. **Repository Actions 권한 활성화**
+   - Repository → Settings → Actions → General
+   - **Workflow permissions** 섹션에서:
+     - "Read and write permissions" 선택
+     - ✅ "Allow GitHub Actions to create and approve pull requests" 체크
+
+2. **CLAUDE_CODE_OAUTH_TOKEN 추가**
+   - Settings → Secrets and variables → Actions → New repository secret
 
 ## 프로젝트 구조
 

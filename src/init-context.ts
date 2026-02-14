@@ -154,8 +154,12 @@ description: 비즈니스 도메인 참조 목록
   // 6. 안내 메시지
   console.log(chalk.bold('\n✅ Context auto-generation setup complete!\n'));
   console.log(chalk.cyan('Next steps:'));
-  console.log(chalk.cyan('  1. Add CLAUDE_CODE_OAUTH_TOKEN to your repository secrets'));
+  console.log(chalk.cyan('  1. Enable GitHub Actions permissions:'));
+  console.log(chalk.cyan('     → Repository > Settings > Actions > General'));
+  console.log(chalk.cyan('     → Workflow permissions: "Read and write permissions"'));
+  console.log(chalk.cyan('     → ✅ "Allow GitHub Actions to create and approve pull requests"'));
+  console.log(chalk.cyan('  2. Add CLAUDE_CODE_OAUTH_TOKEN to your repository secrets'));
   console.log(chalk.cyan('     → Settings > Secrets and variables > Actions > New repository secret'));
-  console.log(chalk.cyan('  2. Create a PR to trigger context auto-generation'));
+  console.log(chalk.cyan('  3. Create a PR to trigger context auto-generation'));
   console.log('');
 }
