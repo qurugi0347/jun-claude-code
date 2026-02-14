@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "test": "vitest run",
     "prepublishOnly": "yarn build"
   },
   "packageManager": "yarn@3.8.7",
@@ -19,7 +20,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.0.18"
   },
   "keywords": [
     "claude",
