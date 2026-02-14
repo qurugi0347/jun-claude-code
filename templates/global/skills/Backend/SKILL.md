@@ -1,7 +1,7 @@
 ---
 name: Backend
-description: NestJS/TypeORM 백엔드 개발 시 사용. Controller-Service-Repository 레이어 객체 변환, find vs queryBuilder 선택 기준 제공.
-keywords: [Backend, 백엔드, 레이어, DTO, Entity, Service, Controller, TypeORM, find, queryBuilder]
+description: NestJS/TypeORM 백엔드 개발 시 사용. 레이어 객체 변환, find vs queryBuilder 선택 기준, BDD 테스트 작성 규칙 제공.
+keywords: [Backend, 백엔드, 레이어, DTO, Entity, Service, Controller, TypeORM, find, queryBuilder, test, BDD, 테스트, Jest]
 estimated_tokens: ~400
 ---
 
@@ -174,3 +174,13 @@ const user = await this.userRepository.findOneBy({ id });
 - [ ] QueryBuilder는 groupBy, getRawMany 등 필요한 경우에만 사용하는가?
 
 </checklist>
+
+<reference>
+
+## 관련 문서
+
+| 주제 | 위치 | 설명 |
+|-----|------|------|
+| BDD 테스트 | `bdd-testing.md` | NestJS + Jest BDD 스타일 테스트 작성 규칙 |
+
+</reference>
