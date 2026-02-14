@@ -103,7 +103,39 @@ function getDestClaudeDir(): string {
  * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
  * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
  */
-export function mergeSettingsJson(sourceDir: string, destDir: string): void {
+/**
+ * Replace ~/.claude/ paths with ./.claude/ in all command fields (deep traverse).
+ */
+function replaceClaudePaths(obj: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (key === 'command' && typeof value === 'string') {
+      result[key] = value.replace(/~\/\.claude\//g, './.claude/');
+    } else if (Array.isArray(value)) {
+      result[key] = value.map((item) =>
+        typeof item === 'object' && item !== null ? replaceClaudePaths(item) : item
+      );
+    } else if (typeof value === 'object' && value !== null) {
+      result[key] = replaceClaudePaths(value);
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+/**
+ * Merge settings.json from source into destination.
+ * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
+ * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
+ * statusLine is always excluded from merge (personal environment setting).
+ * When project=true, ~/.claude/ paths in command fields are converted to ./.claude/.
+ */
+export function mergeSettingsJson(
+  sourceDir: string,
+  destDir: string,
+  options?: { project?: boolean }
+): void {
   const sourcePath = path.join(sourceDir, 'settings.json');
   const destPath = path.join(destDir, 'settings.json');
 
@@ -131,8 +163,8 @@ export function mergeSettingsJson(sourceDir: string, destDir: string): void {
 
   // Merge top-level keys (source fills in missing keys, dest's existing keys preserved)
   for (const key of Object.keys(sourceSettings)) {
-    if (key === 'hooks') {
-      continue; // hooks are merged separately below
+    if (key === 'hooks' || key === 'statusLine') {
+      continue; // hooks are merged separately below; statusLine is excluded
     }
     if (!(key in destSettings)) {
       destSettings[key] = sourceSettings[key];
@@ -165,6 +197,11 @@ export function mergeSettingsJson(sourceDir: string, destDir: string): void {
     }
   }
 
+  // Convert ~/.claude/ → ./.claude/ paths for project mode
+  if (options?.project) {
+    destSettings = replaceClaudePaths(destSettings);
+  }
+
   ensureDir(destDir);
   fs.writeFileSync(destPath, JSON.stringify(destSettings, null, 2) + '\n', 'utf-8');
 
@@ -194,6 +231,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
   // Files to exclude from global copy (merge-handled separately)
   const EXCLUDE_FROM_GLOBAL = [
     'settings.json',
+    'statusline-command.sh',
   ];
 
   // Get all files to copy
@@ -275,7 +313,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
   }
 
   // Merge settings.json (hooks are merged, not overwritten)
-  mergeSettingsJson(sourceDir, destDir);
+  mergeSettingsJson(sourceDir, destDir, { project });
 
   console.log();
   console.log(chalk.green(`Done! Copied ${copiedCount} files, skipped ${skippedCount} files.`));

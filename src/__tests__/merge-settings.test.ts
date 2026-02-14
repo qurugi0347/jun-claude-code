@@ -133,7 +133,7 @@ describe('copy.ts mergeSettingsJson', () => {
     mergeGlobalSettings(sourceDir, destDir);
 
     const result = readJson(path.join(destDir, 'settings.json'));
-    expect(result.statusLine).toEqual(sourceSettings.statusLine);
+    expect(result.statusLine).toBeUndefined();
     expect(result.hooks.UserPromptSubmit).toHaveLength(1);
     expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe('skill-forced.sh');
   });
@@ -272,6 +272,92 @@ describe('copy.ts mergeSettingsJson', () => {
 
     const result = readJson(path.join(destDir, 'settings.json'));
     expect(result).toEqual(destSettings);
+  });
+
+  it('should exclude statusLine from source even on fresh install', () => {
+    const sourceSettings = {
+      statusLine: { type: 'command', command: '~/.claude/statusline-command.sh' },
+      hooks: {},
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.statusLine).toBeUndefined();
+  });
+
+  it('should preserve existing statusLine in dest when source also has statusLine', () => {
+    const sourceSettings = {
+      statusLine: { type: 'command', command: 'source-status' },
+      hooks: {},
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    const destSettings = {
+      statusLine: { type: 'command', command: 'dest-status' },
+    };
+    writeJson(path.join(destDir, 'settings.json'), destSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.statusLine.command).toBe('dest-status');
+  });
+
+  it('should convert ~/.claude/ to ./.claude/ in command fields when project=true', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: '~/.claude/hooks/skill-forced.sh' },
+            ],
+          },
+        ],
+        PreToolUse: [
+          {
+            matcher: 'Bash',
+            hooks: [
+              { type: 'command', command: '~/.claude/hooks/blocker.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe(
+      './.claude/hooks/skill-forced.sh'
+    );
+    expect(result.hooks.PreToolUse[0].hooks[0].command).toBe(
+      './.claude/hooks/blocker.sh'
+    );
+  });
+
+  it('should keep ~/.claude/ paths unchanged when project option is not set', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: '~/.claude/hooks/skill-forced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe(
+      '~/.claude/hooks/skill-forced.sh'
+    );
   });
 });
 
