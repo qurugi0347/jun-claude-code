@@ -1,9 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "echo '{{dir}} {{git}} | {{tokens}} | {{model}}'",
-    "updateInterval": 1000
-  },
   "hooks": {
     "UserPromptSubmit": [
       {
