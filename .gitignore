@@ -21,3 +21,5 @@ dist/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+HANDOFF.md
