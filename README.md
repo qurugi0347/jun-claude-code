@@ -2,66 +2,6 @@
 
 Claude Code 설정 템플릿 CLI. 미리 정의된 Agents, Skills, Hooks, Workflow를 프로젝트에 설치하여 Claude Code 환경을 빠르게 구축합니다.
 
-## 포함 내용
-
-### Agents (`templates/global/agents/`)
-
-작업별 전문 Subagent 13종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
-
-| Agent | 역할 |
-|-------|------|
-| `explore` | 코드베이스 탐색 |
-| `task-planner` | 작업 계획 수립 |
-| `code-writer` | 코드 작성 (Opus) |
-| `simple-code-writer` | 단순 수정 (Haiku) |
-| `code-reviewer` | 셀프 코드 리뷰 |
-| `git-manager` | Git 커밋/PR |
-| `impact-analyzer` | 사이드이펙트 분석 |
-| `qa-tester` | 테스트/빌드 검증 |
-| `architect` | 아키텍처 설계 |
-| `designer` | UI/UX 스타일링 |
-| `director` | 작업 총괄 디렉터 |
-| `context-collector` | 소스 코드 기반 Context 수집 |
-| `context-manager` | Context 문서 관리 |
-
-### Skills (`templates/global/skills/`)
-
-| Skill | 설명 |
-|-------|------|
-| `Coding` | 공통 코딩 원칙 (SRP, 응집도, 가독성) |
-| `Git` | Git 커밋/PR 규칙, PR 리뷰, 피드백 적용 |
-| `Backend` | 백엔드 개발 원칙 (레이어, TypeORM) |
-| `React` | React 개발 (TanStack Router, React Hook Form, Tailwind) |
-| `Documentation` | .claude 문서 작성 가이드 |
-| `Director` | 디렉터 Agent 운영 스킬 |
-
-### Hooks (`templates/global/hooks/`)
-
-| Hook | 설명 |
-|------|------|
-| `workflow-enforced.sh` | 워크플로우 순서 강제 프로토콜 |
-| `skill-forced.sh` | Skill/Agent 평가 프로토콜 |
-
-### Project Agents (`templates/project/agents/`)
-
-프로젝트 `.claude/`에 설치되는 프로젝트별 Agent.
-
-| Agent | 역할 |
-|-------|------|
-| `project-task-manager` | GitHub Project 태스크 관리 |
-| `context-generator` | Context 자동 생성 |
-| `project-context-collector` | .claude/context/ 문서 기반 프로젝트 배경 수집 |
-
-### Project Skills (`templates/project/skills/`)
-
-| Skill | 설명 |
-|-------|------|
-| `ContextGeneration` | Context 자동 생성 스킬 |
-
-### Workflow
-
-Planning -> Validation -> Implementation -> Review 순서의 작업 워크플로우와 Context 절약 원칙(Subagent 위임 규칙)을 정의합니다.
-
 ## 설치
 
 ```bash
@@ -79,6 +19,7 @@ npm install -g jun-claude-code
 | 명령어 | 설명 | 활성화되는 기능 |
 |--------|------|----------------|
 | `jun-claude-code` | 전역 설정 (`~/.claude/`) 설치 | Agents 13종, Skills 6종, Hooks 2종, Workflow |
+| `jun-claude-code --project` | 프로젝트 설정 (`.claude/`) 설치 | 전역과 동일 (프로젝트별 오버라이드용) |
 | `jun-claude-code init-project` | GitHub Project 연동 | 세션 시작 시 태스크 자동 로드, 태스크 관리 Agent |
 | `jun-claude-code init-context` | Context 자동 생성 설정 | PR 기반 Context 자동 생성, Codebase/Business 문서화, 별도 브랜치 PR |
 
@@ -92,6 +33,7 @@ jun-claude-code
 
 | 옵션 | 설명 |
 |------|------|
+| `--project`, `-p` | 전역(`~/.claude/`) 대신 프로젝트(`.claude/`)에 설치 |
 | `--dry-run`, `-d` | 실제 복사 없이 복사될 파일 목록만 확인 |
 | `--force`, `-f` | 확인 없이 모든 파일 덮어쓰기 |
 
@@ -176,6 +118,66 @@ jun-claude-code init-context
 2. **CLAUDE_CODE_OAUTH_TOKEN 추가**
    - Settings → Secrets and variables → Actions → New repository secret
 
+## 포함 내용
+
+### Agents (`templates/global/agents/`)
+
+작업별 전문 Subagent 13종. Main Agent의 Context Window를 절약하면서 각 작업을 위임합니다.
+
+| Agent | 역할 |
+|-------|------|
+| `explore` | 코드베이스 탐색 |
+| `task-planner` | 작업 계획 수립 |
+| `code-writer` | 코드 작성 (Opus) |
+| `simple-code-writer` | 단순 수정 (Haiku) |
+| `code-reviewer` | 셀프 코드 리뷰 |
+| `git-manager` | Git 커밋/PR |
+| `impact-analyzer` | 사이드이펙트 분석 |
+| `qa-tester` | 테스트/빌드 검증 |
+| `architect` | 아키텍처 설계 |
+| `designer` | UI/UX 스타일링 |
+| `director` | 작업 총괄 디렉터 |
+| `context-collector` | 소스 코드 기반 Context 수집 |
+| `context-manager` | Context 문서 관리 |
+
+### Skills (`templates/global/skills/`)
+
+| Skill | 설명 |
+|-------|------|
+| `Coding` | 공통 코딩 원칙 (SRP, 응집도, 가독성) |
+| `Git` | Git 커밋/PR 규칙, PR 리뷰, 피드백 적용 |
+| `Backend` | 백엔드 개발 원칙 (레이어, TypeORM) |
+| `React` | React 개발 (TanStack Router, React Hook Form, Tailwind) |
+| `Documentation` | .claude 문서 작성 가이드 |
+| `Director` | 디렉터 Agent 운영 스킬 |
+
+### Hooks (`templates/global/hooks/`)
+
+| Hook | 설명 |
+|------|------|
+| `workflow-enforced.sh` | 워크플로우 순서 강제 프로토콜 |
+| `skill-forced.sh` | Skill/Agent 평가 프로토콜 |
+
+### Project Agents (`templates/project/agents/`)
+
+프로젝트 `.claude/`에 설치되는 프로젝트별 Agent.
+
+| Agent | 역할 |
+|-------|------|
+| `project-task-manager` | GitHub Project 태스크 관리 |
+| `context-generator` | Context 자동 생성 |
+| `project-context-collector` | .claude/context/ 문서 기반 프로젝트 배경 수집 |
+
+### Project Skills (`templates/project/skills/`)
+
+| Skill | 설명 |
+|-------|------|
+| `ContextGeneration` | Context 자동 생성 스킬 |
+
+### Workflow
+
+Planning -> Validation -> Implementation -> Review 순서의 작업 워크플로우와 Context 절약 원칙(Subagent 위임 규칙)을 정의합니다.
+
 ## 프로젝트 구조
 
 ```
@@ -196,7 +198,7 @@ templates/
 
 ## 커스터마이징
 
-설치 후 `~/.claude/`에서 필요에 맞게 수정할 수 있습니다. 프로젝트별로는 프로젝트 루트에 `.claude/`를 만들어 설정을 추가합니다.
+`--project` 옵션을 사용하면 전역 템플릿을 프로젝트 `.claude/`에 바로 설치할 수 있습니다. 설치 후 필요에 맞게 수정하세요.
 
 ```
 your-project/
