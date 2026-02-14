@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
+import * as crypto from 'crypto';
 import chalk from 'chalk';
 
 export interface CopyOptions {
@@ -24,6 +25,14 @@ function askConfirmation(question: string): Promise<boolean> {
       resolve(normalized === 'y' || normalized === 'yes');
     });
   });
+}
+
+/**
+ * Calculate SHA-256 hash of a file
+ */
+function getFileHash(filePath: string): string {
+  const content = fs.readFileSync(filePath);
+  return crypto.createHash('sha256').update(content).digest('hex');
 }
 
 /**
@@ -216,10 +225,17 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     console.log(chalk.yellow('[DRY RUN] Files that would be copied:'));
     console.log();
     for (const file of files) {
+      const sourcePath = path.join(sourceDir, file);
       const destPath = path.join(destDir, file);
       const exists = fs.existsSync(destPath);
-      const status = exists ? chalk.yellow('[overwrite]') : chalk.green('[new]');
-      console.log(`  ${status} ${file}`);
+      if (exists) {
+        const sourceHash = getFileHash(sourcePath);
+        const destHash = getFileHash(destPath);
+        const status = sourceHash === destHash ? chalk.gray('[unchanged]') : chalk.yellow('[overwrite]');
+        console.log(`  ${status} ${file}`);
+      } else {
+        console.log(`  ${chalk.green('[new]')} ${file}`);
+      }
     }
     // settings.json merge indicator
     const sourceSettingsExists = fs.existsSync(path.join(sourceDir, 'settings.json'));
@@ -241,9 +257,18 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     const exists = fs.existsSync(destPath);
 
     if (exists && !force) {
-      // Ask for confirmation
+      const sourceHash = getFileHash(sourcePath);
+      const destHash = getFileHash(destPath);
+
+      if (sourceHash === destHash) {
+        console.log(`  ${chalk.gray('[unchanged]')} ${file}`);
+        skippedCount++;
+        continue;
+      }
+
+      // Hash differs - ask for confirmation
       const shouldOverwrite = await askConfirmation(
-        chalk.yellow(`File exists: ${file}. Overwrite? (y/N): `)
+        chalk.yellow(`File changed: ${file}. Overwrite? (y/N): `)
       );
 
       if (!shouldOverwrite) {

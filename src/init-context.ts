@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
+import * as crypto from 'crypto';
 import chalk from 'chalk';
 
 /**
@@ -29,6 +30,14 @@ function askConfirmation(question: string): Promise<boolean> {
 }
 
 /**
+ * Calculate SHA-256 hash of a file
+ */
+function getFileHash(filePath: string): string {
+  const content = fs.readFileSync(filePath);
+  return crypto.createHash('sha256').update(content).digest('hex');
+}
+
+/**
  * Initialize context auto-generation with GitHub Actions
  */
 export async function initContext(): Promise<void> {
@@ -43,14 +52,21 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(workflowDest), { recursive: true });
 
   if (fs.existsSync(workflowDest)) {
-    const shouldOverwrite = await askConfirmation(
-      chalk.yellow('  ⚠ .github/workflows/context-gen.yml already exists. Overwrite? (y/N): ')
-    );
-    if (shouldOverwrite) {
-      fs.copyFileSync(templateSrc, workflowDest);
-      console.log(chalk.green('  ✓ Replaced .github/workflows/context-gen.yml'));
+    const sourceHash = getFileHash(templateSrc);
+    const destHash = getFileHash(workflowDest);
+
+    if (sourceHash === destHash) {
+      console.log(chalk.gray('  [unchanged] .github/workflows/context-gen.yml'));
     } else {
-      console.log(chalk.gray('  Skipped: .github/workflows/context-gen.yml'));
+      const shouldOverwrite = await askConfirmation(
+        chalk.yellow('  ⚠ .github/workflows/context-gen.yml has changes. Overwrite? (y/N): ')
+      );
+      if (shouldOverwrite) {
+        fs.copyFileSync(templateSrc, workflowDest);
+        console.log(chalk.green('  ✓ Replaced .github/workflows/context-gen.yml'));
+      } else {
+        console.log(chalk.gray('  Skipped: .github/workflows/context-gen.yml'));
+      }
     }
   } else {
     fs.copyFileSync(templateSrc, workflowDest);
@@ -64,14 +80,21 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(agentDest), { recursive: true });
 
   if (fs.existsSync(agentDest)) {
-    const shouldOverwrite = await askConfirmation(
-      chalk.yellow('  ⚠ .claude/agents/context-generator.md already exists. Overwrite? (y/N): ')
-    );
-    if (shouldOverwrite) {
-      fs.copyFileSync(agentSrc, agentDest);
-      console.log(chalk.green('  ✓ Replaced .claude/agents/context-generator.md'));
+    const sourceHash = getFileHash(agentSrc);
+    const destHash = getFileHash(agentDest);
+
+    if (sourceHash === destHash) {
+      console.log(chalk.gray('  [unchanged] .claude/agents/context-generator.md'));
     } else {
-      console.log(chalk.gray('  Skipped: .claude/agents/context-generator.md'));
+      const shouldOverwrite = await askConfirmation(
+        chalk.yellow('  ⚠ .claude/agents/context-generator.md has changes. Overwrite? (y/N): ')
+      );
+      if (shouldOverwrite) {
+        fs.copyFileSync(agentSrc, agentDest);
+        console.log(chalk.green('  ✓ Replaced .claude/agents/context-generator.md'));
+      } else {
+        console.log(chalk.gray('  Skipped: .claude/agents/context-generator.md'));
+      }
     }
   } else {
     fs.copyFileSync(agentSrc, agentDest);
@@ -85,14 +108,21 @@ export async function initContext(): Promise<void> {
   fs.mkdirSync(path.dirname(skillDest), { recursive: true });
 
   if (fs.existsSync(skillDest)) {
-    const shouldOverwrite = await askConfirmation(
-      chalk.yellow('  ⚠ .claude/skills/ContextGeneration/SKILL.md already exists. Overwrite? (y/N): ')
-    );
-    if (shouldOverwrite) {
-      fs.copyFileSync(skillSrc, skillDest);
-      console.log(chalk.green('  ✓ Replaced .claude/skills/ContextGeneration/SKILL.md'));
+    const sourceHash = getFileHash(skillSrc);
+    const destHash = getFileHash(skillDest);
+
+    if (sourceHash === destHash) {
+      console.log(chalk.gray('  [unchanged] .claude/skills/ContextGeneration/SKILL.md'));
     } else {
-      console.log(chalk.gray('  Skipped: .claude/skills/ContextGeneration/SKILL.md'));
+      const shouldOverwrite = await askConfirmation(
+        chalk.yellow('  ⚠ .claude/skills/ContextGeneration/SKILL.md has changes. Overwrite? (y/N): ')
+      );
+      if (shouldOverwrite) {
+        fs.copyFileSync(skillSrc, skillDest);
+        console.log(chalk.green('  ✓ Replaced .claude/skills/ContextGeneration/SKILL.md'));
+      } else {
+        console.log(chalk.gray('  Skipped: .claude/skills/ContextGeneration/SKILL.md'));
+      }
     }
   } else {
     fs.copyFileSync(skillSrc, skillDest);
