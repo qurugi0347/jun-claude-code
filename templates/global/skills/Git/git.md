@@ -165,7 +165,7 @@ Generated with [Claude Code](https://claude.ai/code)
 ```bash
 git push -u origin feature/branch-name
 
-gh pr create --base main --title "<간결한 제목>" --body "$(cat <<'EOF'
+gh pr create --base main --title "<PREFIX 없이 간결한 제목>" --body "$(cat <<'EOF'
 ## Summary
 ...
 EOF
