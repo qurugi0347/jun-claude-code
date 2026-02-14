@@ -10,15 +10,17 @@ const program = new Command();
 
 program
   .name('jun-claude-code')
-  .description('Copy .claude configuration files to your home directory (~/.claude)')
+  .description('Copy .claude configuration files to ~/.claude (global) or .claude/ (project)')
   .version('1.0.0')
   .option('-d, --dry-run', 'Preview files to be copied without actually copying')
   .option('-f, --force', 'Overwrite existing files without confirmation')
+  .option('-p, --project', 'Install to project .claude/ instead of global ~/.claude/')
   .action(async (options) => {
     try {
       await copyClaudeFiles({
         dryRun: options.dryRun,
         force: options.force,
+        project: options.project,
       });
     } catch (error) {
       if (error instanceof Error) {

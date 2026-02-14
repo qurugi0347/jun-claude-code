@@ -8,6 +8,7 @@ import { getHookKey } from './utils';
 export interface CopyOptions {
   dryRun?: boolean;
   force?: boolean;
+  project?: boolean;
 }
 
 /**
@@ -174,13 +175,14 @@ export function mergeSettingsJson(sourceDir: string, destDir: string): void {
  * Copy .claude files to user's home directory
  */
 export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> {
-  const { dryRun = false, force = false } = options;
+  const { dryRun = false, force = false, project = false } = options;
 
   const sourceDir = getSourceGlobalDir();
-  const destDir = getDestClaudeDir();
+  const destDir = project ? path.join(process.cwd(), '.claude') : getDestClaudeDir();
+  const targetLabel = project ? 'project' : 'global';
 
   console.log(chalk.blue('Source:'), sourceDir);
-  console.log(chalk.blue('Destination:'), destDir);
+  console.log(chalk.blue('Destination:'), `${destDir} ${chalk.gray(`(${targetLabel})`)}`);
   console.log();
 
   // Check if source exists
