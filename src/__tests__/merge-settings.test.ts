@@ -305,7 +305,7 @@ describe('copy.ts mergeSettingsJson', () => {
     expect(result.statusLine.command).toBe('dest-status');
   });
 
-  it('should convert ~/.claude/ to ./.claude/ in command fields when project=true', () => {
+  it('should convert ~/.claude/ to .claude/ in command fields when project=true', () => {
     const sourceSettings = {
       hooks: {
         UserPromptSubmit: [
@@ -331,10 +331,10 @@ describe('copy.ts mergeSettingsJson', () => {
 
     const result = readJson(path.join(destDir, 'settings.json'));
     expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe(
-      './.claude/hooks/skill-forced.sh'
+      '.claude/hooks/skill-forced.sh'
     );
     expect(result.hooks.PreToolUse[0].hooks[0].command).toBe(
-      './.claude/hooks/blocker.sh'
+      '.claude/hooks/blocker.sh'
     );
   });
 

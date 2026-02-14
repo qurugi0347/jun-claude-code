@@ -104,13 +104,13 @@ function getDestClaudeDir(): string {
  * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
  */
 /**
- * Replace ~/.claude/ paths with ./.claude/ in all command fields (deep traverse).
+ * Replace ~/.claude/ paths with .claude/ in all command fields (deep traverse).
  */
 function replaceClaudePaths(obj: Record<string, any>): Record<string, any> {
   const result: Record<string, any> = {};
   for (const [key, value] of Object.entries(obj)) {
     if (key === 'command' && typeof value === 'string') {
-      result[key] = value.replace(/~\/\.claude\//g, './.claude/');
+      result[key] = value.replace(/~\/\.claude\//g, '.claude/');
     } else if (Array.isArray(value)) {
       result[key] = value.map((item) =>
         typeof item === 'object' && item !== null ? replaceClaudePaths(item) : item
@@ -129,7 +129,7 @@ function replaceClaudePaths(obj: Record<string, any>): Record<string, any> {
  * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
  * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
  * statusLine is always excluded from merge (personal environment setting).
- * When project=true, ~/.claude/ paths in command fields are converted to ./.claude/.
+ * When project=true, ~/.claude/ paths in command fields are converted to .claude/.
  */
 export function mergeSettingsJson(
   sourceDir: string,
