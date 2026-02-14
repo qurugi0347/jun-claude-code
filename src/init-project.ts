@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
 import chalk from 'chalk';
+import { getHookKey } from './utils';
 
 interface ProjectConfig {
   owner: string;
@@ -94,9 +95,10 @@ function copyProjectFile(srcRelative: string, destDir: string): void {
 }
 
 /**
- * Merge StartSession hook into settings.json
+ * Merge StartSession hook into settings.json.
+ * Appends the task-loader hook if not already present (duplicate detection via getHookKey).
  */
-function mergeSettingsJson(destDir: string): void {
+export function mergeProjectSettingsJson(destDir: string): void {
   const settingsPath = path.join(destDir, 'settings.json');
   let settings: Record<string, any> = {};
 
@@ -113,12 +115,26 @@ function mergeSettingsJson(destDir: string): void {
     settings.hooks = {};
   }
 
-  settings.hooks.StartSession = [
-    {
-      type: 'command',
-      command: 'bash .claude/hooks/task-loader.sh',
-    },
-  ];
+  if (!settings.hooks.StartSession) {
+    settings.hooks.StartSession = [];
+  }
+
+  const newEntry = {
+    hooks: [
+      {
+        type: 'command',
+        command: 'bash .claude/hooks/task-loader.sh',
+      },
+    ],
+  };
+
+  const existingKeys = new Set(
+    settings.hooks.StartSession.map((e: any) => getHookKey(e))
+  );
+
+  if (!existingKeys.has(getHookKey(newEntry))) {
+    settings.hooks.StartSession.push(newEntry);
+  }
 
   fs.mkdirSync(destDir, { recursive: true });
   fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf-8');
@@ -144,7 +160,7 @@ export async function initProject(): Promise<void> {
   copyProjectFile('agents/project-task-manager.md', destDir);
 
   // 3. settings.json merge
-  mergeSettingsJson(destDir);
+  mergeProjectSettingsJson(destDir);
 
   console.log(chalk.cyan('\n✅ GitHub Project 설정 완료!'));
   console.log(chalk.gray(`   Owner: ${config.owner}`));

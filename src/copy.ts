@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as readline from 'readline';
 import * as crypto from 'crypto';
 import chalk from 'chalk';
+import { getHookKey } from './utils';
 
 export interface CopyOptions {
   dryRun?: boolean;
@@ -101,7 +102,7 @@ function getDestClaudeDir(): string {
  * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
  * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
  */
-function mergeSettingsJson(sourceDir: string, destDir: string): void {
+export function mergeSettingsJson(sourceDir: string, destDir: string): void {
   const sourcePath = path.join(sourceDir, 'settings.json');
   const destPath = path.join(destDir, 'settings.json');
 
@@ -150,19 +151,6 @@ function mergeSettingsJson(sourceDir: string, destDir: string): void {
       destHooks[event] = [];
     }
     const destEntries: any[] = destHooks[event];
-
-    // Extract a command-based key from a hook entry for duplicate detection.
-    // Type 1: { type: "command", command: "..." } → returns "type:command"
-    // Type 2: { hooks: [{ type: "command", command: "..." }, ...] } → returns sorted "type:command" joined
-    const getHookKey = (entry: any): string => {
-      if (entry.hooks && Array.isArray(entry.hooks)) {
-        return entry.hooks
-          .map((h: any) => `${h.type || ''}:${h.command || ''}`)
-          .sort()
-          .join('\n');
-      }
-      return `${entry.type || ''}:${entry.command || ''}`;
-    };
 
     // Build a Set of command keys from existing entries for fast duplicate detection
     const existingKeys = new Set(destEntries.map((entry) => getHookKey(entry)));
