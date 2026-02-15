@@ -228,16 +228,23 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     process.exit(1);
   }
 
-  // Files to exclude from global copy (merge-handled separately)
-  const EXCLUDE_FROM_GLOBAL = [
+  // Files to exclude from all copies (merge-handled separately)
+  const EXCLUDE_ALWAYS = [
     'settings.json',
     'statusline-command.sh',
+  ];
+
+  // Files to exclude only when installing to project
+  const EXCLUDE_FROM_PROJECT = [
+    'hooks/_dedup.sh',
   ];
 
   // Get all files to copy
   const allFiles = getAllFiles(sourceDir);
   const files = allFiles.filter((file) => {
-    return !EXCLUDE_FROM_GLOBAL.includes(file);
+    if (EXCLUDE_ALWAYS.includes(file)) return false;
+    if (project && EXCLUDE_FROM_PROJECT.includes(file)) return false;
+    return true;
   });
 
   if (files.length === 0) {
