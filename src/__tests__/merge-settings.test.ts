@@ -359,6 +359,119 @@ describe('copy.ts mergeSettingsJson', () => {
       '~/.claude/hooks/skill-forced.sh'
     );
   });
+
+  it('should not duplicate hooks when project=true and run 3 times (idempotency)', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: '~/.claude/hooks/skill-forced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe(
+      '.claude/hooks/skill-forced.sh'
+    );
+  });
+
+  it('should not duplicate hooks across multiple events in project mode', () => {
+    const sourceSettings = {
+      hooks: {
+        SubagentStart: [
+          { hooks: [{ type: 'command', command: '~/.claude/hooks/subagent.sh' }] },
+        ],
+        UserPromptSubmit: [
+          { hooks: [{ type: 'command', command: '~/.claude/hooks/skill-forced.sh' }] },
+        ],
+        PreToolUse: [
+          {
+            matcher: 'Bash',
+            hooks: [{ type: 'command', command: '~/.claude/hooks/blocker.sh' }],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.SubagentStart).toHaveLength(1);
+    expect(result.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(result.hooks.PreToolUse).toHaveLength(1);
+  });
+
+  it('should not duplicate matcher hooks in project mode on re-run', () => {
+    const sourceSettings = {
+      hooks: {
+        PreToolUse: [
+          {
+            matcher: 'Bash',
+            hooks: [{ type: 'command', command: '~/.claude/hooks/blocker.sh' }],
+          },
+          {
+            matcher: 'Write',
+            hooks: [{ type: 'command', command: '~/.claude/hooks/blocker.sh' }],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.PreToolUse).toHaveLength(2);
+    expect(result.hooks.PreToolUse[0].matcher).toBe('Bash');
+    expect(result.hooks.PreToolUse[1].matcher).toBe('Write');
+  });
+
+  it('should dedup when dest has .claude/ paths and source has ~/.claude/ paths', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: '~/.claude/hooks/skill-forced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    // Simulate dest from a previous project install (already converted)
+    const destSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: '.claude/hooks/skill-forced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(destDir, 'settings.json'), destSettings);
+
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    expect(result.hooks.UserPromptSubmit).toHaveLength(1);
+  });
 });
 
 // ─── init-project.ts mergeSettingsJson (project) ───

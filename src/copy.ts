@@ -161,6 +161,11 @@ export function mergeSettingsJson(
     }
   }
 
+  // Convert ~/.claude/ → .claude/ paths in source BEFORE merge (for dedup key matching)
+  if (options?.project) {
+    sourceSettings = replaceClaudePaths(sourceSettings) as Record<string, any>;
+  }
+
   // Merge top-level keys (source fills in missing keys, dest's existing keys preserved)
   for (const key of Object.keys(sourceSettings)) {
     if (key === 'hooks' || key === 'statusLine') {
