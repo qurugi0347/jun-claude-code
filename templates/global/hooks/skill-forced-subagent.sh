@@ -9,7 +9,7 @@ CLAUDE_DIR="$(dirname "$SCRIPT_DIR")"
 GLOBAL_CLAUDE_DIR="$HOME/.claude"
 PROJECT_CLAUDE_DIR="$(pwd)/.claude"
 
-# Dedup: project-level 복사본이면 global에 양보
+# Dedup: project 우선, global은 project 버전 존재 시 양보
 source "$SCRIPT_DIR/_dedup.sh"
 _hook_dedup_check "${BASH_SOURCE[0]}" || exit 0
 
