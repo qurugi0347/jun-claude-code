@@ -13,12 +13,15 @@ PR 변경 내용을 분석하여 `.claude/context/` 하위에 codebase/business 
 
 ```
 .claude/context/
-├── codebase/
-│   ├── INDEX.md          # 모듈 목록 + 경로
-│   └── <module-name>.md  # 모듈별 구현 참조
-└── business/
-    ├── INDEX.md          # 프로젝트 개요 + 도메인 목록
-    └── <domain-area>.md  # 비즈니스 레벨 요약
+├── codebase/        # 모듈별 구현 참조
+│   ├── INDEX.md
+│   └── <module-name>.md
+├── business/        # 비즈니스 레벨 요약
+│   ├── INDEX.md
+│   └── <domain-area>.md
+└── architecture/    # 인프라 + 코드 아키텍처
+    ├── INDEX.md
+    └── <topic>.md
 ```
 
 <rules>
@@ -106,6 +109,62 @@ keywords: [비즈니스, 키워드]
   - `mergeSettingsJson()` -> "기존 설정을 보존하면서 새 설정 적용"
   - `copyClaudeFiles()` -> "템플릿 설정을 사용자 환경에 배포"
 
+## Architecture Context 규칙
+
+### 파일명
+- **kebab-case** 사용 (예: `deployment.md`, `database-schema.md`, `layer-structure.md`)
+- 아키텍처 토픽 단위로 분리
+
+### 분류
+
+| 분류 | 대상 | 파일명 예시 |
+|------|------|-----------|
+| 인프라 | 서버 배포, CI/CD, 클라우드 구성, 모니터링 | `deployment.md`, `ci-cd.md` |
+| 코드 아키텍처 | 레이어 구조, 디자인 패턴, 모듈 관계 | `layer-structure.md`, `module-dependencies.md` |
+| 데이터 | DB 스키마, 캐시 전략, 마이그레이션 | `database-schema.md`, `cache-strategy.md` |
+
+### 필수 섹션
+
+```markdown
+---
+name: <토픽명>
+description: <한 줄 설명>
+keywords: [관련, 키워드]
+---
+
+# <토픽명>
+
+<2-3문장 개요>
+
+## 구성 요소
+
+| 요소 | 역할 | 설정 파일/경로 |
+|------|------|--------------|
+| ... | ... | ... |
+
+## 다이어그램 (선택)
+
+<텍스트 기반 다이어그램>
+
+## 관련 Context
+
+- [<모듈명>](../codebase/<module>.md)
+- [<도메인명>](../business/<domain>.md)
+```
+
+## PR 내용 활용 규칙
+
+Context 생성 시 PR 정보를 다음과 같이 활용합니다:
+
+| PR 정보 | 활용 방법 |
+|---------|----------|
+| PR 제목 | 변경의 핵심 의도 파악 |
+| PR 본문 | 기대효과, 배경, 관련 이슈 파악 |
+| Diff | 실제 코드 변경 내용 분석 |
+
+- PR 의도를 반영하여 context 문서의 "개요"와 "핵심 흐름"을 작성한다
+- PR 본문의 기대효과를 Business Context의 "사용자 관점"에 반영한다
+
 </rules>
 
 ## INDEX.md 작성 규칙
@@ -146,6 +205,23 @@ description: 비즈니스 도메인 참조 목록
 | 도메인 | 설명 | 문서 |
 |--------|------|------|
 | 설정 관리 | 사용자 설정 배포 및 관리 | [configuration-management.md](./configuration-management.md) |
+```
+
+### architecture/INDEX.md
+
+```markdown
+---
+name: Architecture Index
+description: 인프라/코드 아키텍처 참조 목록
+---
+
+# Architecture Context Index
+
+## 토픽 목록
+
+| 토픽 | 분류 | 설명 | 문서 |
+|------|------|------|------|
+| 배포 구성 | 인프라 | 서버 배포 방식 | [deployment.md](./deployment.md) |
 ```
 
 ## 증분 업데이트 원칙

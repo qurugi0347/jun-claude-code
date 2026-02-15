@@ -42,6 +42,11 @@ jobs:
           show_full_output: true
           claude_args: '--allowedTools "Bash(git:*),Bash(ls:*),Bash(mkdir:*),Read,Write,Edit,Glob,Grep"'
           prompt: |
+            # PR 정보
+            **제목**: ${{ github.event.pull_request.title }}
+            **본문**:
+            ${{ github.event.pull_request.body }}
+
             # 에이전트 정의
             ${{ steps.read-skills.outputs.agent_def }}
 
@@ -49,13 +54,15 @@ jobs:
             ${{ steps.read-skills.outputs.skill_guide }}
 
             # 작업 지시
-            PR diff를 분석하고 .claude/context/ 아래에 컨텍스트 문서를 생성/업데이트하세요.
+            PR 정보와 diff를 분석하고 .claude/context/ 아래에 컨텍스트 문서를 생성/업데이트하세요.
 
             단계:
-            1. `git diff HEAD~1 --name-only`을 실행하여 변경된 파일 목록 가져오기
-            2. 변경된 각 모듈에 대해 .claude/context/codebase/<module>.md 생성 또는 업데이트
-            3. 영향을 받는 각 비즈니스 도메인에 대해 .claude/context/business/<domain>.md 생성 또는 업데이트
-            4. 두 디렉토리의 INDEX.md 파일 업데이트
+            1. PR 제목과 본문에서 변경 의도와 기대효과를 파악
+            2. `git diff HEAD~1 --name-only`로 변경된 파일 목록 가져오기
+            3. 변경된 코드의 기능 단위별로 .claude/context/codebase/<module>.md 생성/업데이트
+            4. 영향받는 비즈니스 도메인에 대해 .claude/context/business/<domain>.md 생성/업데이트
+            5. 인프라/아키텍처 변경이 있으면 .claude/context/architecture/<topic>.md 생성/업데이트
+            6. 각 디렉토리의 INDEX.md 파일 업데이트
 
             중요사항:
             - 컨텍스트 문서에 소스 코드를 포함하지 말고, 파일 경로와 함수 이름만 포함하세요

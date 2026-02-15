@@ -41,9 +41,11 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 ### Step 1.2: Context 수집
 
 - [ ] EnterPlanMode 진입 (복잡한 작업인 경우)
-- [ ] 관련 Context 문서 확인 (.claude/context/)
+- [ ] **병렬 Context 수집 (정확도 향상)**:
+  - `project-context-collector` → .claude/context/ 문서에서 프로젝트 배경 수집
+  - `context-collector` → 소스 코드 + .claude/context/ 에서 패턴/구현 방식 수집
+  - 두 Agent를 병렬로 호출하여 작업 속도와 정확도를 높인다
 - [ ] 필요한 Skill 활성화 (.claude/skills/)
-- [ ] 기존 코드 탐색 (Explore Agent 또는 직접 탐색)
 
 ### Step 1.3: TaskList 생성
 

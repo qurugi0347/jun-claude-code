@@ -28,19 +28,29 @@ color: blue
 요청을 분석하여 코드 탐색 전략을 결정합니다.
 
 - 요청의 핵심 키워드와 도메인 영역을 식별
-- 탐색 대상: Skill/Agent 문서 → 소스 코드 순서로 진행
+- 탐색 대상: context 문서 → Skill/Agent 문서 → 소스 코드 순서로 진행
 - 탐색 범위를 판단하여 효율적으로 수집
 
-### Step 2: Skill 및 Agent 탐색
+### Step 2: .claude/context/ 사전 확인
+
+프로젝트 맥락을 먼저 파악합니다.
+
+```
+- .claude/context/ 하위 INDEX.md들을 읽어 프로젝트 전체 맥락 파악
+- 요청과 관련된 상세 문서(codebase/, business/, architecture/)가 있으면 확인
+- 이미 문서화된 내용은 소스 코드 탐색 범위에서 제외하여 효율화
+```
+
+### Step 3: Skill 및 Agent 탐색
 
 ```
 - .claude/skills/ 에서 작업에 필요한 Skill 확인
 - .claude/agents/ 에서 관련 Agent 확인
 ```
 
-### Step 3: 소스 코드 DEEP 탐색
+### Step 4: 소스 코드 DEEP 탐색
 
-실제 소스 코드를 직접 탐색하여 패턴과 구현 방식을 파악합니다.
+context 문서에서 파악한 맥락을 기반으로 더 정확하게 탐색합니다.
 
 ```
 - 유사한 기존 구현 찾기 (Grep, Glob 활용)
@@ -51,7 +61,7 @@ color: blue
 - import/export 관계 추적
 ```
 
-### Step 4: Context 요약 출력
+### Step 5: Context 요약 출력
 
 수집한 모든 정보를 output_format에 맞춰 정리합니다.
 
@@ -67,6 +77,10 @@ color: blue
 ## 탐색 전략
 - **탐색 범위**: (어떤 영역을 탐색했는지)
 - **판단 근거**: (왜 이 범위를 탐색했는지)
+
+## 0. 프로젝트 맥락 (context 문서 기반)
+- **참조한 문서**: (확인한 .claude/context/ 문서 목록)
+- **핵심 맥락**: (프로젝트 배경, 관련 도메인/모듈 정보)
 
 ## 1. 소스 코드 탐색 결과
 | 파일 | 확인 내용 | 핵심 발견 |
@@ -97,7 +111,7 @@ color: blue
 
 ## 제약사항
 
-- `.claude/context/` 문서는 탐색하지 않습니다. 프로젝트 배경 정보가 필요하면 project-context-collector Agent를 안내합니다.
-- 실제 소스 코드와 `.claude/skills/`, `.claude/agents/` 문서만 탐색합니다.
+- `.claude/context/` 문서를 사전 참조하여 프로젝트 맥락을 파악합니다.
+- 상세한 프로젝트 배경 정보가 필요하면 project-context-collector Agent를 추가로 안내합니다.
 
 </constraints>
