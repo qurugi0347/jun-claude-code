@@ -27,28 +27,37 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 
 <checklist>
 
-### Step 1.1: Context 수집
+### Step 1.1: 작업 목적 확인 -- 기능 요청 시 필수
+
+사용자에게 아래 3가지를 반드시 확인하고, Plan 문서에 기록하세요:
+- [ ] 목적: 이 작업을 왜 하는가? (What is the goal?)
+- [ ] 문제: 어떤 문제를 해결하는가? (What problem does it solve?)
+- [ ] 방법: 어떻게 해결할 것인가? (How will it be solved?)
+
+Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희석되지 않도록 관리합니다.
+
+### Step 1.2: Context 수집
 
 - [ ] EnterPlanMode 진입 (복잡한 작업인 경우)
 - [ ] 관련 Context 문서 확인 (.claude/context/)
 - [ ] 필요한 Skill 활성화 (.claude/skills/)
 - [ ] 기존 코드 탐색 (Explore Agent 또는 직접 탐색)
 
-### Step 1.2: TaskList 생성
+### Step 1.3: TaskList 생성
 
 필수 조건:
 - [ ] 작업을 작은 단위로 분해
 - [ ] 각 Task에 명확한 완료 조건 정의
 - [ ] Task 간 의존성 설정
 
-### Step 1.3: 코드 수정 계획 작성
+### Step 1.4: 코드 수정 계획 작성
 
 필수 출력:
 - [ ] 수정할 파일 목록
 - [ ] 각 파일의 변경 내용 요약
 - [ ] 예상되는 영향 범위
 
-### Step 1.4: 사용자 Confirm -- 필수
+### Step 1.5: 사용자 Confirm -- 필수
 
 - [ ] 계획을 사용자에게 보여주고 승인받은 후 구현 진행
 
@@ -122,7 +131,7 @@ MANDATORY WORKFLOW SEQUENCE PROTOCOL
 
 ### 워크플로우 요약
 
-계획(Context->TaskList->수정계획->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
+계획(목적확인->Context->TaskList->수정계획->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
 
 ### 참조 가능한 Skills (자동 탐색됨)
 
