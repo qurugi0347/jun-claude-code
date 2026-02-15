@@ -6,12 +6,15 @@ import { copyClaudeFiles } from './copy';
 import { initContext } from './init-context';
 import { validateTemplates } from './validate';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { version } = require('../package.json');
+
 const program = new Command();
 
 program
   .name('jun-claude-code')
   .description('Copy .claude configuration files to ~/.claude (global) or .claude/ (project)')
-  .version('1.0.0')
+  .version(version)
   .option('-d, --dry-run', 'Preview files to be copied without actually copying')
   .option('-f, --force', 'Overwrite existing files without confirmation')
   .option('-p, --project', 'Install to project .claude/ instead of global ~/.claude/')
