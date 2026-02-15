@@ -18,7 +18,8 @@ echo "✅ [Hook] Skill/Agent 평가 프로토콜 실행됨"
 cat << 'EOF'
 MANDATORY SKILL & AGENT EVALUATION PROTOCOL
 
-작업을 시작하기 전에 아래 단계를 순서대로 완료하세요:
+BLOCKING REQUIREMENT: 응답 시작 시 아래 Skill/Agent 평가를 반드시 출력하세요.
+평가 없이 작업을 시작하면 프로토콜 위반입니다.
 
 <delegation_rules>
 
@@ -60,12 +61,12 @@ Main Agent의 Context Window는 제한적입니다.
 
 ## PART 1: SKILL 평가
 
-Step 1 - Skill 평가: 각 Skill에 대해 다음을 명시하세요:
-  - Skill 이름
-  - YES 또는 NO (이 요청에 해당 Skill이 필요한가?)
-  - 한 줄 이유
+응답에 아래 형식으로 Skill 평가를 출력하세요:
 
-Step 2 - Skill 활성화: YES로 표시된 모든 Skill의 SKILL.md를 읽으세요.
+- [Skill이름]: YES/NO - 이유
+- 예: `Git: YES - 커밋 작업 필요`
+
+YES인 Skill의 SKILL.md를 읽으세요.
 
 ---
 
@@ -180,13 +181,12 @@ cat << 'EOF'
 
 ## PART 2: AGENT 평가 (Context 절약 핵심)
 
-Step 3 - Agent 평가: 각 Agent에 대해 다음을 명시하세요:
-  - Agent 이름
-  - YES 또는 NO (이 요청에 해당 Agent 활용이 필요한가?)
-  - 한 줄 이유
+응답에 아래 형식으로 Agent 평가를 출력하세요:
 
-Step 4 - Agent 활용: YES로 표시된 Agent는 Task 도구로 호출하세요.
-  예: Task(subagent_type="task-planner", prompt="...")
+- [Agent이름]: YES/NO - 이유
+- 예: `git-manager: YES - 커밋 작업 위임`
+
+YES인 Agent는 Task 도구로 호출하세요.
 
 ---
 
@@ -237,13 +237,11 @@ cat << 'EOF'
 
 ## PART 3: 구현
 
-Step 5 - 구현: 모든 관련 Skill 확인 및 Agent 호출 후에 구현을 시작하세요.
+Skill/Agent 평가를 출력한 후에 구현을 시작하세요.
 
 ---
 
 탐색은 Subagent 전담, 구현 후 검증(code-reviewer + qa-tester), 단순 작업은 직접 처리 가능
-
-지금 바로 모든 사용 가능한 Skill과 Agent를 평가하세요.
 
 </phase>
 EOF
