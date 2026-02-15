@@ -39,7 +39,7 @@ jobs:
       - name: Commit version update
         run: |
           git add package.json
-          git commit -m "v${GITHUB_REF#refs/tags/}"
+          git commit -m "${GITHUB_REF#refs/tags/}"
 
       - name: Build
         run: yarn build
