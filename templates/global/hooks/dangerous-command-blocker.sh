@@ -51,7 +51,7 @@ if echo "$COMMAND" | grep -qE '(^|;|\||&&)\s*sudo\s'; then
 fi
 
 # 3. git push --force / -f (강제 푸시)
-if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(-f|--force)'; then
+if echo "$COMMAND" | grep -qE 'git\s+push\s+.*\s(-f|--force)(\s|$)'; then
   block "git push --force 는 원격 히스토리를 덮어씁니다. 이 명령어는 차단됩니다."
 fi
 
