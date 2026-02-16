@@ -22,7 +22,9 @@ _hook_dedup_check() {
   if [ "$self_dir" = "$global_dir" ]; then
     # project-level 동일 hook이 존재하면 → global은 skip
     local project_hook
-    project_hook="$(pwd)/.claude/hooks/$hook_name"
+    local project_root
+    project_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+    project_hook="${project_root:-.}/.claude/hooks/$hook_name"
     if [ -f "$project_hook" ]; then
       return 1  # global yields to project → skip
     fi
