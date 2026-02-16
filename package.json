@@ -1,6 +1,6 @@
 {
   "name": "jun-claude-code",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Claude Code configuration template - copy .claude settings to your project",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
