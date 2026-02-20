@@ -28,6 +28,8 @@ TAG="v${NEW_VERSION}"
 
 echo "Deploying: $CURRENT_VERSION -> $NEW_VERSION"
 
+git push
+
 # 태그 생성 & 푸시 (버전 bump은 GitHub Actions에서 처리)
 git tag "$TAG"
 git push origin "$TAG"
