@@ -10,6 +10,7 @@ fi
 
 # 최신 코드 동기화
 git pull
+git push
 
 # 현재 버전 읽기
 CURRENT_VERSION=$(node -p "require('./package.json').version")
