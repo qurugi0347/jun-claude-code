@@ -66,13 +66,15 @@ Execution Plan에 skill이 없는 경우:
 ## 작업 워크플로우
 
 ```
-1. Context 수집 → 2. TaskList 생성 → 3. Agent/Skill 할당 (task-enricher) → 4. 수정 계획 (사용자 Confirm 필수)
+1. Context 수집 → 2. TaskList 생성 → 3. Agent/Skill 할당 (task-enricher) → 4. 수정 계획
                                                                                       ↓
-                                          5. 사이드이펙트 검증 (Code Flow, UserFlow, Breaking Change)
+                                          4.5. Plan 문서 생성 (.claude/plan/) → 5. 사용자 Confirm
                                                                                       ↓
-                                          6. 코드 수정 (Execution Plan에 따라 subagent 조율) → 7. 단위별 커밋
+                                          6. 사이드이펙트 검증 (Code Flow, UserFlow, Breaking Change)
                                                                                       ↓
-                                          8. Self Code Review (lint) → 9. Task 완료 검증
+                                          7. 코드 수정 (Execution Plan에 따라 subagent 조율) → 8. 단위별 커밋
+                                                                                      ↓
+                                          9. Self Code Review (lint) → 10. Task 완료 검증
 ```
 
 </workflow>
@@ -87,5 +89,6 @@ Execution Plan에 skill이 없는 경우:
 | 공통 코딩 원칙 | `.claude/skills/Coding/SKILL.md` |
 | Git 규칙 | `.claude/skills/Git/SKILL.md` |
 | 문서 작성 가이드 | `.claude/skills/Documentation/SKILL.md` |
+| 현재 작업 계획 | `.claude/plan/` (plan.md, context.md, checklist.md) |
 
 </reference>

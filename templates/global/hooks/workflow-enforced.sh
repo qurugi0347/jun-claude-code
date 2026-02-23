@@ -78,6 +78,17 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 복잡한 Plan의 경우 `plan-verifier` Agent로 검증을 권장합니다:
 - [ ] 목적 정합성, 완전성, 논리적 일관성, 실현 가능성, 스코프 초과 여부 검증
 
+### Step 1.5.5: Plan 문서 생성 -- 필수
+
+계획이 확정되면 프로젝트의 `.claude/plan/` 폴더에 3가지 문서를 생성하세요:
+
+- [ ] `.claude/plan/plan.md` -- 전체 계획 (목적, 설계, 수정 파일 목록, TaskList 요약)
+- [ ] `.claude/plan/context.md` -- 맥락 (사용자 요청 원문, 비즈니스/기술적 배경, 탐색한 코드, 결정 사항)
+- [ ] `.claude/plan/checklist.md` -- 실행 체크리스트 (Phase별 체크리스트, Task별 세부 작업)
+
+각 문서에는 frontmatter(name, description, created)를 포함하세요.
+이 문서들은 구현 중 맥락 유실 방지와 진행 추적에 활용됩니다.
+
 ### Step 1.6: 사용자 Confirm -- 필수
 
 - [ ] 계획을 사용자에게 보여주고 승인받은 후 구현 진행
@@ -152,7 +163,7 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 
 ### 워크플로우 요약
 
-계획(목적확인->Context->TaskList->Agent/Skill할당->수정계획->Plan검증(선택)->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
+계획(목적확인->Context->TaskList->Agent/Skill할당->수정계획->Plan검증(선택)->Plan문서생성->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
 
 ### 참조 가능한 Skills (자동 탐색됨)
 
