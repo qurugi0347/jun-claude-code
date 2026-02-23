@@ -34,3 +34,12 @@ CLI 도구(`jun-claude-code`)가 설치를 처리합니다. 설치 후 프로젝
 - Context 절약 원칙 (Subagent 위임 규칙)
 - 작업 워크플로우 (Planning → Validation → Implementation → Review)
 - .claude 문서 작성 가이드
+
+## 프롬프트 작성 원칙
+
+`templates/` 디렉토리의 모든 파일은 `~/.claude/` 또는 프로젝트 `.claude/`로 설치됩니다.
+따라서 Skills, Agents, Hooks 등의 프롬프트 문서를 작성/수정할 때는 `skills/PromptStructuring/SKILL.md` 규칙을 적용하세요.
+
+- XML 태그 구조화 (`<rules>`, `<instructions>`, `<output_format>` 등 의미 단위 분리)
+- 긍정 표현 사용 (부정형 → 긍정형 전환)
+- 출력 최적화 (테이블 > 산문, 불필요한 서사 제거)

@@ -82,4 +82,17 @@ done
 cat << 'EOF'
 
 Skill 규칙을 준수하여 작업을 시작하세요.
+
+---
+
+REPORT FORMAT PROTOCOL (작업 완료 시 필수)
+
+작업 완료 후 반드시 아래 3가지를 구조화하여 보고하세요:
+
+1. **Discoveries** — 발견한 것 (탐색 결과, 패턴, 참고 코드)
+2. **Changes** — 변경한 것 (수정/생성/삭제한 파일과 내용 요약)
+3. **Reasoning** — 판단 근거 (왜 그렇게 결정했는지, 검토한 대안)
+
+해당 없는 항목은 "해당 없음"으로 표시하세요.
+상세 형식은 ~/.claude/skills/Reporting/SKILL.md를 참조하세요.
 EOF
