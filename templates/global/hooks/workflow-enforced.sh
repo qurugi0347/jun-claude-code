@@ -55,6 +55,17 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 - [ ] 각 Task에 명확한 완료 조건 정의
 - [ ] Task 간 의존성 설정
 
+### Step 1.3.5: 각 Task에 Agent/Skill 할당 ← 필수
+
+`task-enricher` Agent를 호출하여 TaskList의 각 Task에 실행 계획을 추가합니다:
+- [ ] 각 task에 담당 subagent 순서 명시 (순차/병렬 구분)
+- [ ] 각 subagent가 참조할 Skill 경로 명시
+- [ ] subagent 간 input/output 연결 구조 정의
+- [ ] Main agent 조율 지점 명시
+
+> task-enricher 완료 후 TaskList의 각 task description에 `## Execution Plan` 섹션이 추가됩니다.
+> 이후 구현 단계에서 Main agent는 이 계획에 따라 subagent를 조율합니다.
+
 ### Step 1.4: 코드 수정 계획 작성
 
 필수 출력:
@@ -141,7 +152,7 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 
 ### 워크플로우 요약
 
-계획(목적확인->Context->TaskList->수정계획->Plan검증(선택)->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
+계획(목적확인->Context->TaskList->Agent/Skill할당->수정계획->Plan검증(선택)->Confirm) -> 검증(사이드이펙트) -> 구현(코드수정->커밋) -> 리뷰(CodeReview->완료검증)
 
 ### 참조 가능한 Skills (자동 탐색됨)
 

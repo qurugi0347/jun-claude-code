@@ -23,7 +23,22 @@ SKILL EVALUATION (Subagent)
 
 <phase name="Skill 평가">
 
-각 Skill을 YES/NO로 평가하고, YES인 Skill의 SKILL.md를 읽으세요.
+## Skill 참조 방법
+
+### 우선: TaskList에서 명시된 Skill 확인
+
+현재 실행 중인 task의 `## Execution Plan` 섹션을 확인하세요.
+task description에 skill 경로가 명시되어 있다면 해당 Skill만 읽으세요.
+
+확인 방법:
+1. `TaskList` 도구로 현재 task 목록 조회
+2. 자신이 담당한 task 찾기 (description의 Execution Plan 확인)
+3. 해당 subagent 항목의 `skill:` 필드에 명시된 SKILL.md만 읽기
+
+### 폴백: Task에 Skill 정보 없을 경우
+
+task description에 Execution Plan이 없거나 skill이 "없음"으로 명시된 경우,
+아래 전체 Skill 목록에서 현재 작업과 관련된 Skill을 YES/NO로 평가하세요.
 
 ### 사용 가능한 Skills (자동 탐색됨)
 
@@ -66,5 +81,5 @@ done
 
 cat << 'EOF'
 
-관련 Skill 확인 후 작업을 시작하세요. Skill 규칙을 준수하세요.
+Skill 규칙을 준수하여 작업을 시작하세요.
 EOF
