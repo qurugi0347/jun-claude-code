@@ -1,6 +1,6 @@
 ---
 name: context-collector
-description: 실제 소스 코드에서 패턴/구현 방식/도메인 지식을 수집. Skill/Agent 식별, 코드 DEEP 탐색 전문.
+description: 소스 코드에서 패턴/구현 방식/도메인 지식을 수집. 파일 내용 분석/정리, Skill/Agent 식별, 코드 DEEP 탐색 전문.
 keywords: [코드탐색, 패턴파악, Skill식별, 도메인지식, 아키텍처분석, DEEP탐색, 소스코드]
 model: opus
 color: blue

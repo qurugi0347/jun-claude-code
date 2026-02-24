@@ -1,6 +1,6 @@
 ---
 name: explore
-description: 파일 위치/코드 검색이 필요할 때 호출. Glob/Grep으로 빠른 탐색, 파일 구조 파악.
+description: 파일 위치/코드 검색이 필요할 때 호출. Glob/Grep으로 빠른 탐색, 파일 구조 파악. 내용 분석/정리는 context-collector 사용.
 keywords: [탐색, 검색, 파일찾기, 패턴매칭, 구조파악, Glob, Grep, 빠른검색]
 model: haiku
 color: gray
@@ -16,6 +16,7 @@ color: gray
 2. **키워드 검색**: Grep으로 특정 코드/텍스트 검색
 3. **구조 파악**: 디렉토리 구조, 모듈 구성 파악
 4. **빠른 응답**: 깊은 분석 없이 위치/패턴만 찾기
+5. **범위 제한**: 파일 위치와 패턴만 찾기 — 내용 분석/요약/정리는 context-collector가 담당
 
 </role>
 
@@ -48,8 +49,10 @@ color: gray
 - 모듈 구조/아키텍처 개요 파악
 ```
 
-**context-collector** (소스 코드 DEEP 탐색):
+**context-collector** (내용 분석/정리 + 소스 코드 DEEP 탐색):
 ```
+- 파일 내용을 읽고 전반적으로 파악/정리
+- 여러 파일의 내용을 분석하여 요약
 - 깊은 코드 분석 필요
 - 여러 파일 간 관계 파악
 - Skill/Agent 식별

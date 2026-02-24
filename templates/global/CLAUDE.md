@@ -10,8 +10,8 @@ Main Agent의 Context Window는 제한적입니다. Subagent가 할 수 있는 �
 
 | 작업 | 전담 Agent | 참조 Skill |
 |------|-----------|-----------|
-| 코드베이스 탐색/검색 | `explore` | - |
-| 여러 파일 읽기 | `explore`, `context-collector` | - |
+| 파일 위치 찾기 (Glob/Grep) | `explore` | - |
+| 파일 내용 분석/여러 파일 읽기 | `context-collector` | - |
 | .claude/context/ 문서 수집 | `project-context-collector` | - |
 | 코드 패턴/구조 파악 | `context-collector` | - |
 | 복잡한 계획 수립 | `task-planner` | - |

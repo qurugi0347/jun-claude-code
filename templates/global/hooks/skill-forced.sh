@@ -40,10 +40,10 @@ Main Agent의 Context Window는 제한적입니다.
 
 | 작업 | 전담 Agent |
 |------|-----------|
-| 파일 탐색 (Glob/Grep) | explore Agent가 전담 |
+| 파일 위치 탐색 (Glob/Grep) | explore Agent가 전담 |
 | .claude/context/ 문서 탐색 | project-context-collector가 전담 |
 | 소스 코드 패턴/구조 파악 | context-collector가 전담 |
-| 2개 이상 파일 읽기 | explore/context-collector가 전담 |
+| 파일 내용 분석/여러 파일 읽기 | context-collector가 전담 |
 | 복잡한 분석/계획 | task-planner에 위임 |
 | 파일 수정 (3개 이상) | code-writer가 전담 |
 | Git 명령어 실행 (git add, commit, push 등) | git-manager에 위임 |
