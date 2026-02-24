@@ -439,6 +439,110 @@ describe('copy.ts mergeSettingsJson', () => {
     expect(result.hooks.PreToolUse[1].matcher).toBe('Write');
   });
 
+  it('should skip source group when dest group contains all source commands plus extras', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: 'skill-forced.sh' },
+              { type: 'command', command: 'workflow-enforced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    // Dest has the same commands PLUS an extra custom hook (peon-ping)
+    const destSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: 'peon.sh' },
+              { type: 'command', command: 'skill-forced.sh' },
+              { type: 'command', command: 'workflow-enforced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(destDir, 'settings.json'), destSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    // Should remain 1 group, not duplicate
+    expect(result.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(result.hooks.UserPromptSubmit[0].hooks).toHaveLength(3);
+  });
+
+  it('should skip source group when dest has commands split across multiple groups', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: 'skill-forced.sh' },
+              { type: 'command', command: 'workflow-enforced.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    // Dest has the same commands spread across separate groups
+    const destSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          { hooks: [{ type: 'command', command: 'skill-forced.sh' }] },
+          { hooks: [{ type: 'command', command: 'workflow-enforced.sh' }] },
+        ],
+      },
+    };
+    writeJson(path.join(destDir, 'settings.json'), destSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    // Should remain 2 groups, source group not duplicated
+    expect(result.hooks.UserPromptSubmit).toHaveLength(2);
+  });
+
+  it('should add source group when dest only has some of its commands', () => {
+    const sourceSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          {
+            hooks: [
+              { type: 'command', command: 'skill-forced.sh' },
+              { type: 'command', command: 'new-hook.sh' },
+            ],
+          },
+        ],
+      },
+    };
+    writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
+
+    // Dest has only one of the two source commands
+    const destSettings = {
+      hooks: {
+        UserPromptSubmit: [
+          { hooks: [{ type: 'command', command: 'skill-forced.sh' }] },
+        ],
+      },
+    };
+    writeJson(path.join(destDir, 'settings.json'), destSettings);
+
+    mergeGlobalSettings(sourceDir, destDir);
+
+    const result = readJson(path.join(destDir, 'settings.json'));
+    // Source group should be added since new-hook.sh is missing
+    expect(result.hooks.UserPromptSubmit).toHaveLength(2);
+  });
+
   it('should dedup when dest has .claude/ paths and source has ~/.claude/ paths', () => {
     const sourceSettings = {
       hooks: {

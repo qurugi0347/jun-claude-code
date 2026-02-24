@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as readline from 'readline';
 import * as crypto from 'crypto';
 import chalk from 'chalk';
-import { getHookKey } from './utils';
 
 export interface CopyOptions {
   dryRun?: boolean;
@@ -190,14 +189,50 @@ export function mergeSettingsJson(
     }
     const destEntries: any[] = destHooks[event];
 
-    // Build a Set of command keys from existing entries for fast duplicate detection
-    const existingKeys = new Set(destEntries.map((entry) => getHookKey(entry)));
+    // Collect all individual commands from dest entries, grouped by matcher
+    const destCommandsByMatcher = new Map<string, Set<string>>();
+    for (const entry of destEntries) {
+      const matcher = entry.matcher || '';
+      if (!destCommandsByMatcher.has(matcher)) {
+        destCommandsByMatcher.set(matcher, new Set());
+      }
+      const cmds = destCommandsByMatcher.get(matcher)!;
+      if (entry.hooks && Array.isArray(entry.hooks)) {
+        for (const h of entry.hooks) {
+          if (h.command) cmds.add(h.command);
+        }
+      } else if (entry.command) {
+        cmds.add(entry.command);
+      }
+    }
 
     for (const entry of sourceEntries) {
-      const key = getHookKey(entry);
-      if (!existingKeys.has(key)) {
+      const matcher = entry.matcher || '';
+      const existingCmds = destCommandsByMatcher.get(matcher) || new Set<string>();
+
+      // Extract all commands from this source entry
+      const sourceCommands: string[] = [];
+      if (entry.hooks && Array.isArray(entry.hooks)) {
+        for (const h of entry.hooks) {
+          if (h.command) sourceCommands.push(h.command);
+        }
+      } else if (entry.command) {
+        sourceCommands.push(entry.command);
+      }
+
+      // Skip if all source commands already exist in dest for the same matcher
+      const allExist =
+        sourceCommands.length > 0 && sourceCommands.every((cmd) => existingCmds.has(cmd));
+
+      if (!allExist) {
         destEntries.push(entry);
-        existingKeys.add(key);
+        // Track newly added commands for subsequent source entries
+        if (!destCommandsByMatcher.has(matcher)) {
+          destCommandsByMatcher.set(matcher, existingCmds);
+        }
+        for (const cmd of sourceCommands) {
+          existingCmds.add(cmd);
+        }
       }
     }
   }
