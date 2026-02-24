@@ -48,6 +48,15 @@
             "command": "~/.claude/hooks/code-quality-reminder.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-wrap-suggester.sh"
+          }
+        ]
       }
     ]
   }
