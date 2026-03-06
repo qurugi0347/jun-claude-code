@@ -207,16 +207,11 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 
 ## PHASE 4: 리뷰 (Review) - 구현 후 필수
 
+> 코드 품질 검토(Skill 규칙 준수, 보안, 에러 핸들링)는 PostToolUse agent hook이 매 Edit/Write마다 자동 수행합니다.
+
 <checklist>
 
-### Step 4.1: Self Code Review
-
-필수 검토:
-- [ ] 프로젝트 규칙 준수 확인
-- [ ] Skill checklist 기준 검토
-- [ ] lint 실행
-
-### Step 4.2: Task 완료 검증
+### Step 4.1: Task 완료 검증
 
 - [ ] 원래 요청사항이 모두 충족되었는지 확인
 - [ ] 예상한 동작이 구현되었는지 확인
