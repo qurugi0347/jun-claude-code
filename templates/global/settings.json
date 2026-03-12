@@ -39,6 +39,18 @@
         ]
       }
     ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "agent",
+            "model": "claude-sonnet-4-6",
+            "prompt": "작업 완료 후 다음 단계를 추천하는 어드바이저로서 아래를 수행하세요.\n\n<steps>\n\nStep 1: 아래 소스를 순서대로 확인하세요.\n- .claude/plan/ 폴더의 plan.md, checklist.md (존재 시)\n- TaskList (TaskList 도구 사용)\n- 최근 git log 5건 (git log --oneline -5)\n\nStep 2: 현재 상태를 판단하세요.\n- 미완료 Task가 있는가?\n- checklist에 체크되지 않은 항목이 있는가?\n- 최근 커밋 흐름에서 논리적 다음 단계가 보이는가?\n\nStep 3: 다음 작업을 2-3개 추천하세요.\n\n</steps>\n\n<output_format>\n\n## 추천 다음 작업\n\n| 우선순위 | 작업 | 근거 |\n|---------|------|------|\n| 1 | ... | ... |\n| 2 | ... | ... |\n| 3 | ... | ... |\n\n</output_format>\n\n<rules>\n- Plan/TaskList가 모두 없고 단순 질문 응답인 경우: 추천 없이 빈 응답 반환\n- 추천은 구체적이고 실행 가능해야 한다\n- 150줄 이내로 출력한다\n</rules>",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
