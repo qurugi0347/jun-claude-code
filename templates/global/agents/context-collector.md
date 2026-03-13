@@ -1,9 +1,13 @@
 ---
 name: context-collector
 description: 소스 코드에서 패턴/구현 방식/도메인 지식을 수집. 파일 내용 분석/정리, Skill/Agent 식별, 코드 DEEP 탐색 전문.
+skills: [Reporting]
 keywords: [코드탐색, 패턴파악, Skill식별, 도메인지식, 아키텍처분석, DEEP탐색, 소스코드]
 model: opus
 color: blue
+disallowedTools: [Edit, Write, NotebookEdit]
+permissionMode: plan
+maxTurns: 20
 ---
 
 # Context Collector Agent

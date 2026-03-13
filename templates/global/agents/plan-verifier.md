@@ -1,9 +1,12 @@
 ---
 name: plan-verifier
 description: Plan 수립 후 구현 전에 Plan 품질을 검증하는 Agent. 목적 정합성, 완전성, 논리적 일관성, 실현 가능성, 스코프 초과 여부를 코드베이스 탐색을 통해 능동적으로 검증.
+skills: [Reporting]
 keywords: [Plan검증, 목적정합성, 완전성, 논리적일관성, 실현가능성, 스코프검증, PlanReview]
 model: opus
 color: cyan
+disallowedTools: [Edit, Write, NotebookEdit]
+permissionMode: plan
 ---
 
 # Plan Verifier Agent

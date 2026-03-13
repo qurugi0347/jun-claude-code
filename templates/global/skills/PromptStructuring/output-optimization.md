@@ -2,7 +2,6 @@
 name: PromptStructuring-output-optimization
 description: "Hook/프롬프트 출력의 토큰 최적화 기법과 가이드라인"
 keywords: [output, optimization, hook, 토큰절약, 출력최적화, 슬림화]
-estimated_tokens: 500
 ---
 
 # 출력 최적화 가이드

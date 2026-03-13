@@ -2,7 +2,7 @@
 name: Director
 description: 프로젝트 스펙/기획 문서 작성 구조, 검증 규칙, 충돌 탐지 가이드라인 제공.
 keywords: [프로젝트스펙, 기획문서, 검증규칙, 충돌탐지, spec]
-estimated_tokens: ~600
+user-invocable: false
 ---
 
 # Director Skill

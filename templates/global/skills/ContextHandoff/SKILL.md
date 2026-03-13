@@ -2,7 +2,9 @@
 name: context-handoff
 description: 컨텍스트 압축을 위한 HANDOFF.md 작성 가이드
 keywords: [HANDOFF, 컨텍스트, context, 압축, handoff, 세션, clear, 토큰]
-estimated_tokens: ~300
+user-invocable: true
+disable-model-invocation: true
+argument-hint: "[handoff-name]"
 ---
 
 # Context Handoff

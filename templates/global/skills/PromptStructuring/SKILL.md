@@ -2,7 +2,7 @@
 name: PromptStructuring
 description: "Claude Code 프롬프트의 XML 태그 구조화, 긍정 표현 전환, 출력 최적화 가이드"
 keywords: [prompt, xml-tags, positive-phrasing, output-optimization, 프롬프트, 구조화, 긍정표현, XML, 출력최적화]
-estimated_tokens: 300
+user-invocable: false
 ---
 
 # 프롬프트 구조화 스킬
@@ -17,3 +17,4 @@ estimated_tokens: 300
 | 2. 긍정 표현 | "~금지" 대신 "~한다"로 행동 직접 유도 | `positive-phrasing.md` |
 | 3. 흐름 기호 | 단계/변환/위임에 `->` 사용: 계획 -> 구현 -> 검증 | - |
 | 4. 출력 최적화 | 반복 제거, 테이블 > 산문, Hook 출력 150줄 이내 | `output-optimization.md` |
+| 5. Frontmatter | Skill/Agent YAML frontmatter 필드 선택과 작성 기준 | `skills-frontmatter.md` |

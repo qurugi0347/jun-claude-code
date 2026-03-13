@@ -2,7 +2,6 @@
 name: git
 description: Git 작업 가이드. Commit 메시지 작성법, PR 작성법, 브랜치 전략, 안전 규칙.
 keywords: [커밋, PR, 브랜치, push, merge, FEAT, FIX, REFACTOR, CHORE, DOCS, GitHub, 풀리퀘스트]
-estimated_tokens: ~600
 ---
 
 # Git 작업 가이드

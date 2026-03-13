@@ -2,7 +2,7 @@
 name: React
 description: React 컴포넌트 작성 시 사용. 파일/폴더 구조, useState/useEffect 규칙, props 설계, 렌더링 최적화 기법 제공.
 keywords: [React, 컴포넌트, useState, useEffect, 훅, props, 상태관리, 렌더링, 최적화]
-estimated_tokens: ~600
+user-invocable: false
 ---
 
 # React 개발 스킬

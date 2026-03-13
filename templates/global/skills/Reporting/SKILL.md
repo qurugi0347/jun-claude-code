@@ -2,7 +2,7 @@
 name: Reporting
 description: Subagent 보고 형식 가이드. Discoveries/Changes/Reasoning 3축 구조화, Agent 유형별 출력 템플릿 제공.
 keywords: [보고, 리포트, Discoveries, Changes, Reasoning, subagent, 출력형식]
-estimated_tokens: ~600
+user-invocable: false
 ---
 
 # Subagent 보고 형식

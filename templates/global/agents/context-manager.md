@@ -4,6 +4,7 @@ description: 기존 .claude/context/ 문서의 구조 최적화 시 호출. 큰 
 keywords: [Context관리, 문서정리, 파일분리, 토큰최적화, 구조개선, 문서품질]
 model: sonnet
 color: green
+skills: [Reporting]
 ---
 
 # Context Manager Agent
@@ -82,7 +83,6 @@ INDEX 파일에는 **핵심 요약**만 포함:
 name: domain-order-index
 description: 주문 도메인 개요
 keywords: [주문, Order, 결제, Payment]
-estimated_tokens: ~200
 ---
 
 # 주문 도메인

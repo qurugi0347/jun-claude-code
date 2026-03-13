@@ -2,8 +2,9 @@
 name: session-wrap
 description: PR diff 기반으로 반복 패턴, 학습 포인트, 후속 작업을 분석하여 Skill/Context 후보를 제안
 keywords: [세션정리, PR분석, 자동화, 학습, 후속작업, session-wrap, 회고]
-estimated_tokens: ~800
 user-invocable: true
+disable-model-invocation: true
+context: fork
 ---
 
 # Session Wrap Skill

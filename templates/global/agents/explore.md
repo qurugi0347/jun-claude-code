@@ -1,9 +1,13 @@
 ---
 name: explore
 description: 파일 위치/코드 검색이 필요할 때 호출. Glob/Grep으로 빠른 탐색, 파일 구조 파악. 내용 분석/정리는 context-collector 사용.
+skills: [Reporting]
 keywords: [탐색, 검색, 파일찾기, 패턴매칭, 구조파악, Glob, Grep, 빠른검색]
 model: haiku
 color: gray
+disallowedTools: [Edit, Write, NotebookEdit]
+permissionMode: plan
+maxTurns: 5
 ---
 
 # Explore Agent

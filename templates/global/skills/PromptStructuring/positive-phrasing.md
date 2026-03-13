@@ -2,7 +2,6 @@
 name: PromptStructuring-positive-phrasing
 description: "부정 표현을 긍정 표현으로 전환하는 패턴과 체크리스트"
 keywords: [positive, phrasing, 긍정표현, 부정표현, 전환]
-estimated_tokens: 350
 ---
 
 # 긍정 표현 전환 가이드

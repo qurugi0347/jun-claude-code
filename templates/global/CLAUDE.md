@@ -43,21 +43,22 @@ Main agent는 **직접 코드를 읽거나 쓰지 않고**, 아래 역할에 집
 - Critical 이슈 발견 시 해당 단계 subagent 재호출
 - 모든 Git 작업(커밋, PR, 브랜치)은 git-manager에 위임
 
-### Skill 위임 원칙 (skill-forced-subagent.sh 활용)
+### Skill 위임 원칙 (Skills 2.0 Preload)
 
-`SubagentStart` hook(`skill-forced-subagent.sh`)은 subagent가 TaskList에서 자신의 task를 찾아 명시된 skill만 읽도록 안내합니다.
+Agent frontmatter의 `skills` 필드에 선언된 Skill이 Agent 시작 시 자동으로 preload됩니다.
 
-**핵심 원칙**: 형식 규칙을 프롬프트에 직접 쓰지 말고, SKILL.md를 먼저 읽도록 지시하라.
+```yaml
+# 예: code-writer.md frontmatter
+skills: [Coding, Backend, Reporting]
+```
+
+**핵심 원칙**: 형식 규칙을 프롬프트에 직접 쓰지 말고, Agent의 `skills` 필드에 선언하라.
 
 #### Subagent 위임 시 Skill 지시 방법
 
-subagent 프롬프트에 형식을 직접 쓰는 대신, 아래 패턴을 사용하세요:
+Agent frontmatter에 `skills` 필드가 설정되어 있으면 별도 지시 불필요.
+추가 Skill 참조가 필요한 경우에만 프롬프트에 명시:
 
-```
-먼저 해당 task의 Execution Plan에 명시된 skill SKILL.md를 읽고 규칙을 파악한 뒤 작업하세요.
-```
-
-Execution Plan에 skill이 없는 경우:
 ```
 먼저 ~/.claude/skills/ 에서 이 작업과 관련된 SKILL.md를 찾아 읽고 규칙을 따르세요.
 ```
