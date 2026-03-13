@@ -16,6 +16,7 @@ keywords: [agent, hooks, lifecycle, 관심사분리, frontmatter, 자동화]
 |------|------|------------|
 | Agent별 hook 선언 | 각 Agent frontmatter에 필요한 hook만 명시 | 코드 수정 Agent에서만 자동 코드 리뷰가 실행됨 |
 | Skills preload | Agent 시작 시 필요한 Skill 문서 자동 주입 | Agent가 별도 안내 없이도 관련 규칙 준수 |
+| SubagentStart hook 제거 | `skill-forced-subagent.sh` 삭제 → `skills` frontmatter 필드로 대체 | Skill 규칙을 명시적 hook 없이 자동으로 주입 |
 | 전역 hook 최소화 | settings.json에는 보안/워크플로우 필수 hook만 유지 | 불필요한 Agent에 hook이 실행되지 않아 성능 향상 |
 | permissionMode 선언 | 읽기 전용/편집 허용 등 권한을 Agent 단위로 지정 | 탐색 Agent가 실수로 파일 수정하는 상황 방지 |
 
@@ -35,6 +36,7 @@ keywords: [agent, hooks, lifecycle, 관심사분리, frontmatter, 자동화]
 | PreToolUse: dangerous-command-blocker | settings.json | 전체 (위험 명령어 차단) |
 | PostToolUse: 코드 리뷰 | code-writer, code-reviewer 등 frontmatter | 해당 Agent에서만 |
 | Stop: followup 추천 | code-writer, git-manager 등 frontmatter | 해당 Agent에서만 |
+| ~~SubagentStart: skill-forced-subagent~~ | ~~settings.json (전역 삭제됨)~~ | ~~`skills` frontmatter로 대체~~ |
 
 ## 관련 Codebase Context
 
