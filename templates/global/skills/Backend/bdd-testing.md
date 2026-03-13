@@ -2,7 +2,6 @@
 name: bdd-testing
 description: NestJS + Jest BDD 스타일 테스트 작성 시 사용. describe 네스팅 구조, Given/When/Then 패턴, Testing Module Mock 설정 규칙 제공.
 keywords: [BDD, test, 테스트, Jest, NestJS, describe, it, Given, When, Then, mock, TestingModule]
-estimated_tokens: ~500
 ---
 
 # BDD 테스트 작성 규칙

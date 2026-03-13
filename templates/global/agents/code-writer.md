@@ -4,6 +4,9 @@ description: 로직 작성, 기능 구현, 리팩토링 등 코드 수정이 필
 keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript, React, 훅, 페이지]
 model: opus
 color: cyan
+skills: [Coding, Backend]
+permissionMode: acceptEdits
+memory: project
 ---
 
 # Code Writer Agent

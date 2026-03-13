@@ -4,6 +4,9 @@ description: 코드 작성 완료 후 품질 검토 시 호출. CLAUDE.md/Skills
 keywords: [코드리뷰, 체크리스트, lint, 규칙검증, 품질검사, Critical, Warning, 수정제안]
 model: opus
 color: yellow
+disallowedTools: [Edit, Write, NotebookEdit]
+skills: [Coding]
+memory: project
 ---
 
 # Code Reviewer Agent

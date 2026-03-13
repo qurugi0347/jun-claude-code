@@ -4,6 +4,7 @@ description: 복잡한 작업 시작 전 계획 수립 시 호출. 요구사항 
 keywords: [TaskList, 계획수립, 요구사항명확화, 작업분해, 질문, 수정계획, 파일목록, 의존성]
 model: opus
 color: green
+disallowedTools: [Edit, Write, NotebookEdit]
 ---
 
 # Task Planner Agent

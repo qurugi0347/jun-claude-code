@@ -2,7 +2,7 @@
 name: Backend
 description: NestJS/TypeORM 백엔드 개발 시 사용. 레이어 객체 변환, find vs queryBuilder 선택 기준, BDD 테스트 작성 규칙 제공.
 keywords: [Backend, 백엔드, 레이어, DTO, Entity, Service, Controller, TypeORM, find, queryBuilder, test, BDD, 테스트, Jest]
-estimated_tokens: ~400
+user-invocable: false
 ---
 
 # 백엔드 개발 원칙

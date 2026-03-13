@@ -82,7 +82,6 @@ INDEX 파일에는 **핵심 요약**만 포함:
 name: domain-order-index
 description: 주문 도메인 개요
 keywords: [주문, Order, 결제, Payment]
-estimated_tokens: ~200
 ---
 
 # 주문 도메인

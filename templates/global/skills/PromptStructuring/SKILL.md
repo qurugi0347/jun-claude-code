@@ -2,7 +2,7 @@
 name: PromptStructuring
 description: "Claude Code 프롬프트의 XML 태그 구조화, 긍정 표현 전환, 출력 최적화 가이드"
 keywords: [prompt, xml-tags, positive-phrasing, output-optimization, 프롬프트, 구조화, 긍정표현, XML, 출력최적화]
-estimated_tokens: 300
+user-invocable: false
 ---
 
 # 프롬프트 구조화 스킬

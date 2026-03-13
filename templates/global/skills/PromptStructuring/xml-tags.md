@@ -2,7 +2,6 @@
 name: PromptStructuring-xml-tags
 description: "XML 태그 표준 목록, 파일 유형별 권장 조합"
 keywords: [xml, tags, role, instructions, rules, constraints]
-estimated_tokens: 400
 ---
 
 # XML 태그 표준

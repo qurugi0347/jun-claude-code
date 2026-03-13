@@ -2,9 +2,14 @@
 name: pr-apply
 description: PR 리뷰 피드백 적용 스킬. 리뷰 코멘트 확인, 코드 수정, 커밋 생성.
 keywords: [PR피드백, 리뷰적용, 코드수정, 코멘트, 변경요청, 재커밋]
-estimated_tokens: ~250
 user-invocable: true
+context: fork
+argument-hint: "[PR-number]"
 ---
+
+## PR Context
+- Diff: !`gh pr diff $ARGUMENTS`
+- Comments: !`gh pr view $ARGUMENTS --comments`
 
 # PR Apply Skill
 
