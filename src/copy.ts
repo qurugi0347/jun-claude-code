@@ -188,7 +188,47 @@ async function selectItems(
     name: category,
     message: `Select ${category} to install`,
     choices,
-    hint: '(↑↓ navigate, <space> toggle, <enter> confirm)',
+    hint: '(↑↓ navigate, <space> toggle, <a> select all, <enter> confirm)',
+  });
+
+  try {
+    return await prompt.run();
+  } catch {
+    console.log(chalk.yellow('\nInstallation cancelled.'));
+    process.exit(0);
+  }
+}
+
+/**
+ * Show MultiSelect prompt for skill sub-files across multiple skills.
+ * Groups files by skill with separators.
+ */
+async function selectSkillSubFiles(
+  skills: { skillName: string; subFiles: string[] }[],
+  sourceDir: string,
+  destDir: string
+): Promise<string[]> {
+  const choices: any[] = [];
+
+  for (const { skillName, subFiles } of skills) {
+    choices.push({ role: 'separator', message: chalk.cyan(`── ${skillName} ──`) });
+
+    for (const file of subFiles) {
+      const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+      choices.push({
+        name: file,
+        message: `  ${path.basename(file)}`,
+        hint: statusLabel(status),
+        enabled: status !== 'unchanged',
+      });
+    }
+  }
+
+  const prompt = new MultiSelect({
+    name: 'skill-files',
+    message: 'Select skill files to install',
+    choices,
+    hint: '(↑↓ navigate, <space> toggle, <a> select all, <enter> confirm)',
   });
 
   try {
@@ -468,7 +508,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
       agentFiles = await selectItems('Agents', agentItems);
     }
 
-    // Skills: MultiSelect
+    // Skills: MultiSelect (2-step)
     if (categorized.skills.length > 0) {
       const skillItems = categorized.skills.map(skill => ({
         name: skill,
@@ -476,11 +516,28 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
         status: getSkillStatus(skill, sourceDir, destDir),
       }));
       const selectedSkills = await selectItems('Skills', skillItems);
-      skillFiles = files.filter(f => {
-        if (!f.startsWith('skills/')) return false;
-        const skillName = f.split('/')[1];
-        return selectedSkills.includes(skillName);
-      });
+
+      // Step 2: 선택된 스킬의 하위 파일 선택
+      const multiFileSkills: { skillName: string; subFiles: string[] }[] = [];
+
+      for (const skillName of selectedSkills) {
+        const skillSubFiles = files.filter(f =>
+          f.startsWith(`skills/${skillName}/`)
+        );
+
+        if (skillSubFiles.length > 1) {
+          multiFileSkills.push({ skillName, subFiles: skillSubFiles });
+        } else {
+          // 파일이 1개뿐이면 자동 포함
+          skillFiles.push(...skillSubFiles);
+        }
+      }
+
+      // 하위 파일 선택이 필요한 스킬이 있으면 한 번의 프롬프트로 표시
+      if (multiFileSkills.length > 0) {
+        const selectedSubFiles = await selectSkillSubFiles(multiFileSkills, sourceDir, destDir);
+        skillFiles.push(...selectedSubFiles);
+      }
     }
   }
 
