@@ -4,6 +4,15 @@ description: 기존 .claude/context/ 문서의 구조 최적화 시 호출. 큰 
 keywords: [Context관리, 문서정리, 파일분리, 토큰최적화, 구조개선, 문서품질]
 model: sonnet
 color: green
+skills: [Reporting]
+hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: agent
+          model: claude-sonnet-4-6
+          prompt: "코드 품질 리뷰어로서 아래 단계를 수행하세요.\n\nStep 1: ~/.claude/skills/ 와 .claude/skills/ 두 디렉토리의 SKILL.md 파일 목록을 스캔하세요. 변경된 파일의 타입과 내용을 기준으로 관련 Skill을 판별하세요 (예: Coding, Backend, React 등).\n\nStep 2: 관련 SKILL.md를 읽고 규칙을 파악하세요.\n\nStep 3: 변경된 파일을 읽고 코드 변경 내용을 맥락과 함께 리뷰하세요.\n\nStep 4: 아래 항목을 검토하세요:\n- Skill에 명시된 규칙 위반 여부\n- 실패 가능한 작업의 에러 핸들링 누락\n- 보안 문제 (인젝션, XSS, 하드코딩된 시크릿)\n- 명백한 로직 오류 또는 오타\n\n문제 발견 시: {\"ok\": false, \"reason\": \"구체적 이슈와 개선 제안\"}\n문제 없을 시: {\"ok\": true}\n\n실제 문제만 지적하세요. 스타일, 네이밍, 사소한 선호도는 지적하지 마세요."
+          timeout: 60
 ---
 
 # Context Manager Agent

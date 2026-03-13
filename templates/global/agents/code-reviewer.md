@@ -5,7 +5,7 @@ keywords: [코드리뷰, 체크리스트, lint, 규칙검증, 품질검사, Crit
 model: opus
 color: yellow
 disallowedTools: [Edit, Write, NotebookEdit]
-skills: [Coding]
+skills: [Coding, Reporting]
 memory: project
 ---
 
