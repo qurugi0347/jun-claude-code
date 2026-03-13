@@ -31,6 +31,7 @@ keywords: [copy, install, multiselect, enquirer, categorize, file-status]
 | `getFileStatus(sourcePath, destPath)` | 파일 해시 비교로 new/changed/unchanged 판별 |
 | `getSkillStatus(skillName, sourceDir, destDir)` | 스킬 디렉토리 내 모든 파일을 비교해 상태 반환 |
 | `selectItems(category, items)` | enquirer MultiSelect 프롬프트 표시, 선택된 항목 이름 배열 반환 |
+| `selectSkillSubFiles(skills, sourceDir, destDir)` | 선택된 스킬의 하위 파일을 그룹 구분선과 함께 MultiSelect로 표시, 선택된 파일 경로 배열 반환 |
 | `statusLabel(status)` | chalk 컬러 상태 텍스트 반환 (inline 힌트용) |
 | `statusBracket(status)` | chalk 컬러 `[상태]` 텍스트 반환 (로그 출력용) |
 | `mergeSettingsJson(sourceDir, destDir, opts)` | settings.json hooks를 이벤트 키 단위로 병합 |
@@ -45,7 +46,10 @@ keywords: [copy, install, multiselect, enquirer, categorize, file-status]
 5. `--force`: 전체 파일 복사 (프롬프트 없음)
 6. 기본 모드:
    - others: 변경된 파일만 자동 복사
-   - agents/skills: `selectItems()` 통해 사용자 선택 후 복사
+   - agents: `selectItems()` 통해 사용자 선택 후 복사
+   - skills: 2단계 선택
+     - 1단계: `selectItems()` → 스킬 디렉토리 선택
+     - 2단계: `selectSkillSubFiles()` → 선택된 스킬의 하위 파일 선택 (하위 파일이 1개인 스킬은 자동 포함)
 7. `mergeSettingsJson()` → settings.json 병합
 
 ## 관련 Business Context
