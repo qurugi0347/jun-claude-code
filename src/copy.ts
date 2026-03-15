@@ -1,8 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as readline from 'readline';
 import * as crypto from 'crypto';
 import chalk from 'chalk';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { MultiSelect } = require('enquirer');
 
 export interface CopyOptions {
   dryRun?: boolean;
@@ -10,22 +12,12 @@ export interface CopyOptions {
   project?: boolean;
 }
 
-/**
- * Prompt user for confirmation using readline
- */
-function askConfirmation(question: string): Promise<boolean> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+type FileStatus = 'new' | 'changed' | 'unchanged';
 
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      rl.close();
-      const normalized = answer.toLowerCase().trim();
-      resolve(normalized === 'y' || normalized === 'yes');
-    });
-  });
+interface CategorizedFiles {
+  agents: string[];
+  skills: string[];
+  others: string[];
 }
 
 /**
@@ -95,6 +87,156 @@ function getDestClaudeDir(): string {
     throw new Error('Could not determine home directory');
   }
   return path.join(homeDir, '.claude');
+}
+
+/**
+ * Categorize files into agents, skills (top-level dirs), and others
+ */
+function categorizeFiles(files: string[]): CategorizedFiles {
+  const agents: string[] = [];
+  const skillDirs = new Set<string>();
+  const others: string[] = [];
+
+  for (const file of files) {
+    if (file.startsWith('agents/')) {
+      agents.push(file);
+    } else if (file.startsWith('skills/')) {
+      const parts = file.split('/');
+      if (parts.length >= 2 && parts[1]) {
+        skillDirs.add(parts[1]);
+      }
+    } else {
+      others.push(file);
+    }
+  }
+
+  return {
+    agents: agents.sort(),
+    skills: Array.from(skillDirs).sort(),
+    others: others.sort(),
+  };
+}
+
+/**
+ * Get file status (new/changed/unchanged)
+ */
+function getFileStatus(sourcePath: string, destPath: string): FileStatus {
+  if (!fs.existsSync(destPath)) return 'new';
+  return getFileHash(sourcePath) === getFileHash(destPath) ? 'unchanged' : 'changed';
+}
+
+/**
+ * Get skill directory status by checking all files within
+ */
+function getSkillStatus(skillName: string, sourceDir: string, destDir: string): FileStatus {
+  const sourceSkillDir = path.join(sourceDir, 'skills', skillName);
+  const destSkillDir = path.join(destDir, 'skills', skillName);
+
+  if (!fs.existsSync(destSkillDir)) return 'new';
+
+  const sourceFiles = getAllFiles(sourceSkillDir, sourceSkillDir);
+  for (const file of sourceFiles) {
+    const src = path.join(sourceSkillDir, file);
+    const dst = path.join(destSkillDir, file);
+    if (!fs.existsSync(dst) || getFileHash(src) !== getFileHash(dst)) {
+      return 'changed';
+    }
+  }
+
+  return 'unchanged';
+}
+
+/**
+ * Format status label for display
+ */
+function statusLabel(status: FileStatus): string {
+  switch (status) {
+    case 'new': return chalk.green('new');
+    case 'changed': return chalk.yellow('changed');
+    case 'unchanged': return chalk.gray('unchanged');
+  }
+}
+
+/**
+ * Format status label with brackets for log output
+ */
+function statusBracket(status: FileStatus): string {
+  switch (status) {
+    case 'new': return chalk.green('[new]');
+    case 'changed': return chalk.yellow('[changed]');
+    case 'unchanged': return chalk.gray('[unchanged]');
+  }
+}
+
+/**
+ * Show MultiSelect prompt for a category
+ */
+async function selectItems(
+  category: string,
+  items: { name: string; displayName: string; status: FileStatus }[]
+): Promise<string[]> {
+  if (items.length === 0) return [];
+
+  const choices = items.map(item => ({
+    name: item.name,
+    message: item.displayName,
+    hint: statusLabel(item.status),
+    enabled: item.status !== 'unchanged',
+  }));
+
+  const prompt = new MultiSelect({
+    name: category,
+    message: `Select ${category} to install`,
+    choices,
+    hint: '(↑↓ navigate, <space> toggle, <a> select all, <enter> confirm)',
+  });
+
+  try {
+    return await prompt.run();
+  } catch {
+    console.log(chalk.yellow('\nInstallation cancelled.'));
+    process.exit(0);
+  }
+}
+
+/**
+ * Show MultiSelect prompt for skill sub-files across multiple skills.
+ * Groups files by skill with separators.
+ */
+async function selectSkillSubFiles(
+  skills: { skillName: string; subFiles: string[] }[],
+  sourceDir: string,
+  destDir: string
+): Promise<string[]> {
+  const choices: any[] = [];
+
+  for (const { skillName, subFiles } of skills) {
+    choices.push({ role: 'separator', message: chalk.cyan(`── ${skillName} ──`) });
+
+    for (const file of subFiles) {
+      const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+      choices.push({
+        name: file,
+        message: `  ${path.basename(file)}`,
+        hint: statusLabel(status),
+        enabled: status !== 'unchanged',
+      });
+    }
+  }
+
+  const prompt = new MultiSelect({
+    name: 'skill-files',
+    message: 'Select skill files to install',
+    choices,
+    hint: '(↑↓ navigate, <space> toggle, <a> select all, <enter> confirm)',
+  });
+
+  try {
+    return await prompt.run();
+  } catch {
+    console.log(chalk.yellow('\nInstallation cancelled.'));
+    process.exit(0);
+  }
 }
 
 /**
@@ -292,27 +434,43 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     return;
   }
 
-  console.log(chalk.cyan(`Found ${files.length} files to copy:`));
+  const categorized = categorizeFiles(files);
+
+  console.log(chalk.cyan(`Found ${files.length} files (${categorized.agents.length} agents, ${categorized.skills.length} skills, ${categorized.others.length} others)`));
   console.log();
 
-  // Dry run mode - just show what would be copied
+  // Dry run mode - show categorized status
   if (dryRun) {
     console.log(chalk.yellow('[DRY RUN] Files that would be copied:'));
     console.log();
-    for (const file of files) {
-      const sourcePath = path.join(sourceDir, file);
-      const destPath = path.join(destDir, file);
-      const exists = fs.existsSync(destPath);
-      if (exists) {
-        const sourceHash = getFileHash(sourcePath);
-        const destHash = getFileHash(destPath);
-        const status = sourceHash === destHash ? chalk.gray('[unchanged]') : chalk.yellow('[overwrite]');
-        console.log(`  ${status} ${file}`);
-      } else {
-        console.log(`  ${chalk.green('[new]')} ${file}`);
+
+    if (categorized.agents.length > 0) {
+      console.log(chalk.cyan('  Agents:'));
+      for (const file of categorized.agents) {
+        const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+        console.log(`    ${statusBracket(status)} ${path.basename(file, '.md')}`);
       }
+      console.log();
     }
-    // settings.json merge indicator
+
+    if (categorized.skills.length > 0) {
+      console.log(chalk.cyan('  Skills:'));
+      for (const skill of categorized.skills) {
+        const status = getSkillStatus(skill, sourceDir, destDir);
+        console.log(`    ${statusBracket(status)} ${skill}`);
+      }
+      console.log();
+    }
+
+    if (categorized.others.length > 0) {
+      console.log(chalk.cyan('  Others (auto-install):'));
+      for (const file of categorized.others) {
+        const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+        console.log(`    ${statusBracket(status)} ${file}`);
+      }
+      console.log();
+    }
+
     const sourceSettingsExists = fs.existsSync(path.join(sourceDir, 'settings.json'));
     if (sourceSettingsExists) {
       console.log(`  ${chalk.blue('[merge]')} settings.json`);
@@ -322,42 +480,91 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     return;
   }
 
-  // Copy files
-  let copiedCount = 0;
-  let skippedCount = 0;
+  // Determine files to copy per category
+  let agentFiles: string[] = [];
+  let skillFiles: string[] = [];
+  let otherFiles: string[] = [];
 
-  for (const file of files) {
-    const sourcePath = path.join(sourceDir, file);
-    const destPath = path.join(destDir, file);
-    const exists = fs.existsSync(destPath);
-
-    if (exists && !force) {
-      const sourceHash = getFileHash(sourcePath);
-      const destHash = getFileHash(destPath);
-
-      if (sourceHash === destHash) {
-        console.log(`  ${chalk.gray('[unchanged]')} ${file}`);
-        skippedCount++;
-        continue;
-      }
-
-      // Hash differs - ask for confirmation
-      const shouldOverwrite = await askConfirmation(
-        chalk.yellow(`File changed: ${file}. Overwrite? (y/N): `)
-      );
-
-      if (!shouldOverwrite) {
-        console.log(chalk.gray(`  Skipped: ${file}`));
-        skippedCount++;
-        continue;
+  if (force) {
+    agentFiles = categorized.agents;
+    skillFiles = files.filter(f => f.startsWith('skills/'));
+    otherFiles = categorized.others;
+  } else {
+    // Others: auto-copy new/changed files
+    for (const file of categorized.others) {
+      const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+      if (status !== 'unchanged') {
+        otherFiles.push(file);
       }
     }
 
+    // Agents: MultiSelect
+    if (categorized.agents.length > 0) {
+      const agentItems = categorized.agents.map(file => ({
+        name: file,
+        displayName: path.basename(file, '.md'),
+        status: getFileStatus(path.join(sourceDir, file), path.join(destDir, file)),
+      }));
+      agentFiles = await selectItems('Agents', agentItems);
+    }
+
+    // Skills: MultiSelect (2-step)
+    if (categorized.skills.length > 0) {
+      const skillItems = categorized.skills.map(skill => ({
+        name: skill,
+        displayName: skill,
+        status: getSkillStatus(skill, sourceDir, destDir),
+      }));
+      const selectedSkills = await selectItems('Skills', skillItems);
+
+      // Step 2: 선택된 스킬의 하위 파일 선택
+      const multiFileSkills: { skillName: string; subFiles: string[] }[] = [];
+
+      for (const skillName of selectedSkills) {
+        const skillSubFiles = files.filter(f =>
+          f.startsWith(`skills/${skillName}/`)
+        );
+
+        if (skillSubFiles.length > 1) {
+          multiFileSkills.push({ skillName, subFiles: skillSubFiles });
+        } else {
+          // 파일이 1개뿐이면 자동 포함
+          skillFiles.push(...skillSubFiles);
+        }
+      }
+
+      // 하위 파일 선택이 필요한 스킬이 있으면 한 번의 프롬프트로 표시
+      if (multiFileSkills.length > 0) {
+        const selectedSubFiles = await selectSkillSubFiles(multiFileSkills, sourceDir, destDir);
+        skillFiles.push(...selectedSubFiles);
+      }
+    }
+  }
+
+  // Copy all selected files
+  const allFilesToCopy = [...otherFiles, ...agentFiles, ...skillFiles];
+  let copiedCount = 0;
+
+  if (otherFiles.length > 0 || categorized.others.length > 0) {
+    // Show unchanged others for context
+    for (const file of categorized.others) {
+      if (!otherFiles.includes(file)) {
+        console.log(`  ${chalk.gray('[unchanged]')} ${file}`);
+      }
+    }
+  }
+
+  for (const file of allFilesToCopy) {
+    const sourcePath = path.join(sourceDir, file);
+    const destPath = path.join(destDir, file);
+    const exists = fs.existsSync(destPath);
     copyFile(sourcePath, destPath);
-    const status = exists ? chalk.yellow('[overwritten]') : chalk.green('[created]');
-    console.log(`  ${status} ${file}`);
+    const label = exists ? chalk.yellow('[overwritten]') : chalk.green('[created]');
+    console.log(`  ${label} ${file}`);
     copiedCount++;
   }
+
+  const skippedCount = files.length - copiedCount;
 
   // Merge settings.json (hooks are merged, not overwritten)
   mergeSettingsJson(sourceDir, destDir, { project });
