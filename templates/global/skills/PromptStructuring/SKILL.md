@@ -1,6 +1,6 @@
 ---
 name: PromptStructuring
-description: "Skill/Agent/Hook 파일 작성 시 필수 참조. XML 태그 구조화, 긍정 표현, 출력 최적화, Skills 2.0 frontmatter(context:fork, agent, hooks, skills preload) 스펙 포함."
+description: ".claude/skills/ 또는 .claude/agents/ 하위 파일을 생성·수정할 때 반드시 이 Skill을 읽고 규칙을 적용한다. XML 태그 구조화, 긍정 표현, 출력 최적화, Skills 2.0 frontmatter(context:fork, agent, hooks, skills preload) 스펙 포함."
 keywords: [prompt, xml-tags, positive-phrasing, output-optimization, 프롬프트, 구조화, 긍정표현, XML, 출력최적화, frontmatter, SKILL.md, agent.md, skills-2.0, hooks, context-fork, skills-preload]
 user-invocable: false
 ---
