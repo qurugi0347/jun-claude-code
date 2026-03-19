@@ -146,13 +146,15 @@ Plan 파일의 Context 섹션에 위 내용을 명시하여 작업 목적이 희
 
 ### Step 1.5.5: Plan 문서 생성 -- 필수
 
+> **`Planning` Skill (`skills/Planning/SKILL.md`)의 템플릿을 따라 작성한다.**
+
 계획이 확정되면 프로젝트의 `.claude/plan/` 폴더에 3가지 문서를 생성하세요:
 
-- [ ] `.claude/plan/plan.md` -- 전체 계획 (목적, 설계, 수정 파일 목록, TaskList 요약)
+- [ ] `.claude/plan/plan.md` -- 전체 계획 (목적, DB/API/FE 설계, 설계 결정과 차선책, TaskList 요약)
 - [ ] `.claude/plan/context.md` -- 맥락 (사용자 요청 원문, 비즈니스/기술적 배경, 탐색한 코드, 결정 사항)
 - [ ] `.claude/plan/checklist.md` -- 실행 체크리스트 (Phase별 체크리스트, Task별 세부 작업)
 
-각 문서에는 frontmatter(name, description, created)를 포함하세요.
+각 문서에는 frontmatter(name, description, created, status)를 포함하세요.
 이 문서들은 구현 중 맥락 유실 방지와 진행 추적에 활용됩니다.
 
 ### Step 1.6: 사용자 Confirm -- 필수
