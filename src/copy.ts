@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import chalk from 'chalk';
+import { loadMetadata, saveMetadata, mergeMetadata } from './metadata';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { MultiSelect } = require('enquirer');
@@ -12,18 +13,29 @@ export interface CopyOptions {
   project?: boolean;
 }
 
-type FileStatus = 'new' | 'changed' | 'unchanged';
+export type FileStatus = 'new' | 'changed' | 'unchanged';
 
-interface CategorizedFiles {
+export interface CategorizedFiles {
   agents: string[];
   skills: string[];
   others: string[];
 }
 
+// Files to exclude from all copies (merge-handled separately)
+export const EXCLUDE_ALWAYS = [
+  'settings.json',
+  'statusline-command.sh',
+];
+
+// Files to exclude only when installing to project
+export const EXCLUDE_FROM_PROJECT = [
+  'hooks/_dedup.sh',
+];
+
 /**
  * Calculate SHA-256 hash of a file
  */
-function getFileHash(filePath: string): string {
+export function getFileHash(filePath: string): string {
   const content = fs.readFileSync(filePath);
   return crypto.createHash('sha256').update(content).digest('hex');
 }
@@ -31,7 +43,7 @@ function getFileHash(filePath: string): string {
 /**
  * Get all files recursively from a directory
  */
-function getAllFiles(dirPath: string, basePath: string = dirPath): string[] {
+export function getAllFiles(dirPath: string, basePath: string = dirPath): string[] {
   const files: string[] = [];
 
   if (!fs.existsSync(dirPath)) {
@@ -55,7 +67,7 @@ function getAllFiles(dirPath: string, basePath: string = dirPath): string[] {
 /**
  * Ensure directory exists
  */
-function ensureDir(dirPath: string): void {
+export function ensureDir(dirPath: string): void {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
@@ -64,7 +76,7 @@ function ensureDir(dirPath: string): void {
 /**
  * Copy a single file
  */
-function copyFile(src: string, dest: string): void {
+export function copyFile(src: string, dest: string): void {
   ensureDir(path.dirname(dest));
   fs.copyFileSync(src, dest);
 }
@@ -72,7 +84,7 @@ function copyFile(src: string, dest: string): void {
 /**
  * Get the source templates/global directory path (from package installation)
  */
-function getSourceGlobalDir(): string {
+export function getSourceGlobalDir(): string {
   // When installed as npm package, __dirname is in dist/
   // templates/global folder is at package root
   return path.resolve(__dirname, '..', 'templates', 'global');
@@ -81,7 +93,7 @@ function getSourceGlobalDir(): string {
 /**
  * Get the destination .claude directory path (user's home)
  */
-function getDestClaudeDir(): string {
+export function getDestClaudeDir(): string {
   const homeDir = process.env.HOME || process.env.USERPROFILE || '';
   if (!homeDir) {
     throw new Error('Could not determine home directory');
@@ -92,7 +104,7 @@ function getDestClaudeDir(): string {
 /**
  * Categorize files into agents, skills (top-level dirs), and others
  */
-function categorizeFiles(files: string[]): CategorizedFiles {
+export function categorizeFiles(files: string[]): CategorizedFiles {
   const agents: string[] = [];
   const skillDirs = new Set<string>();
   const others: string[] = [];
@@ -410,17 +422,6 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     process.exit(1);
   }
 
-  // Files to exclude from all copies (merge-handled separately)
-  const EXCLUDE_ALWAYS = [
-    'settings.json',
-    'statusline-command.sh',
-  ];
-
-  // Files to exclude only when installing to project
-  const EXCLUDE_FROM_PROJECT = [
-    'hooks/_dedup.sh',
-  ];
-
   // Get all files to copy
   const allFiles = getAllFiles(sourceDir);
   const files = allFiles.filter((file) => {
@@ -568,6 +569,13 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
 
   // Merge settings.json (hooks are merged, not overwritten)
   mergeSettingsJson(sourceDir, destDir, { project });
+
+  // Save installation metadata
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const currentVersion = require('../package.json').version;
+  const existingMeta = loadMetadata(destDir);
+  const updatedMeta = mergeMetadata(existingMeta, allFilesToCopy, sourceDir, currentVersion);
+  saveMetadata(destDir, updatedMeta);
 
   console.log();
   console.log(chalk.green(`Done! Copied ${copiedCount} files, skipped ${skippedCount} files.`));

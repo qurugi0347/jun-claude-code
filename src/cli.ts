@@ -69,6 +69,30 @@ program
   });
 
 program
+  .command('update')
+  .description('Update installed templates while preserving user customizations')
+  .option('-p, --project', 'Update project .claude/')
+  .option('-f, --force', 'Overwrite all including user-modified')
+  .option('-d, --dry-run', 'Preview changes without applying')
+  .action(async (options) => {
+    try {
+      const { updateClaudeFiles } = await import('./update');
+      await updateClaudeFiles({
+        dryRun: options.dryRun,
+        force: options.force,
+        project: options.project,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error:', error.message);
+      } else {
+        console.error('An unexpected error occurred');
+      }
+      process.exit(1);
+    }
+  });
+
+program
   .command('validate')
   .description('Validate template directory structure')
   .action(async () => {
