@@ -1,5 +1,9 @@
 # Claude Code 작업 가이드
 
+## Monorepo 주의사항
+
+Monorepo 환경에서는 **반드시 repo root에서 Claude Code CLI를 실행**해야 hooks가 정상 작동합니다. 서브 패키지 디렉토리에서 실행하면 `.claude/` 경로를 찾지 못해 hooks가 무시됩니다.
+
 ## Context 절약 원칙
 
 Main Agent의 Context Window는 제한적입니다. Subagent가 할 수 있는 작업은 Subagent에 위임합니다.
