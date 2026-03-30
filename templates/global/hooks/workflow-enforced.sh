@@ -20,6 +20,7 @@ echo "✅ [Hook] 워크플로우 리마인더"
 
 cat << 'EOF'
 코드 작업 시 CLAUDE.md의 <workflow_protocol>을 따르세요.
+FE/BE/DB 관련 구현 시: FE → DB 설계 → Decision Gate → API 순서 (Step 3.0 참조)
 예외: 단순 오타/설정/1-2줄 수정 시 Phase 축소 가능
 
 ### 참조 가능한 Skills
