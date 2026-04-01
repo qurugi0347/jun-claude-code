@@ -1,7 +1,7 @@
 ---
 name: PromptStructuring-hook-context
 description: Hook 작성 시 stdin으로 전달되는 HookContext JSON 스키마와 파싱 패턴 가이드
-keywords: [hook, HookContext, JSON, stdin, PreToolUse, PostToolUse, jq, 파싱]
+keywords: [hook, HookContext, JSON, stdin, PreToolUse, PostToolUse, Stop, jq, 파싱]
 user-invocable: false
 ---
 
@@ -37,6 +37,15 @@ Hook은 stdin으로 JSON 형식의 HookContext를 수신한다. 이벤트 타입
 |------|------|------|
 | `user_message` | string | 사용자가 입력한 메시지 |
 | `session_id` | string | 현재 세션 ID |
+
+### Stop
+
+Agent 턴 완료 후 실행. 계속 진행 여부를 제어할 수 있음.
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `session_id` | string | 현재 세션 ID |
+| `stop_hook_active` | boolean | Stop hook 실행 중 여부 (무한 루프 방지용) |
 
 ## 표준 파싱 패턴
 
@@ -76,6 +85,8 @@ fi
 | PreToolUse (차단) | - | 차단 사유 메시지 | 0 |
 | PostToolUse | 정보 메시지 (선택) | - | 0 |
 | UserPromptSubmit | 정보 메시지 (선택) | - | 0 |
+| Stop (계속) | 빈 출력 | - | 0 |
+| Stop (중단) | - | 중단 사유 메시지 | 0 |
 | 에러 발생 | - | - | 1 (도구 실행 무관) |
 
 ## 주의사항
