@@ -298,6 +298,24 @@ YES인 Agent는 Task 도구로 호출하세요.
 
 </evaluation_protocol>
 
+<compact_instructions>
+
+## Compact Instructions (Context 압축 시 보존 대상)
+
+Context 압축(Compaction) 시 아래 항목을 반드시 보존하세요.
+
+1. **위임 규칙**: Main Agent는 직접 코드를 읽거나 쓰지 않는다. 모든 작업은 subagent에 위임.
+2. **Agent 역할 구분**:
+   - 탐색: `explore`(haiku) / 분석: `context-collector`(opus) / Context 문서: `project-context-collector`(sonnet)
+   - 코드: `code-writer`(opus) / `simple-code-writer`(haiku, 1-2파일)
+   - Git: `git-manager`(sonnet) -- Main Agent는 git 명령 직접 실행 금지
+3. **워크플로우**: Context 수집 → TaskList → task-enricher → Plan 문서 → 사용자 Confirm → 검증 → 구현 → 커밋 → 리뷰
+4. **Plan 문서**: `.claude/plan/`에 plan.md, context.md, checklist.md 3개 필수
+5. **Skill Preload**: Agent의 `skills` 필드로 자동 preload. 프롬프트에 규칙 직접 작성 금지
+6. **Execution Plan**: TaskList의 각 task에 `## Execution Plan` 섹션 존재. Main Agent는 이에 따라 subagent 조율
+
+</compact_instructions>
+
 ## 문서 참조
 
 <reference>
