@@ -72,6 +72,7 @@ argument-hint: "[PR-number]"
 |------|------|--------|------|
 | `name` | string | **필수** | Agent 이름. 소문자+하이픈 |
 | `description` | string | **필수** | 위임 판단 기준. 언제 이 Agent를 사용하는지 명시 |
+| `whenToUse` | string | - | Agent 자동 선택 매칭 기준. 이 Agent를 선택해야 하는 구체적 상황과 유사 Agent와의 구분점을 명시. 10~5000자 |
 | `keywords` | array | - | 검색/매칭용 키워드. 영문+한글 혼용 권장 |
 | `disallowedTools` | array | - | 명시적 거부 도구 목록 |
 | `model` | string | `inherit` | `sonnet`, `opus`, `haiku`, 모델 ID |

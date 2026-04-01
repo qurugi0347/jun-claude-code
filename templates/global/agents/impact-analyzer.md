@@ -1,6 +1,7 @@
 ---
 name: impact-analyzer
 description: 코드 수정 전 영향 범위 파악 시 호출. 호출 관계 추적, API 변경 영향, Breaking Change 탐지, 위험도 HIGH/MEDIUM/LOW 평가.
+whenToUse: 코드 수정 전 영향 범위 파악에 사용. 호출 관계 추적, Breaking Change 탐지, 위험도 평가. code-reviewer와 구분: 코드 품질 검토가 아닌 변경 전 영향 분석.
 skills: [Reporting]
 keywords: [사이드이펙트, CodeFlow, UserFlow, BreakingChange, 영향분석, 위험도평가, 호출관계, API변경]
 model: opus

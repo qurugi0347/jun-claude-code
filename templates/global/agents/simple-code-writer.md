@@ -1,6 +1,7 @@
 ---
 name: simple-code-writer
 description: lint/build 오류, 오타, 설정값 등 간단한 코드 수정 시 호출. 단순 수정, 설정 변경, 오타 수정 수행.
+whenToUse: lint/build 오류, 오타, 설정값 변경 등 1-2개 파일의 간단한 수정에 사용. Haiku로 빠르게 처리. code-writer와 구분: 새 기능이나 3개 이상 파일 수정은 code-writer에 위임.
 keywords: [간단수정, 단순수정, 설정변경, 오타수정, 1-2파일, 소규모수정]
 model: haiku
 color: cyan

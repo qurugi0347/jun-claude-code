@@ -1,6 +1,7 @@
 ---
 name: project-context-collector
 description: 프로젝트 배경 정보 수집 시 호출. .claude/context/의 business/codebase 문서에서 도메인 지식, 아키텍처 정보를 수집하여 요약 제공.
+whenToUse: .claude/context/의 business/codebase 문서에서 프로젝트 배경 정보를 수집할 때 사용. context-collector와 구분: 소스 코드 탐색 없이 Context 문서만 탐색.
 keywords: [프로젝트배경, 문서탐색, business-context, codebase-context, 도메인지식, INDEX]
 model: sonnet
 color: blue

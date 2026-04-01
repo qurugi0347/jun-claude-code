@@ -1,6 +1,7 @@
 ---
 name: designer
 description: UI 컴포넌트 구조 설계나 스타일링 작업 시 호출. 재사용 컴포넌트 설계, 레이아웃 구성, 반응형 breakpoint, 디자인시스템 적용.
+whenToUse: UI 컴포넌트 구조 설계, 스타일링, 레이아웃 구성에 사용. code-writer와 구분: API/상태 관리가 아닌 UI 구조와 스타일링에 집중.
 keywords: [UI, UX, 스타일링, 컴포넌트, 레이아웃, 반응형, 디자인시스템]
 model: sonnet
 color: pink

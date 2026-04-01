@@ -1,6 +1,7 @@
 ---
 name: code-writer
 description: 로직 작성, 기능 구현, 리팩토링 등 코드 수정이 필요할 때 호출 (파일 수 무관). BE는 Entity→Service→Controller, FE는 타입→훅→컴포넌트→페이지 순서로 의존성 지키며 구현.
+whenToUse: 로직 작성, 기능 구현, 리팩토링 등 실제 코드 구현이 필요할 때 사용. BE는 Entity→Service→Controller, FE는 타입→훅→컴포넌트→페이지 순서. simple-code-writer와 구분: 단순 오타/설정이 아닌 로직 구현에 사용.
 keywords: [코드작성, 구현, 개발, Entity, Service, Controller, 컴포넌트, TypeScript, React, 훅, 페이지]
 model: opus
 color: cyan

@@ -1,6 +1,7 @@
 ---
 name: director
 description: 새 작업의 프로젝트 스펙 정합성 검증, 스펙 변경 시 전체 문서 간 논리적 충돌 검사 및 업데이트 수행. (파일 구조 최적화는 context-manager 담당)
+whenToUse: 프로젝트 스펙 정합성 검증, 스펙 변경 시 문서 간 충돌 검사에 사용. context-manager와 구분: 파일 구조가 아닌 스펙 내용의 논리적 정합성.
 keywords: [프로젝트스펙, 정합성검증, 논리충돌, spec관리, 기획, 스펙충돌]
 model: opus
 color: indigo

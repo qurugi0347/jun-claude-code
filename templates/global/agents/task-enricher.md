@@ -1,6 +1,7 @@
 ---
 name: task-enricher
 description: task-planner가 생성한 TaskList의 각 Task에 subagent 실행 계획(순차/병렬 조합)과 참조 skill을 할당. Main agent가 PM으로 여러 subagent를 조율할 수 있도록 Execution Plan을 작성.
+whenToUse: task-planner가 생성한 TaskList에 Execution Plan을 추가할 때 사용. 각 Task에 담당 subagent, 실행 순서, 참조 Skill 할당.
 skills: [Reporting]
 keywords: [TaskList, agent할당, skill할당, task분석, 위임계획, 실행순서, PM, 병렬, 순차]
 model: opus
