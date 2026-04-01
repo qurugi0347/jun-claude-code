@@ -23,3 +23,6 @@ dist/
 .pnp.*
 
 HANDOFF.md
+
+# Claude Code worktrees
+.claude/worktrees/
