@@ -2,6 +2,8 @@
 name: ContextGeneration
 description: PR 변경 내용을 분석하여 .claude/context/ 문서를 자동 생성하는 규칙
 keywords: [context, codebase, business, PR, 자동생성, 문서화]
+context: fork
+agent: context-generator
 ---
 
 # Context 자동 생성 규칙
