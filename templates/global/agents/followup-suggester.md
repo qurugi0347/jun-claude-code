@@ -1,6 +1,7 @@
 ---
 name: followup-suggester
 description: PR에서 미완성 항목과 후속 작업을 식별하여 우선순위별로 제안하는 Agent
+whenToUse: PR에서 미완성 항목(TODO/FIXME), 테스트 부족, 보안/성능 이슈를 식별하여 우선순위별로 정리할 때 사용.
 keywords: [후속작업, TODO, FIXME, 리팩토링, 테스트부족, 보안, PR분석, session-wrap]
 model: sonnet
 color: blue

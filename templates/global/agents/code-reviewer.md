@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: 코드 품질 검토 및 GitHub PR line-level comment 게시. CLAUDE.md/Skills 규칙 준수 확인, Critical/Warning 분류, lint 실행, PR 리뷰 코멘트 작성.
+whenToUse: 코드 품질 검토 및 PR line-level comment 게시에 사용. Skill 규칙 준수 확인, Critical/Warning 분류. qa-tester와 구분: 빌드/테스트 실행이 아닌 코드 리뷰.
 keywords: [코드리뷰, 체크리스트, lint, 규칙검증, 품질검사, Critical, Warning, 수정제안, PR리뷰, GitHub, comment, 라인코멘트]
 model: opus
 color: yellow

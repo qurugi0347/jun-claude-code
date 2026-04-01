@@ -1,6 +1,7 @@
 ---
 name: learning-extractor
 description: PR 변경에서 학습 포인트를 추출하고 Context/규칙 후보를 제안하는 분석 Agent
+whenToUse: PR 변경에서 학습 포인트를 추출하고 Context/규칙 후보를 제안할 때 사용. automation-scout와 구분: 자동화가 아닌 지식 축적용 Context 후보.
 keywords: [학습, 지식추출, Context후보, 규칙, PR분석, CLAUDE.md, 라이브러리, session-wrap]
 model: sonnet
 color: green

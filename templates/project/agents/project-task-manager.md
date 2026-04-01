@@ -1,6 +1,7 @@
 ---
 name: project-task-manager
 description: GitHub Project 태스크 관리 Agent. 태스크 조회, 생성, 상태 변경, 이슈 연동.
+whenToUse: GitHub Project 보드의 태스크 조회, 생성, 상태 변경에 사용. task-planner와 구분: 코드 작업 계획이 아닌 GitHub Project CRUD.
 keywords: [GitHub, Project, 태스크, 이슈, 할일, 백로그, 진행중, task, issue, project board]
 model: haiku
 color: green

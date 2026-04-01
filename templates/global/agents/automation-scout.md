@@ -1,6 +1,7 @@
 ---
 name: automation-scout
 description: PR diff에서 반복 패턴을 발견하고 Skill 후보를 제안하는 분석 Agent
+whenToUse: PR diff에서 반복 패턴을 발견하고 Skill 후보를 제안할 때 사용. learning-extractor와 구분: 학습이 아닌 자동화 가능한 반복 패턴 탐지.
 keywords: [자동화, 반복패턴, Skill후보, PR분석, 워크플로우, 패턴매칭, session-wrap]
 model: sonnet
 color: yellow

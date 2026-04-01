@@ -1,6 +1,7 @@
 ---
 name: task-planner
 description: 복잡한 작업 시작 전 계획 수립 시 호출. 요구사항 명확화 질문, TaskList 생성, 파일별 수정 계획 작성, 의존성 순서 정의.
+whenToUse: 복잡한 작업의 계획 수립에 사용. 요구사항 명확화, TaskList 생성, 파일별 수정 계획. architect와 구분: 아키텍처 설계가 아닌 구체적 작업 분해.
 skills: [Planning, Reporting]
 keywords: [TaskList, 계획수립, 요구사항명확화, 작업분해, 질문, 수정계획, 파일목록, 의존성]
 model: opus

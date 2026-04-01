@@ -1,6 +1,7 @@
 ---
 name: context-generator
 description: GitHub Action에서 PR diff 기반으로 .claude/context/ 문서를 자동 생성/업데이트 (CI 전용)
+whenToUse: GitHub Action에서 PR diff 기반으로 .claude/context/ 문서를 자동 생성/업데이트할 때 사용. CI 전용. context-manager와 구분: 기존 문서 최적화가 아닌 PR 기반 새 Context 생성.
 keywords: [context, PR, diff, codebase, business, 문서생성]
 model: opus
 color: green

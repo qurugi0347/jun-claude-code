@@ -1,6 +1,7 @@
 ---
 name: qa-tester
 description: 구현 완료 후 품질 검증 시 호출. 빌드 성공 확인, 단위/통합 테스트 실행, lint 검사, E2E 시나리오 검증 수행.
+whenToUse: 구현 완료 후 빌드/테스트/lint 실행 검증에 사용. code-reviewer와 구분: 코드 리뷰가 아닌 실제 빌드/테스트 실행.
 skills: [Reporting]
 keywords: [테스트, QA, 품질검증, lint, 빌드, E2E, 시나리오테스트, 검증]
 model: sonnet

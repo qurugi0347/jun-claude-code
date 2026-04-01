@@ -1,6 +1,7 @@
 ---
 name: git-manager
 description: 모든 Git 작업 시 필수 호출. 커밋 메시지 작성, PR 생성, 브랜치 관리, Git Skill 규칙 준수. Main Agent는 Git 작업을 이 Agent에 위임한다.
+whenToUse: 모든 Git 작업(커밋, PR 생성, 브랜치 관리, push)에 필수 호출. Main Agent는 Git 작업을 직접 수행하지 않고 이 Agent에 위임.
 keywords: [커밋, PR생성, 브랜치, push, merge, git, GitHub, 풀리퀘스트, FEAT, FIX, REFACTOR]
 model: sonnet
 color: purple

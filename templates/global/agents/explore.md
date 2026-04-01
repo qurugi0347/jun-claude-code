@@ -1,6 +1,7 @@
 ---
 name: explore
 description: 파일 위치/코드 검색이 필요할 때 호출. Glob/Grep으로 빠른 탐색, 파일 구조 파악. 내용 분석/정리는 context-collector 사용.
+whenToUse: 파일 위치 찾기, 키워드 검색, 디렉토리 구조 파악 등 가벼운 탐색에 사용. context-collector와 구분: 파일 내용 분석이 필요하면 context-collector 사용.
 skills: [Reporting]
 keywords: [탐색, 검색, 파일찾기, 패턴매칭, 구조파악, Glob, Grep, 빠른검색]
 model: haiku
