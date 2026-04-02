@@ -20,7 +20,7 @@ user-invocable: false
 
 환경변수 `CLAUDE_CODE_COORDINATOR_MODE=true` 설정 후 Claude Code 실행.
 
-### Coordinator의 도구 제한
+### Coordinator의 도구 제한 (추정)
 
 Coordinator는 아래 도구만 사용 가능:
 - `Agent` — worker 생성
@@ -67,7 +67,7 @@ Coordinator Mode 활성화 시 차이점:
 ### 개요
 
 복잡한 계획 수립을 원격 Cloud Container Runtime에서 처리.
-Opus 4.6 모델 + 최대 30분 thinking window로 깊은 분석 수행.
+고성능 모델 + 장시간 thinking window로 깊은 분석 수행 (현재 추정: Opus 4.6, 최대 30분).
 
 ### 트리거 조건 (추정)
 

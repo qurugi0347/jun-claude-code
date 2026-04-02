@@ -86,7 +86,7 @@ color: red
 
 > **Coordinator Mode (Experimental)**: 대규모 아키텍처 작업 시
 > `CLAUDE_CODE_COORDINATOR_MODE=true`로 멀티워커 병렬 실행이 가능합니다.
-> 상세: `skills/PromptStructuring/advanced-modes.md` 참조
+> 상세: `.claude/skills/PromptStructuring/advanced-modes.md` 참조
 
 </instructions>
 

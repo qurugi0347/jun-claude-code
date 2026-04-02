@@ -79,7 +79,7 @@ TaskList를 생성하고 코드 수정 계획을 작성하는 전문 Agent입니
 
 > **ULTRAPLAN (Experimental)**: 매우 복잡한 계획(20+ 파일, 다중 모듈)의 경우
 > Claude Code가 자동으로 ULTRAPLAN을 트리거하여 원격에서 깊은 분석을 수행할 수 있습니다.
-> 상세: `skills/PromptStructuring/advanced-modes.md` 참조
+> 상세: `.claude/skills/PromptStructuring/advanced-modes.md` 참조
 
 요구사항이 명확해진 후에만 TaskList를 생성합니다.
 
