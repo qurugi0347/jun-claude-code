@@ -13,3 +13,4 @@ description: 코드베이스 모듈 참조 목록
 | Agent Configuration | Skills 2.0 frontmatter 기반 Agent 선언적 설정 시스템 | [agent-configuration.md](./agent-configuration.md) |
 | Skills Frontmatter Reference | Skills 2.0 Skill/Agent frontmatter 필드 명세 문서 | [skills-frontmatter-reference.md](./skills-frontmatter-reference.md) |
 | Copy Logic | 파일 복사 및 MultiSelect 설치 UI 로직 | [copy-logic.md](./copy-logic.md) |
+| Advanced Modes | Coordinator Mode / ULTRAPLAN 실험적 고급 기능 구조 및 흐름 | [advanced-modes.md](./advanced-modes.md) |

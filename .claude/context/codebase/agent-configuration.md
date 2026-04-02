@@ -1,7 +1,7 @@
 ---
 name: Agent Configuration
 description: Skills 2.0 frontmatter 기반 Agent 선언적 설정 시스템
-keywords: [agent, frontmatter, hooks, skills, memory, permissionMode, settings.json]
+keywords: [agent, frontmatter, hooks, skills, memory, permissionMode, settings.json, coordinator, ULTRAPLAN]
 ---
 
 # Agent Configuration
@@ -20,7 +20,8 @@ Skills 2.0 frontmatter를 통해 각 Agent 파일에서 hooks, skills, memory �
 | templates/global/agents/qa-tester.md | 테스트/빌드 검증 Agent | Stop hook |
 | templates/global/agents/explore.md | 파일/코드 탐색 Agent | permissionMode: plan |
 | templates/global/agents/context-collector.md | 코드 패턴 분석 Agent | permissionMode: plan |
-| templates/global/agents/task-planner.md | 복잡한 계획 수립 Agent | skills preload |
+| templates/global/agents/task-planner.md | 복잡한 계획 수립 Agent | skills preload, ULTRAPLAN 안내 |
+| templates/global/agents/architect.md | 아키텍처 설계 Agent | Coordinator Mode 안내 |
 | templates/global/agents/task-enricher.md | Task에 Agent/Skill 할당 Agent | skills preload |
 | templates/global/agents/impact-analyzer.md | 영향 분석 Agent | skills preload |
 | templates/global/agents/plan-verifier.md | Plan 검증 Agent | skills preload |
@@ -46,6 +47,18 @@ Skills 2.0 frontmatter를 통해 각 Agent 파일에서 hooks, skills, memory �
 | qa-tester | - | followup 추천 |
 | 나머지 Agent | - | - |
 
+## 고급 기능 안내 (Experimental)
+
+task-planner와 architect Agent에는 실험적 고급 기능 안내 문구가 포함되어 있습니다.
+
+| Agent | 안내 내용 |
+|-------|---------|
+| templates/global/agents/task-planner.md | 복잡한 계획 수립 시 ULTRAPLAN 자동 트리거 가능성 안내 |
+| templates/global/agents/architect.md | 대규모 병렬 작업 시 Coordinator Mode 활용 가능성 안내 |
+
+상세: [Advanced Modes](./advanced-modes.md) 참조.
+
 ## 관련 Business Context
 
 - [Agent 라이프사이클 관리](../business/agent-lifecycle-management.md)
+- [고급 병렬 워크플로우](../business/advanced-parallel-workflows.md)
