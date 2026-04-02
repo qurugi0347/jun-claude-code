@@ -84,6 +84,7 @@ argument-hint: "[PR-number]"
 | `memory` | string | - | 영속 메모리 스코프: `user`, `project`, `local` |
 | `background` | boolean | `false` | `true` -> 백그라운드 작업으로 실행 |
 | `isolation` | string | - | `worktree` -> 임시 git worktree에서 격리 실행 |
+| `coordinatorMode` | boolean | `false` | `true` → Coordinator Mode에서 worker로 실행 가능. 소스 분석 기반 추정, 동작 미보장 (experimental, 미검증) |
 
 </fields>
 
@@ -96,6 +97,12 @@ argument-hint: "[PR-number]"
 | `acceptEdits` | 파일 수정 자동 승인 | code-writer, simple-code-writer |
 | `dontAsk` | 권한 프롬프트 자동 거부 | - |
 | `bypassPermissions` | 모든 권한 검사 건너뜀 | 주의 필요 |
+
+### Coordinator Mode (Experimental)
+
+`CLAUDE_CODE_COORDINATOR_MODE=true` 환경변수로 활성화.
+Coordinator는 Agent, SendMessage, TaskStop, SyntheticOutput만 사용 가능.
+상세: `advanced-modes.md` 참조
 
 ### skills preload
 
