@@ -328,5 +328,6 @@ Context 압축(Compaction) 시 아래 항목을 반드시 보존하세요.
 | Git 규칙 | `.claude/skills/Git/SKILL.md` |
 | 문서 작성 가이드 | `.claude/skills/Documentation/SKILL.md` |
 | 현재 작업 계획 | `.claude/plan/` (plan.md, context.md, checklist.md) |
+| 고급 모드 가이드 (Experimental) | `.claude/skills/PromptStructuring/advanced-modes.md` |
 
 </reference>

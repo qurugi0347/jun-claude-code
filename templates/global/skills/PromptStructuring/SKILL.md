@@ -1,7 +1,7 @@
 ---
 name: PromptStructuring
 description: ".claude/skills/ 또는 .claude/agents/ 하위 파일을 생성·수정할 때 반드시 이 Skill을 읽고 규칙을 적용한다. XML 태그 구조화, 긍정 표현, 출력 최적화, Skills 2.0 frontmatter(context:fork, agent, hooks, skills preload) 스펙 포함."
-keywords: [prompt, xml-tags, positive-phrasing, output-optimization, 프롬프트, 구조화, 긍정표현, XML, 출력최적화, frontmatter, SKILL.md, agent.md, skills-2.0, hooks, context-fork, skills-preload]
+keywords: [prompt, xml-tags, positive-phrasing, output-optimization, 프롬프트, 구조화, 긍정표현, XML, 출력최적화, frontmatter, SKILL.md, agent.md, skills-2.0, hooks, context-fork, skills-preload, coordinator, ULTRAPLAN]
 user-invocable: false
 ---
 
@@ -18,6 +18,7 @@ user-invocable: false
 | 3. 흐름 기호 | 단계/변환/위임에 `->` 사용: 계획 -> 구현 -> 검증 | - |
 | 4. 출력 최적화 | 반복 제거, 테이블 > 산문, Hook 출력 150줄 이내 | `output-optimization.md` |
 | 5. Skills 2.0 Frontmatter | Skill/Agent YAML frontmatter 필드, context:fork + agent 조합, hooks, skills preload | `skills-frontmatter.md` |
+| 6. 고급 모드 (Experimental) | ULTRAPLAN, Coordinator Mode 등 실험적 고급 기능 | `advanced-modes.md` |
 
 ## 적용 시점
 
