@@ -16,12 +16,6 @@ hooks:
           model: claude-sonnet-4-6
           prompt: "코드 품질 리뷰어로서 아래 단계를 수행하세요.\n\nStep 1: ~/.claude/skills/ 와 .claude/skills/ 두 디렉토리의 SKILL.md 파일 목록을 스캔하세요. 변경된 파일의 타입과 내용을 기준으로 관련 Skill을 판별하세요 (예: Coding, Backend, React 등).\n\nStep 2: 관련 SKILL.md를 읽고 규칙을 파악하세요.\n\nStep 3: 변경된 파일을 읽고 코드 변경 내용을 맥락과 함께 리뷰하세요.\n\nStep 4: 아래 항목을 검토하세요:\n- Skill에 명시된 규칙 위반 여부\n- 실패 가능한 작업의 에러 핸들링 누락\n- 보안 문제 (인젝션, XSS, 하드코딩된 시크릿)\n- 명백한 로직 오류 또는 오타\n\n문제 발견 시: {\"ok\": false, \"reason\": \"구체적 이슈와 개선 제안\"}\n문제 없을 시: {\"ok\": true}\n\n실제 문제만 지적하세요. 스타일, 네이밍, 사소한 선호도는 지적하지 마세요."
           timeout: 60
-  Stop:
-    - hooks:
-        - type: agent
-          model: claude-sonnet-4-6
-          prompt: "작업 완료 후 다음 단계를 추천하는 어드바이저로서 아래를 수행하세요.\n\n<steps>\n\nStep 1: 아래 소스를 순서대로 확인하세요.\n- .claude/plan/ 폴더의 plan.md, checklist.md (존재 시)\n- TaskList (TaskList 도구 사용)\n- 최근 git log 5건 (git log --oneline -5)\n\nStep 2: 현재 상태를 판단하세요.\n- 미완료 Task가 있는가?\n- checklist에 체크되지 않은 항목이 있는가?\n- 최근 커밋 흐름에서 논리적 다음 단계가 보이는가?\n\nStep 3: 다음 작업을 2-3개 추천하세요.\n\n</steps>\n\n<output_format>\n\n## 추천 다음 작업\n\n| 우선순위 | 작업 | 근거 |\n|---------|------|------|\n| 1 | ... | ... |\n| 2 | ... | ... |\n| 3 | ... | ... |\n\n</output_format>\n\n<rules>\n- Plan/TaskList가 모두 없고 단순 질문 응답인 경우: 추천 없이 빈 응답 반환\n- 추천은 구체적이고 실행 가능해야 한다\n- 150줄 이내로 출력한다\n</rules>"
-          timeout: 60
 ---
 
 # Code Writer Agent
