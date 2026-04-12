@@ -1,7 +1,7 @@
 ---
 name: PromptStructuring-skills-frontmatter
 description: Skills 2.0 Skill/Agent frontmatter 필드 레퍼런스. 작성 시 필드 선택 기준과 예시 제공.
-keywords: [frontmatter, SKILL.md, agent, yaml, skills-2.0, hooks, context-fork, tools, permissionMode]
+keywords: [frontmatter, SKILL.md, agent, yaml, skills-2.0, context-fork, tools, permissionMode]
 user-invocable: false
 ---
 
@@ -25,7 +25,6 @@ SKILL.md와 Agent .md 파일의 YAML frontmatter 필드 가이드.
 | `model` | string | `inherit` | `sonnet`, `opus`, `haiku`, 모델 ID, `inherit` |
 | `context` | string | - | `fork` -> 격리된 subagent에서 실행 |
 | `agent` | string | `general-purpose` | `context: fork` 시 사용할 agent 타입 |
-| `hooks` | object | - | Skill 라이프사이클에 스코프된 훅 |
 
 </fields>
 
@@ -80,7 +79,6 @@ argument-hint: "[PR-number]"
 | `maxTurns` | number | - | 최대 턴 수. 초과 시 결과 반환 후 종료 |
 | `skills` | array | - | 시작 시 사전 로드할 Skill 목록 |
 | `mcpServers` | object/array | - | 사용 가능 MCP 서버 |
-| `hooks` | object | - | Agent 라이프사이클 훅 |
 | `memory` | string | - | 영속 메모리 스코프: `user`, `project`, `local` |
 | `background` | boolean | `false` | `true` -> 백그라운드 작업으로 실행 |
 | `isolation` | string | - | `worktree` -> 임시 git worktree에서 격리 실행 |
@@ -179,49 +177,6 @@ Main Agent → task-planner 호출 → Planning Skill 자동 preload → 동일 
 | 컨텍스트 격리 | - | O | O |
 
 ---
-
-## Hooks in Skills/Agents
-
-Skill과 Agent의 frontmatter에 `hooks` 필드를 정의하면 해당 컴포넌트가 활성화된 동안에만 실행된다.
-
-<rules>
-
-- 모든 hook 이벤트 지원: PreToolUse, PostToolUse, Stop, UserPromptSubmit 등
-- Agent의 `Stop` hook은 자동으로 `SubagentStop`으로 변환
-- `once: true` 옵션: Skill 전용, 세션당 1회만 실행
-- 형식은 settings.json hooks와 동일하되 YAML로 작성
-
-</rules>
-
-### 예시: Agent에 hooks 추가
-
-```yaml
----
-name: git-manager
-skills: [Git]
-hooks:
-  PostToolUse:
-    - matcher: "Bash"
-      hooks:
-        - type: command
-          command: "~/.claude/hooks/session-wrap-suggester.sh"
----
-```
-
-### 예시: Skill에 hooks 추가
-
-```yaml
----
-name: secure-deploy
-description: 보안 검증 후 배포
-hooks:
-  PreToolUse:
-    - matcher: "Bash"
-      hooks:
-        - type: command
-          command: "./scripts/security-check.sh"
----
-```
 
 ## 미존재 필드 (FAQ)
 
