@@ -17,6 +17,7 @@ export type FileStatus = 'new' | 'changed' | 'unchanged';
 
 export interface CategorizedFiles {
   agents: string[];
+  commands: string[];
   skills: string[];
   others: string[];
 }
@@ -106,12 +107,15 @@ export function getDestClaudeDir(): string {
  */
 export function categorizeFiles(files: string[]): CategorizedFiles {
   const agents: string[] = [];
+  const commands: string[] = [];
   const skillDirs = new Set<string>();
   const others: string[] = [];
 
   for (const file of files) {
     if (file.startsWith('agents/')) {
       agents.push(file);
+    } else if (file.startsWith('commands/')) {
+      commands.push(file);
     } else if (file.startsWith('skills/')) {
       const parts = file.split('/');
       if (parts.length >= 2 && parts[1]) {
@@ -124,6 +128,7 @@ export function categorizeFiles(files: string[]): CategorizedFiles {
 
   return {
     agents: agents.sort(),
+    commands: commands.sort(),
     skills: Array.from(skillDirs).sort(),
     others: others.sort(),
   };
@@ -437,7 +442,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
 
   const categorized = categorizeFiles(files);
 
-  console.log(chalk.cyan(`Found ${files.length} files (${categorized.agents.length} agents, ${categorized.skills.length} skills, ${categorized.others.length} others)`));
+  console.log(chalk.cyan(`Found ${files.length} files (${categorized.agents.length} agents, ${categorized.commands.length} commands, ${categorized.skills.length} skills, ${categorized.others.length} others)`));
   console.log();
 
   // Dry run mode - show categorized status
@@ -448,6 +453,15 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
     if (categorized.agents.length > 0) {
       console.log(chalk.cyan('  Agents:'));
       for (const file of categorized.agents) {
+        const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
+        console.log(`    ${statusBracket(status)} ${path.basename(file, '.md')}`);
+      }
+      console.log();
+    }
+
+    if (categorized.commands.length > 0) {
+      console.log(chalk.cyan('  Commands:'));
+      for (const file of categorized.commands) {
         const status = getFileStatus(path.join(sourceDir, file), path.join(destDir, file));
         console.log(`    ${statusBracket(status)} ${path.basename(file, '.md')}`);
       }
@@ -483,11 +497,13 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
 
   // Determine files to copy per category
   let agentFiles: string[] = [];
+  let commandFiles: string[] = [];
   let skillFiles: string[] = [];
   let otherFiles: string[] = [];
 
   if (force) {
     agentFiles = categorized.agents;
+    commandFiles = categorized.commands;
     skillFiles = files.filter(f => f.startsWith('skills/'));
     otherFiles = categorized.others;
   } else {
@@ -507,6 +523,16 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
         status: getFileStatus(path.join(sourceDir, file), path.join(destDir, file)),
       }));
       agentFiles = await selectItems('Agents', agentItems);
+    }
+
+    // Commands: MultiSelect
+    if (categorized.commands.length > 0) {
+      const commandItems = categorized.commands.map(file => ({
+        name: file,
+        displayName: path.basename(file, '.md'),
+        status: getFileStatus(path.join(sourceDir, file), path.join(destDir, file)),
+      }));
+      commandFiles = await selectItems('Commands', commandItems);
     }
 
     // Skills: MultiSelect (2-step)
@@ -543,7 +569,7 @@ export async function copyClaudeFiles(options: CopyOptions = {}): Promise<void> 
   }
 
   // Copy all selected files
-  const allFilesToCopy = [...otherFiles, ...agentFiles, ...skillFiles];
+  const allFilesToCopy = [...otherFiles, ...agentFiles, ...commandFiles, ...skillFiles];
   let copiedCount = 0;
 
   if (otherFiles.length > 0 || categorized.others.length > 0) {
