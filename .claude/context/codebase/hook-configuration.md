@@ -1,7 +1,7 @@
 ---
 name: Hook Configuration
-description: settings.json 전역 hook 명령어 설정 및 실행 경로 해결 전략
-keywords: [hooks, settings.json, worktree, relative-path, git-rev-parse, shell-script]
+description: settings.json 전역 hook 명령어 설정 및 $CLAUDE_PROJECT_DIR 기반 절대경로 실행 전략
+keywords: [hooks, settings.json, worktree, CLAUDE_PROJECT_DIR, absolute-path, shell-script]
 ---
 
 # Hook Configuration
