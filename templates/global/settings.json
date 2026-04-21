@@ -9,11 +9,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/skill-forced.sh"
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-forced.sh\" ]; then \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-forced.sh\"; else \"$HOME/.claude/hooks/skill-forced.sh\"; fi"
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/workflow-enforced.sh"
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/workflow-enforced.sh\" ]; then \"$CLAUDE_PROJECT_DIR/.claude/hooks/workflow-enforced.sh\"; else \"$HOME/.claude/hooks/workflow-enforced.sh\"; fi"
           }
         ]
       }
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/dangerous-command-blocker.sh"
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/dangerous-command-blocker.sh\" ]; then \"$CLAUDE_PROJECT_DIR/.claude/hooks/dangerous-command-blocker.sh\"; else \"$HOME/.claude/hooks/dangerous-command-blocker.sh\"; fi"
           }
         ]
       }
