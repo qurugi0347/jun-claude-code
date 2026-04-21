@@ -3,13 +3,6 @@
 # .claude/hooks/session-wrap-suggester.sh
 # PR 생성 후 /session-wrap 실행을 제안하는 PostToolUse hook (Bash)
 
-# Dedup: project 우선, global은 project 버전 존재 시 양보
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ -f "$SCRIPT_DIR/_dedup.sh" ]; then
-  source "$SCRIPT_DIR/_dedup.sh"
-  _hook_dedup_check "${BASH_SOURCE[0]}" || exit 0
-fi
-
 INPUT=$(cat)
 
 # JSON 파싱 (jq 우선, sed fallback)
