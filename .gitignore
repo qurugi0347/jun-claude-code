@@ -26,3 +26,6 @@ HANDOFF.md
 
 # Claude Code worktrees
 .claude/worktrees/
+
+# Claude Code plan documents
+.claude/plan/
