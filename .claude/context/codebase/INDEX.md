@@ -15,3 +15,4 @@ description: 코드베이스 모듈 참조 목록
 | Copy Logic | 파일 복사 및 MultiSelect 설치 UI 로직 (agents/commands/skills/others 카테고리 지원) | [copy-logic.md](./copy-logic.md) |
 | Hook Configuration | settings.json 전역 hook 명령어 설정 및 실행 경로 해결 전략 | [hook-configuration.md](./hook-configuration.md) |
 | Commands Templates | templates/global/commands/ 커스텀 slash command 정의 파일 모듈 | [commands-templates.md](./commands-templates.md) |
+| Update Logic | 설치된 파일 업데이트, 버전 동기화, removed-upstream 감지 로직 | [update-logic.md](./update-logic.md) |

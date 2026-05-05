@@ -1,7 +1,7 @@
 ---
 name: copy-logic
-description: 파일 복사 및 설치 UI 로직 모듈
-keywords: [copy, install, multiselect, enquirer, categorize, file-status, commands]
+description: 파일 복사 및 설치 UI 로직 모듈 (global/project 모드별 제외 파일 구분 포함)
+keywords: [copy, install, multiselect, enquirer, categorize, file-status, commands, statusLine, exclude]
 ---
 
 # copy-logic
@@ -23,6 +23,13 @@ keywords: [copy, install, multiselect, enquirer, categorize, file-status, comman
 | `CategorizedFiles` | `{ agents, commands, skills, others }` — 카테고리별 파일 분류 결과 |
 | `CopyOptions` | `{ dryRun?, force?, project? }` — 복사 실행 옵션 |
 
+## 제외 파일 목록
+
+| 상수 | 대상 파일 | 동작 |
+|------|-----------|------|
+| `EXCLUDE_ALWAYS` | `settings.json` | 모든 모드에서 직접 복사 제외 (mergeSettingsJson()에서 별도 처리) |
+| `EXCLUDE_FROM_PROJECT` | `hooks/_dedup.sh`, `statusline-command.sh` | project 모드에서만 제외 (global 모드에서는 정상 설치) |
+
 ## 핵심 함수
 
 | 함수 | 설명 |
@@ -34,13 +41,13 @@ keywords: [copy, install, multiselect, enquirer, categorize, file-status, comman
 | `selectSkillSubFiles(skills, sourceDir, destDir)` | 선택된 스킬의 하위 파일을 그룹 구분선과 함께 MultiSelect로 표시, 선택된 파일 경로 배열 반환 |
 | `statusLabel(status)` | chalk 컬러 상태 텍스트 반환 (inline 힌트용) |
 | `statusBracket(status)` | chalk 컬러 `[상태]` 텍스트 반환 (로그 출력용) |
-| `mergeSettingsJson(sourceDir, destDir, opts)` | settings.json hooks를 이벤트 키 단위로 병합 |
+| `mergeSettingsJson(sourceDir, destDir, opts)` | settings.json hooks를 이벤트 키 단위로 병합; statusLine은 project 모드일 때만 제외, global 모드에서는 dest에 없을 경우 source 값 적용 |
 | `copyClaudeFiles(options)` | 전체 설치 흐름 진입점 |
 
 ## 핵심 흐름
 
 1. `copyClaudeFiles()` 호출 → 소스/대상 디렉토리 결정
-2. `getAllFiles()` → 복사 대상 파일 목록 수집
+2. `getAllFiles()` → 복사 대상 파일 목록 수집, `EXCLUDE_ALWAYS` 및 모드별 `EXCLUDE_FROM_PROJECT` 필터링
 3. `categorizeFiles()` → agents / commands / skills / others 분류
 4. `--dry-run`: 카테고리별 상태만 출력 후 종료
 5. `--force`: 전체 파일 복사 (프롬프트 없음)
@@ -51,7 +58,7 @@ keywords: [copy, install, multiselect, enquirer, categorize, file-status, comman
    - skills: 2단계 선택
      - 1단계: `selectItems()` → 스킬 디렉토리 선택
      - 2단계: `selectSkillSubFiles()` → 선택된 스킬의 하위 파일 선택 (하위 파일이 1개인 스킬은 자동 포함)
-7. `mergeSettingsJson()` → settings.json 병합
+7. `mergeSettingsJson()` → settings.json 병합 (statusLine: global에서는 dest-우선 보존, project에서는 제외)
 
 ## 관련 Business Context
 
