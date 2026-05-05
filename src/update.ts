@@ -268,9 +268,11 @@ export async function updateClaudeFiles(options: UpdateOptions = {}): Promise<vo
   }));
 
   // Check for removed-upstream files (in metadata but not in new template)
+  // Files excluded by project mode should NOT be marked as removed-upstream
   if (metadata) {
     for (const file of Object.keys(metadata.files)) {
-      if (!files.includes(file) && !EXCLUDE_ALWAYS.includes(file)) {
+      const excludedByProject = project && EXCLUDE_FROM_PROJECT.includes(file);
+      if (!files.includes(file) && !EXCLUDE_ALWAYS.includes(file) && !excludedByProject) {
         fileStatuses.push({ file, status: 'removed-upstream' });
       }
     }

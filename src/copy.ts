@@ -23,14 +23,16 @@ export interface CategorizedFiles {
 }
 
 // Files to exclude from all copies (merge-handled separately)
+// settings.json은 mergeSettingsJson()에서 별도로 병합 처리
 export const EXCLUDE_ALWAYS = [
   'settings.json',
-  'statusline-command.sh',
 ];
 
 // Files to exclude only when installing to project
+// project 모드에서는 제외되는 파일들 (global ~/.claude/ 환경 전용)
 export const EXCLUDE_FROM_PROJECT = [
   'hooks/_dedup.sh',
+  'statusline-command.sh',
 ];
 
 /**
@@ -286,7 +288,8 @@ function replaceClaudePaths(obj: Record<string, any>): Record<string, any> {
  * Merge settings.json from source into destination.
  * Hooks are merged per event key; duplicate hook entries (by deep equality) are skipped.
  * Non-hook keys are shallow-merged (source wins for new keys, dest preserved for existing).
- * statusLine is always excluded from merge (personal environment setting).
+ * statusLine is excluded only in project mode; in global mode, source statusLine is copied
+ * if dest does not have one (preserving user customization).
  * When project=true, ~/.claude/ paths in command fields are converted to .claude/.
  */
 export function mergeSettingsJson(
@@ -326,8 +329,11 @@ export function mergeSettingsJson(
 
   // Merge top-level keys (source fills in missing keys, dest's existing keys preserved)
   for (const key of Object.keys(sourceSettings)) {
-    if (key === 'hooks' || key === 'statusLine') {
-      continue; // hooks are merged separately below; statusLine is excluded
+    if (key === 'hooks') {
+      continue; // hooks are merged separately below
+    }
+    if (key === 'statusLine' && options?.project) {
+      continue; // statusLine is excluded in project mode (personal env setting)
     }
     if (!(key in destSettings)) {
       destSettings[key] = sourceSettings[key];
