@@ -133,7 +133,7 @@ describe('copy.ts mergeSettingsJson', () => {
     mergeGlobalSettings(sourceDir, destDir);
 
     const result = readJson(path.join(destDir, 'settings.json'));
-    expect(result.statusLine).toBeUndefined();
+    expect(result.statusLine).toEqual({ type: 'command', command: 'echo test' });
     expect(result.hooks.UserPromptSubmit).toHaveLength(1);
     expect(result.hooks.UserPromptSubmit[0].hooks[0].command).toBe('skill-forced.sh');
   });
@@ -274,14 +274,14 @@ describe('copy.ts mergeSettingsJson', () => {
     expect(result).toEqual(destSettings);
   });
 
-  it('should exclude statusLine from source even on fresh install', () => {
+  it('should exclude statusLine in project mode even on fresh install', () => {
     const sourceSettings = {
       statusLine: { type: 'command', command: '~/.claude/statusline-command.sh' },
       hooks: {},
     };
     writeJson(path.join(sourceDir, 'settings.json'), sourceSettings);
 
-    mergeGlobalSettings(sourceDir, destDir);
+    mergeGlobalSettings(sourceDir, destDir, { project: true });
 
     const result = readJson(path.join(destDir, 'settings.json'));
     expect(result.statusLine).toBeUndefined();
