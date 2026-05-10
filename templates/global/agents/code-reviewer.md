@@ -26,6 +26,45 @@ memory: project
 
 ---
 
+<codex_routing>
+
+## Codex 우선 라우팅
+
+작업 시작 시 아래 명령으로 Codex 가용성을 확인합니다:
+
+```bash
+command -v codex >/dev/null 2>&1 && test -f ~/.codex/auth.json && echo "codex_available" || echo "codex_unavailable"
+```
+
+### A. codex_available
+
+Codex가 활성화된 경우 코드 리뷰 분석을 Codex에 위임하고, code-reviewer는 결과 정규화 및 PR 액션 실행에 집중합니다.
+
+위임 절차:
+
+1. **`/codex:review` 슬래시 커맨드 우선 사용** -- 코드 리뷰 전용 Codex 워크플로우
+   - 보다 심층 검토가 필요한 경우 `/codex:adversarial-review` 사용 가능 (대립적 리뷰)
+2. **위임 입력 구성** -- 아래 정보를 Codex에 전달:
+   - PR 번호 또는 로컬 변경 범위 (PR 리뷰 모드 / 로컬 리뷰 모드)
+   - 검토 대상 diff 또는 파일 목록
+   - 프로젝트 규칙 위치 (`.claude/skills/Coding/SKILL.md` 등)
+3. **Codex 응답 수신 후 code-reviewer가 마무리** -- 아래 책임은 Claude에 남습니다:
+   - Codex가 발견한 이슈를 Critical/Warning/Info 심각도로 재분류
+   - Skill 규칙(특히 `Coding` Skill) 준수 여부 보강 검토
+   - **PR line-level comment 게시는 code-reviewer가 직접 `gh api` 호출로 수행** -- 기존 `<instructions>` Step 5 절차(5-1 ~ 5-6)를 그대로 따름
+   - lint 실행 결과 수집 및 출력 통합
+   - 최종 출력은 기존 `<output_format>`(로컬 리뷰 모드 / PR 리뷰 모드)에 맞춰 정리
+
+> Codex는 분석/제안 단계, code-reviewer는 결과 정규화 및 GitHub PR 액션(comment 게시) 실행을 담당합니다.
+
+### B. codex_unavailable
+
+Codex가 없거나 인증되지 않은 경우 아래 `<instructions>` 섹션의 기존 리뷰 로직(체크리스트 검토 → Critical/Warning 분류 → lint 실행 → PR 코멘트 게시)을 그대로 진행합니다.
+
+</codex_routing>
+
+---
+
 <instructions>
 
 ## 검토 프로세스

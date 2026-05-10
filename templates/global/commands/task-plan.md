@@ -9,6 +9,10 @@ argument-hint: "[요청 내용]"
 
 $ARGUMENTS
 
+## Codex 가용성
+
+!`command -v codex >/dev/null 2>&1 && test -f ~/.codex/auth.json && echo "codex_available" || echo "codex_unavailable"`
+
 ## 기존 Plan 파일 현황
 
 !`ls .claude/plan/ 2>/dev/null && echo "---" && cat .claude/plan/plan.md 2>/dev/null || echo "(기존 plan 파일 없음)"`
@@ -31,13 +35,34 @@ $ARGUMENTS
 
 불명확한 부분이 있으면 사용자에게 먼저 질문한다.
 
-### Step 3: Context 수집
+### Step 3: Context 수집 및 Plan 초안 생성
 
-`explore` agent(파일 위치/구조 파악)와 `context-collector` agent(코드 패턴/구현 방식 분석)를 활용하여 수집한다. 두 agent는 병렬로 호출한다.
+위 "Codex 가용성" 출력값에 따라 분기한다.
 
-### Step 4: Plan 문서 3종 작성
+#### A. codex_available
 
-`~/.claude/skills/Planning/SKILL.md` 템플릿에 따라 `.claude/plan/`에 작성한다:
+`/codex:rescue` 슬래시 커맨드 또는 `codex-rescue` subagent(Task tool)에 아래 정보를 전달하여 plan 초안 생성을 위임한다.
+
+**Codex 위임 프롬프트 구성**:
+- 사용자 요청 원문 (`$ARGUMENTS`)
+- 코드베이스 루트 경로 (현재 작업 디렉토리)
+- 산출물 요구사항: `~/.claude/skills/Planning/SKILL.md` 템플릿에 맞는 plan/context/checklist 3종 문서 초안
+- 각 문서가 포함해야 할 항목:
+  - `plan.md`: 목적, DB/API/FE 설계, 설계 결정(선택/이유/차선책/차선책 미채택 이유), TaskList 요약
+  - `context.md`: 사용자 요청 원문, 비즈니스/기술적 배경, 탐색한 코드, 결정 사항
+  - `checklist.md`: Phase별 체크리스트, Task별 세부 작업
+
+Codex 응답 수신 후 Claude가 수행할 작업:
+1. 산출물을 `~/.claude/skills/Planning/SKILL.md` 템플릿 구조로 정규화
+2. 누락된 섹션 보강 (frontmatter: name/description/created/status, status는 `draft`)
+3. `.claude/plan/` 폴더에 3종 파일로 저장
+
+#### B. codex_unavailable
+
+기존 워크플로우로 진행한다.
+
+1. `explore` agent(파일 위치/구조 파악)와 `context-collector` agent(코드 패턴/구현 방식 분석)를 **병렬 호출**하여 context 수집
+2. `~/.claude/skills/Planning/SKILL.md` 템플릿에 따라 `.claude/plan/`에 3종 문서 작성:
 
 | 파일 | 역할 |
 |------|------|
@@ -49,11 +74,11 @@ $ARGUMENTS
 해당 없는 섹션(DB/API/FE)은 생략한다.
 plan.md status는 `draft`로 시작한다.
 
-### Step 5: TaskList 생성 및 Agent 할당
+### Step 4: TaskList 생성 및 Agent 할당
 
 - 작업을 독립 실행 가능한 단위로 분해하여 TaskList를 생성한다
-- `task-enricher` agent를 호출하여 각 Task에 담당 subagent와 Skill을 할당한다
+- `task-enricher` agent를 호출하여 각 Task에 담당 subagent와 Skill을 할당한다 (Codex 분기 여부와 무관하게 Claude가 수행)
 
-### Step 6: 사용자 확인 요청
+### Step 5: 사용자 확인 요청
 
 작성된 plan 요약을 제시하고 승인을 요청한다. 사용자 승인 없이 구현을 시작하지 않는다.

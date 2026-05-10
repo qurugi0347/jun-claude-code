@@ -27,6 +27,46 @@ TaskList를 생성하고 코드 수정 계획을 작성하는 전문 Agent입니
 
 ---
 
+<codex_routing>
+
+## Codex 우선 라우팅
+
+작업 시작 시 아래 명령으로 Codex 가용성을 확인합니다:
+
+```bash
+command -v codex >/dev/null 2>&1 && test -f ~/.codex/auth.json && echo "codex_available" || echo "codex_unavailable"
+```
+
+### A. codex_available
+
+Codex가 활성화된 경우 Plan 초안 작성을 Codex에 위임하고, task-planner는 결과 정규화에 집중합니다.
+
+위임 절차:
+
+1. **Task tool로 `codex-rescue` subagent 호출** -- Plan 초안 생성 위임
+2. **위임 프롬프트 구성** -- 아래 항목을 포함하여 전달:
+   - 사용자 요청 원문 (목적/문제/방법)
+   - 관련 코드베이스 위치 (탐색 대상 디렉토리/파일)
+   - 요구 출력: `.claude/plan/` 3종 문서(plan.md, context.md, checklist.md)에 들어갈 핵심 내용 구조화 제안
+     - 목적/문제/방법 정리
+     - DB/API/FE 설계 초안 (해당되는 경우)
+     - TaskList 초안 (작은 단위 분해 + 의존성)
+3. **Codex 응답 수신 후 task-planner가 정규화** -- 아래 책임은 Claude에 남습니다:
+   - 출력 형식을 기존 `<output_format>` 섹션의 TaskList/파일별 수정 계획/의존성 구조에 맞춰 재작성
+   - 누락된 명확화 질문 보강 (Phase 1 체크리스트 기준)
+   - 기존 코드 패턴과의 정합성 검증 후 보강
+   - 사용자에게 보여줄 최종 결과물 작성
+
+> Codex는 분석/제안 단계, task-planner는 결과 정규화 및 사용자 confirm을 위한 산출물 정리를 담당합니다.
+
+### B. codex_unavailable
+
+Codex가 없거나 인증되지 않은 경우 아래 `<instructions>` 섹션의 기존 절차(Phase 1 명확화 → Phase 2 TaskList → Phase 3 수정 계획)를 그대로 진행합니다.
+
+</codex_routing>
+
+---
+
 <instructions>
 
 ## Phase 1: 요구사항 명확화 (필수)
