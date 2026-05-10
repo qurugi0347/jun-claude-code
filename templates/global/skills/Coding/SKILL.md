@@ -209,6 +209,66 @@ if (isAdmin) {
 
 ---
 
+<rules>
+
+## 주석 작성 원칙
+
+> **WHY를 남긴다. naming만으로 의도가 드러나면 주석을 생략한다.**
+
+### 5가지 기준
+
+| 항목 | 원칙 |
+|------|------|
+| **무엇을 (What)** | 의도/비자명한 제약/도메인 규칙 등 WHY 중심으로 작성. naming만으로 의도가 드러나는 자명한 코드는 주석 생략 |
+| **어디에 (Where)** | 분기/블록 등 **로직 단위** 위에 작성. 함수 docstring은 필요한 경우에만 사용 |
+| **어떻게 (How)** | 인라인 또는 block 주석으로 **최대 2줄, 부득이한 경우에만 3줄까지** |
+| **TODO/FIXME/NOTE** | 단순 표시 대신 **다음에 어떻게 행동해야 하는지**까지 명시 |
+| **시점** | 작성자의 주관적 판단으로 남기되, 코드리뷰의 추가/삭제 요구를 우선 반영 |
+
+### 좋은 예 / 피해야 할 예
+
+<examples>
+<example type="bad">
+```typescript
+// ❌ 자명한 코드에 What 주석 (naming만으로 의도 파악 가능)
+// 사용자 ID로 사용자 조회
+const user = await userRepository.findById(userId);
+
+// ❌ 단순 마커 — 다음 행동을 알 수 없음
+// TODO: 나중에 처리
+await sendNotification(user);
+
+// ❌ 길이 초과 (4줄)
+// 이 함수는 사용자에게 알림을 보냅니다.
+// 알림 채널은 푸시와 이메일이 있고,
+// 푸시가 실패하면 이메일로 fallback 합니다.
+// 그리고 결과를 로그로 남깁니다.
+await notify(user);
+```
+</example>
+<example type="good">
+```typescript
+// ✅ WHY 중심 — 비자명한 도메인 규칙 설명 (분기 단위)
+// VIP 고객은 결제 실패 시에도 즉시 차단하지 않는다 (CS 정책)
+if (user.tier === 'VIP' && payment.failed) {
+  return scheduleRetry(payment);
+}
+
+// ✅ TODO에 다음 행동 명시
+// TODO: API rate limit 도입 시 retry interval을 backoff 기반으로 조정
+await sendNotification(user);
+
+// ✅ 2줄 이내 + WHY
+// 푸시 실패 시 이메일 fallback 필요 — iOS APNs 일시 장애 대비책
+await notifyWithFallback(user);
+```
+</example>
+</examples>
+
+</rules>
+
+---
+
 <checklist>
 
 ## 코드 작성 시 체크리스트
@@ -220,5 +280,7 @@ if (isAdmin) {
 - [ ] 공개 API(index.ts)를 통해 접근하는가?
 - [ ] Promise 처리에 then-catch 패턴을 사용했는가?
 - [ ] 삼항연산자에서 복잡한 함수 호출을 변수로 분리했는가?
+- [ ] 주석은 WHY 중심이며 로직 단위에 2~3줄로 작성되었는가?
+- [ ] TODO/FIXME/NOTE에 다음 행동이 명시되어 있는가?
 
 </checklist>
